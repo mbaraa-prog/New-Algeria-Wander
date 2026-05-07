@@ -1,0 +1,39 @@
+from rest_framework import serializers
+from .models import Place, PlaceImage
+from apps.categories.serializers import CategorySerializer
+
+
+class PlaceImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = PlaceImage
+        fields = ["id", "image", "caption", "order"]
+
+
+class PlaceListSerializer(serializers.ModelSerializer):
+    """Lightweight — cards in wilaya tabs and homepage."""
+    category      = CategorySerializer(read_only=True)
+    place_type_display = serializers.CharField(source="get_place_type_display", read_only=True)
+    wilaya_name   = serializers.CharField(source="wilaya.name", read_only=True)
+
+    class Meta:
+        model  = Place
+        fields = ["id", "name", "slug", "place_type", "place_type_display",
+                  "wilaya_name", "short_desc", "cover_image", "category",
+                  "avg_rating", "review_count", "is_top_choice"]
+
+
+class PlaceDetailSerializer(serializers.ModelSerializer):
+    """Full detail."""
+    category           = CategorySerializer(read_only=True)
+    images             = PlaceImageSerializer(many=True, read_only=True)
+    place_type_display = serializers.CharField(source="get_place_type_display", read_only=True)
+    wilaya_name        = serializers.CharField(source="wilaya.name", read_only=True)
+    wilaya_id          = serializers.IntegerField(source="wilaya.id",   read_only=True)
+
+    class Meta:
+        model  = Place
+        fields = ["id", "name", "slug", "place_type", "place_type_display",
+                  "wilaya_id", "wilaya_name", "category",
+                  "description", "short_desc", "cover_image", "images",
+                  "address", "avg_rating", "review_count", "is_top_choice",
+                  "created_at"]
