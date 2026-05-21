@@ -1,0 +1,319 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import PlaceCard from '../components/PlaceCard';
+import { featuredPlaces, upcomingEvents, wilayas } from '../data/mockData';
+
+import coastHero from '../assets/generated/coast_hero.png';
+import mountainHero from '../assets/generated/mountain_hero.png';
+import saharaHero from '../assets/generated/sahara_hero.png';
+import historyHero from '../assets/generated/history_hero.png';
+import algerLaBlanche from '../assets/Alger la blanche front de mer ❤️🇩🇿.jpg';
+import trainParis from '../assets/Take the train from Paris to Venice via Switzerland.jpg';
+import download3 from '../assets/download (3).jpg';
+
+const Home = () => {
+  const [homeSearch, setHomeSearch] = useState('');
+  const navigate = useNavigate();
+
+  // Theme Slider Data
+  const themes = [
+    {
+      id: 'beaches',
+      category: 'Explore Algeria',
+      title: 'Discover the coasts of Algeria',
+      description: "Explore stunning Mediterranean beaches, vibrant coastal cities, and hidden gems along Algeria's breathtaking shoreline.",
+      mainImage: algerLaBlanche,
+      sideImage1: trainParis,
+      sideImage2: download3,
+      accent: '#FF7F50',
+      bgImage: coastHero,
+      label1: 'Algiers', label2: 'Journey', label3: 'Coasts'
+    },
+    {
+      id: 'mountains',
+      category: 'Explore Algeria',
+      title: 'Discover the Mountains of Algeria',
+      description: "Explore breathtaking peaks, peaceful villages, and unforgettable hiking experiences in Algeria's stunning mountain landscapes.",
+      mainImage: 'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=800',
+      sideImage1: 'https://images.unsplash.com/photo-1511497584788-8767fe771d50?q=80&w=600',
+      sideImage2: 'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?q=80&w=600',
+      accent: '#22C55E',
+      bgImage: mountainHero,
+      label1: 'Tikjda', label2: 'Chelia', label3: 'Tizi Ouzou'
+    },
+    {
+      id: 'desert',
+      category: 'Explore Algeria',
+      title: 'Discover the Desert of Algeria',
+      description: "Experience the magic of the Sahara — vast dunes, silent horizons, and breathtaking sunsets in the world's most iconic desert.",
+      mainImage: 'https://images.unsplash.com/photo-1509233725247-49e657c54213?q=80&w=800',
+      sideImage1: 'https://images.unsplash.com/photo-1440635592348-167b1b30296f?q=80&w=600',
+      sideImage2: 'https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?q=80&w=600',
+      accent: '#EA580C',
+      bgImage: saharaHero,
+      label1: 'Djanet', label2: 'Tamenrast', label3: 'Bechar'
+    },
+    {
+      id: 'history',
+      category: 'Explore Algeria',
+      title: 'Discover the History of Algeria',
+      description: "Discover centuries of history through timeless architecture, ancient cities, and stories carved into every stone.",
+      mainImage: 'https://images.unsplash.com/photo-1605634591461-9b63481a5477?q=80&w=800',
+      sideImage1: 'https://images.unsplash.com/photo-1580674239581-3fbc191a90c2?q=80&w=600',
+      sideImage2: 'https://images.unsplash.com/photo-1596395817202-6028590c67e7?q=80&w=600',
+      accent: '#92400E',
+      bgImage: historyHero,
+      label1: 'Gherdaya', label2: 'Timgad', label3: 'Constantine'
+    }
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const activeTheme = themes[currentIndex];
+
+  const handlePrev = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev === 0 ? themes.length - 1 : prev - 1));
+      setTimeout(() => setIsTransitioning(false), 500);
+    }, 400);
+  };
+
+  const handleNext = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev === themes.length - 1 ? 0 : prev + 1));
+      setTimeout(() => setIsTransitioning(false), 500);
+    }, 400);
+  };
+
+  const handleHomeSearch = () => {
+    if (homeSearch.trim()) {
+      navigate(`/search?q=${encodeURIComponent(homeSearch)}`);
+    }
+  };
+
+  return (
+    <div className="bg-white">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center pt-28 pb-48 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={activeTheme.bgImage}
+            alt={activeTheme.id}
+            className={`w-full h-full object-cover transition-all duration-1000 transform scale-105 ${isTransitioning ? 'blur-2xl scale-125 opacity-50' : 'blur-0 scale-105 opacity-100'}`}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/30 to-transparent"></div>
+        </div>
+
+        {/* Transition Overlay */}
+        <div className={`absolute inset-0 z-40 bg-white transition-opacity duration-500 pointer-events-none ${isTransitioning ? 'opacity-20' : 'opacity-0'}`}></div>
+
+        {/* Navigation Arrows */}
+        <button 
+          onClick={handlePrev}
+          className="absolute left-10 z-30 p-5 rounded-full border border-white/20 text-white/40 hover:text-white hover:border-white transition-all backdrop-blur-md group"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button 
+          onClick={handleNext}
+          className="absolute right-10 z-30 p-5 rounded-full border border-white/20 text-white/40 hover:text-white hover:border-white transition-all backdrop-blur-md group"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        <div className="relative z-10 max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-16 items-center">
+          {/* Hero Content - Fixed Column */}
+          <div className="flex flex-col justify-center min-h-[500px]">
+            <div className={`space-y-10 transition-all duration-700 transform ${isTransitioning ? 'opacity-0 -translate-x-12' : 'opacity-100 translate-x-0'}`}>
+              <div className="inline-block px-5 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-[12px] font-bold text-white uppercase tracking-widest">
+                {activeTheme.category}
+              </div>
+              <h1 className="text-white text-7xl md:text-8xl font-black leading-[1] tracking-tight min-h-[160px]">
+                {activeTheme.title.split(' ').slice(0, -2).join(' ')} <br />
+                <span className="transition-colors duration-1000" style={{ color: activeTheme.accent }}>{activeTheme.title.split(' ').slice(-2).join(' ')}</span>
+              </h1>
+              <p className="text-gray-300 text-xl max-w-lg leading-relaxed font-medium min-h-[90px]">
+                {activeTheme.description}
+              </p>
+              <div className="pt-4">
+                <button 
+                  className="px-14 py-6 rounded-full font-black flex items-center space-x-5 transition-all transform hover:scale-105 active:scale-95 shadow-2xl hover:shadow-orange-500/20"
+                  style={{ backgroundColor: activeTheme.accent, color: 'white' }}
+                >
+                  <span className="text-xl">Explore Now</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero Image Layout (Right) - Locked Position */}
+          <div className="hidden lg:flex items-center gap-10 justify-end relative h-[650px]">
+             {/* Center Large Card - Strictly Fixed Dimensions */}
+             <div className="w-[360px] h-[520px] flex-shrink-0">
+               <div className={`relative w-full h-full rounded-[50px] overflow-hidden border-[12px] border-white/5 shadow-2xl group transition-all duration-700 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+                  <img src={activeTheme.mainImage} alt="Main" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                  <div className="absolute bottom-12 left-0 right-0 text-center">
+                     <h3 className="text-white text-5xl font-black tracking-tighter opacity-50 uppercase">{activeTheme.label1}</h3>
+                  </div>
+               </div>
+             </div>
+
+             {/* Stacked Cards - Strictly Fixed Dimensions */}
+             <div className="space-y-8 flex flex-col flex-shrink-0">
+                <div className="w-[300px] h-[200px] flex-shrink-0">
+                  <div className={`relative w-full h-full rounded-[40px] overflow-hidden border-[6px] border-white/5 shadow-xl group transition-all duration-700 delay-75 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+                    <img src={activeTheme.sideImage1} alt="Side 1" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                       <span className="text-white text-4xl font-black opacity-30 tracking-tighter uppercase">{activeTheme.label2}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[300px] h-[200px] flex-shrink-0">
+                  <div className={`relative w-full h-full rounded-[40px] overflow-hidden border-[6px] border-white/5 shadow-xl group transition-all duration-700 delay-150 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+                    <img src={activeTheme.sideImage2} alt="Side 2" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                       <span className="text-white text-4xl font-black opacity-30 tracking-tighter uppercase">{activeTheme.label3}</span>
+                    </div>
+                  </div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        {/* Dot Pagination */}
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 flex items-center gap-6">
+          {themes.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => !isTransitioning && setCurrentIndex(idx)}
+              className={`transition-all duration-700 rounded-full ${
+                currentIndex === idx ? 'w-10 h-3 bg-white shadow-xl' : 'w-3 h-3 bg-white/30 hover:bg-white/50'
+              }`}
+            ></button>
+          ))}
+        </div>
+      </section>
+
+      {/* Floating Search Widget */}
+      <div className="relative z-30 max-w-5xl mx-auto -mt-24 px-6 pb-20">
+        <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-gray-100">
+          {/* Search Tabs */}
+          <div className="flex items-center space-x-10 mb-8 border-b border-gray-50 pb-4 overflow-x-auto no-scrollbar">
+            {['All', 'Hotels', 'Restaurants', 'Landmarks', 'Events'].map((tab, i) => (
+              <button
+                key={tab}
+                className={`text-[13px] font-bold pb-4 whitespace-nowrap transition-all uppercase tracking-wider ${i === 0 ? 'text-[#006699] border-b-2 border-[#006699]' : 'text-gray-300 hover:text-gray-500'
+                  }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Inputs */}
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-8 items-end">
+            <div className="space-y-3">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] ml-2">Where to go</label>
+              <div className="relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#006699] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  value={homeSearch}
+                  onChange={(e) => setHomeSearch(e.target.value)}
+                  placeholder="Search destinations, cities..."
+                  className="w-full bg-[#F8FAFF] rounded-2xl py-5 pl-16 pr-8 text-sm outline-none border border-transparent focus:border-[#006699] focus:bg-white transition-all shadow-inner"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] ml-2">When</label>
+              <div className="relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#006699] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="mm/dd/yyyy"
+                  className="w-full bg-[#F8FAFF] rounded-2xl py-5 pl-16 pr-8 text-sm outline-none border border-transparent focus:border-[#006699] focus:bg-white transition-all shadow-inner"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleHomeSearch}
+              className="bg-[#FF7F50] text-white rounded-2xl py-5 px-10 font-bold hover:bg-[#E67348] transition-all shadow-xl shadow-orange-100 flex items-center justify-center space-x-3 transform hover:scale-[1.02]"
+              style={{ backgroundColor: activeTheme.accent }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span>Search Destinations</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Discover Section */}
+      <section className="max-w-7xl mx-auto px-6 py-32">
+        <div className="flex items-end justify-between mb-16">
+          <div>
+            <h2 className="text-[#0F4C81] text-4xl font-bold mb-4">Discover by {activeTheme.id.charAt(0).toUpperCase() + activeTheme.id.slice(1)}</h2>
+            <p className="text-gray-400 text-lg">Explore the unique wonders of Algeria</p>
+          </div>
+        </div>
+
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {featuredPlaces.map(place => (
+            <PlaceCard key={place.id} item={place} />
+          ))}
+        </div>
+      </section>
+
+      {/* Wilayas Showcase */}
+      <section className="bg-white py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-[#0F4C81] text-5xl font-bold mb-6 tracking-tight">Our 6 Wilayas</h2>
+            <div className="w-24 h-1.5 mx-auto rounded-full mb-8" style={{ backgroundColor: activeTheme.accent }}></div>
+            <p className="text-gray-400 max-w-3xl mx-auto text-xl leading-relaxed">
+              From the bustling capital to the serene desert, explore the unique charm and heritage of our featured wilayas.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            {wilayas.map(wilaya => (
+              <Link to={`/wilaya/${wilaya.id}`} key={wilaya.id} className="group relative h-80 rounded-[40px] overflow-hidden shadow-2xl transform hover:-translate-y-4 transition-all duration-700">
+                <img src={wilaya.image} alt={wilaya.name} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <div className="absolute bottom-8 left-0 right-0 text-center">
+                  <span className="text-white font-bold text-xl tracking-wide">{wilaya.name}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Home;

@@ -1,0 +1,154 @@
+import React, { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { featuredPlaces, upcomingEvents, wilayas } from '../data/mockData';
+import PlaceCard from '../components/PlaceCard';
+
+const Search = () => {
+  const [searchParams] = useSearchParams();
+  const queryFromUrl = searchParams.get('q') || '';
+  
+  // States for filters
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedWilayas, setSelectedWilayas] = useState([]);
+
+  // Combine data
+  const allItems = useMemo(() => [...featuredPlaces, ...upcomingEvents], []);
+
+  // Filter Logic
+  const filteredResults = useMemo(() => {
+    return allItems.filter(item => {
+      // 1. Search Query (Name or Wilaya)
+      const matchesQuery = !queryFromUrl || 
+        item.name.toLowerCase().includes(queryFromUrl.toLowerCase()) ||
+        item.wilaya.toLowerCase().includes(queryFromUrl.toLowerCase());
+
+      // 2. Category Filter
+      const matchesCategory = selectedCategory === 'All' || 
+        (item.type && item.type.toLowerCase() === selectedCategory.toLowerCase().slice(0, -1)) ||
+        (item.category && item.category.toLowerCase() === selectedCategory.toLowerCase().slice(0, -1));
+
+      // 3. Wilaya Filter
+      const matchesWilaya = selectedWilayas.length === 0 || 
+        selectedWilayas.includes(item.wilaya);
+
+      return matchesQuery && matchesCategory && matchesWilaya;
+    });
+  }, [allItems, queryFromUrl, selectedCategory, selectedWilayas]);
+
+  const toggleWilaya = (wilayaName) => {
+    setSelectedWilayas(prev => 
+      prev.includes(wilayaName) 
+        ? prev.filter(w => w !== wilayaName) 
+        : [...prev, wilayaName]
+    );
+  };
+
+  return (
+    <div className="bg-[#F8FAFF] min-h-screen pt-32 pb-20 px-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12">
+        
+        {/* Sidebar Filters */}
+        <aside className="space-y-10">
+          <h2 className="text-[#0F4C81] text-2xl font-bold px-2">Filters</h2>
+          
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 space-y-10">
+            {/* Category Filter */}
+            <div className="space-y-6">
+              <h3 className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest">Category</h3>
+              <div className="space-y-4">
+                {['All', 'Hotels', 'Restaurants', 'Landmarks', 'Events'].map(cat => (
+                  <label key={cat} className="flex items-center group cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="category"
+                      checked={selectedCategory === cat}
+                      onChange={() => setSelectedCategory(cat)}
+                      className="hidden" 
+                    />
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                      selectedCategory === cat ? 'border-[#006699]' : 'border-gray-200 group-hover:border-gray-300'
+                    }`}>
+                      {selectedCategory === cat && <div className="w-2.5 h-2.5 rounded-full bg-[#006699]" />}
+                    </div>
+                    <span className={`ml-4 text-sm font-medium transition-colors ${
+                      selectedCategory === cat ? 'text-[#0F4C81]' : 'text-gray-500'
+                    }`}>{cat}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Wilaya Filter */}
+            <div className="space-y-6">
+              <h3 className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest">Wilayas</h3>
+              <div className="space-y-4">
+                {wilayas.slice(0, 5).map(wilaya => (
+                  <label key={wilaya.id} className="flex items-center group cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={selectedWilayas.includes(wilaya.name)}
+                      onChange={() => toggleWilaya(wilaya.name)}
+                      className="hidden" 
+                    />
+                    <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${
+                      selectedWilayas.includes(wilaya.name) ? 'bg-[#006699] border-[#006699]' : 'bg-white border-gray-200 group-hover:border-gray-300'
+                    }`}>
+                      {selectedWilayas.includes(wilaya.name) && (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className={`ml-4 text-sm font-medium transition-colors ${
+                      selectedWilayas.includes(wilaya.name) ? 'text-[#0F4C81]' : 'text-gray-500'
+                    }`}>{wilaya.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content: Results */}
+        <main className="space-y-10">
+          <div className="space-y-2">
+            <h1 className="text-[#0F4C81] text-4xl font-bold">
+              {queryFromUrl ? `Search Results for "${queryFromUrl}"` : 'Search All Destinations'}
+            </h1>
+            <p className="text-gray-400 font-medium">
+              Showing {filteredResults.length} results matching your criteria.
+            </p>
+          </div>
+
+          {filteredResults.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {filteredResults.map(item => (
+                <PlaceCard key={item.id} item={item} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-3xl p-20 text-center shadow-sm border border-gray-100">
+              <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <h3 className="text-[#0F4C81] text-xl font-bold mb-2">No results found</h3>
+              <p className="text-gray-400">Try adjusting your filters or search terms.</p>
+            </div>
+          )}
+
+          {filteredResults.length > 0 && (
+            <div className="flex justify-center pt-10">
+              <button className="px-10 py-3.5 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
+                Load More Results
+              </button>
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default Search;
