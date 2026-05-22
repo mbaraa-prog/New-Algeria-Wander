@@ -1,13 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { featuredPlaces, upcomingEvents } from '../data/mockData';
+import PlaceCard from '../components/PlaceCard';
+import dataService from '../api/data';
 
 const Details = () => {
   const { id } = useParams();
-  
-  // Data Lookup Helper
-  const allItems = [...featuredPlaces, ...upcomingEvents];
-  const item = allItems.find(i => String(i.id) === id);
+  const [item, setItem] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [placeResponse, reviewsResponse] = await Promise.all([
+          dataService.getPlaceDetail(id),
+          dataService.getReviews({ place: id }),
+        ]);
+
+        // normalize place response: backend returns envelope { success, data }
+        const placePayload = placeResponse?.data ?? placeResponse ?? null;
+        setItem(placePayload);
+
+        // normalize reviews : envelope { success, data }
+        let rawReviews = reviewsResponse ?? [];
+        if (rawReviews.results) rawReviews = rawReviews.results;
+        if (rawReviews.data) rawReviews = rawReviews.data;
+        setReviews(rawReviews || []);
+      } catch (error) {
+        console.error('Failed to load place details:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFF]">
+        <div className="w-16 h-16 border-4 border-[#006699] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (!item) {
     return (
@@ -20,30 +55,37 @@ const Details = () => {
     );
   }
 
+  const placeType = item.place_type_display || item.place_type || 'Place';
+  const placeName = item.name || item.title;
+  const placeDescription = item.description || item.short_desc || 'No description available.';
+  const placeImage = item.cover_image || item.image;
+  const placeWilaya = item.wilaya_name || item.wilaya?.name || 'Unknown';
+  const placeRating = item.avg_rating || item.rating || 0;
+  const placeReviewCount = reviews.length;
+  const placeOpenHours = item.open_hours || item.opening_hours || 'Daily 9:00 - 18:00';
+
   return (
     <div className="bg-[#F8FAFF] min-h-screen pb-20">
-      {/* Hero Section */}
       <section className="relative h-[600px] w-full overflow-hidden">
         <img 
-          src={item.image} 
-          alt={item.name} 
+          src={placeImage} 
+          alt={placeName} 
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-        
         <div className="absolute bottom-16 left-0 right-0">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex items-center space-x-3 mb-6">
               <span className="bg-[#006699] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">
-                {item.type}
+                {placeType}
               </span>
               <span className="bg-[#FF7F50] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">
-                Historical Site
+                {item.category?.name || 'Featured'}
               </span>
             </div>
             <div className="flex items-end justify-between">
               <h1 className="text-white text-5xl md:text-6xl font-bold max-w-3xl leading-tight">
-                {item.name}
+                {placeName}
               </h1>
               <div className="flex space-x-4 mb-2">
                 <button className="bg-white/10 backdrop-blur-md p-4 rounded-full text-white hover:bg-[#FF7F50] transition-all border border-white/20">
@@ -62,7 +104,6 @@ const Details = () => {
         </div>
       </section>
 
-      {/* Info Row */}
       <section className="max-w-7xl mx-auto px-6 -mt-10 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-3xl p-6 shadow-xl border border-white flex items-center space-x-4">
@@ -74,7 +115,7 @@ const Details = () => {
             </div>
             <div>
               <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Location</p>
-              <p className="text-[#0F4C81] font-bold">{item.wilaya}</p>
+              <p className="text-[#0F4C81] font-bold">{placeWilaya}</p>
             </div>
           </div>
 
@@ -86,7 +127,7 @@ const Details = () => {
             </div>
             <div>
               <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Rating</p>
-              <p className="text-[#0F4C81] font-bold">{item.rating} ({item.reviewsCount} Reviews)</p>
+              <p className="text-[#0F4C81] font-bold">{placeRating} ({placeReviewCount} Reviews)</p>
             </div>
           </div>
 
@@ -98,7 +139,7 @@ const Details = () => {
             </div>
             <div>
               <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Open Hours</p>
-              <p className="text-[#0F4C81] font-bold">{item.openHours}</p>
+              <p className="text-[#0F4C81] font-bold">{placeOpenHours}</p>
             </div>
           </div>
 
@@ -110,31 +151,26 @@ const Details = () => {
             </div>
             <div>
               <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Reviews</p>
-              <p className="text-[#0F4C81] font-bold">{item.comments?.length || 0} Comments</p>
+              <p className="text-[#0F4C81] font-bold">{placeReviewCount} Comments</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="max-w-7xl mx-auto px-6 mt-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Left Column: About & Comments */}
         <div className="lg:col-span-2 space-y-16">
           <div className="space-y-6">
             <h2 className="text-[#0F4C81] text-3xl font-bold">About this Location</h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              {item.description}
+              {placeDescription}
             </p>
           </div>
 
-          {/* Visitor Opinions */}
           <div className="space-y-10">
             <h2 className="text-[#0F4C81] text-3xl font-bold">Visitor Opinions</h2>
-            
-            {/* Add Comment Area */}
             <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
               <div className="flex items-start space-x-6">
-                <div className="h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
+                <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
                   <img src="https://i.pravatar.cc/150?u=user" alt="User" />
                 </div>
                 <div className="flex-1 space-y-4">
@@ -161,29 +197,28 @@ const Details = () => {
               </div>
             </div>
 
-            {/* Comments List */}
             <div className="space-y-6">
-              {item.comments?.map(comment => (
-                <div key={comment.id} className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
+              {reviews.map(review => (
+                <div key={review.id} className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
                   <div className="flex items-start space-x-6">
-                    <div className="h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
-                      <img src={comment.avatar} alt={comment.user} />
+                    <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
+                      <img src={review.avatar || `https://i.pravatar.cc/150?u=${review.user || review.username || review.id}`} alt={review.user || review.username || 'Guest'} />
                     </div>
                     <div className="flex-1 space-y-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <h4 className="font-bold text-[#0F4C81]">{comment.user}</h4>
-                          <p className="text-gray-400 text-xs">{comment.date}</p>
+                          <h4 className="font-bold text-[#0F4C81]">{review.user || review.username || 'Guest'}</h4>
+                          <p className="text-gray-400 text-xs">{review.created_at ? new Date(review.created_at).toLocaleDateString() : review.date || 'Unknown date'}</p>
                         </div>
                         <div className="flex text-[#FF7F50]">
                           {[...Array(5)].map((_, i) => (
-                            <svg key={i} xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${i < comment.rating ? 'fill-current' : 'text-gray-200'}`} viewBox="0 0 20 20">
+                            <svg key={i} xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${i < (review.rating || 0) ? 'fill-current' : 'text-gray-200'}`} viewBox="0 0 20 20">
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                             </svg>
                           ))}
                         </div>
                       </div>
-                      <p className="text-gray-600 leading-relaxed">{comment.text}</p>
+                      <p className="text-gray-600 leading-relaxed">{review.comment || review.body || review.text || review.review}</p>
                       <div className="flex items-center space-x-6 text-gray-400 text-xs font-bold uppercase tracking-widest">
                         <button className="flex items-center space-x-2 hover:text-[#FF7F50] transition-colors">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -206,14 +241,12 @@ const Details = () => {
           </div>
         </div>
 
-        {/* Right Column: Key Info & Related */}
         <div className="space-y-12">
-          {/* Key Information */}
           <div className="bg-white rounded-[40px] p-10 shadow-xl border border-white">
             <h3 className="text-[#0F4C81] text-xl font-bold mb-8">Key Information</h3>
             <div className="space-y-8">
               <div className="flex items-start space-x-5">
-                <div className="text-[#006699] mt-1 flex-shrink-0">
+                <div className="text-[#006699] mt-1 shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -226,19 +259,19 @@ const Details = () => {
               </div>
 
               <div className="flex items-start space-x-5">
-                <div className="text-[#006699] mt-1 flex-shrink-0">
+                <div className="text-[#006699] mt-1 shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
                   <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Opening Hours</h4>
-                  <p className="text-gray-700 text-sm font-medium">Daily: {item.openHours}</p>
+                  <p className="text-gray-700 text-sm font-medium">Daily: {placeOpenHours}</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-5">
-                <div className="text-[#006699] mt-1 flex-shrink-0">
+                <div className="text-[#006699] mt-1 shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
@@ -250,9 +283,9 @@ const Details = () => {
               </div>
 
               <div className="flex items-start space-x-5">
-                <div className="text-[#006699] mt-1 flex-shrink-0">
+                <div className="text-[#006699] mt-1 shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
                   </svg>
                 </div>
                 <div>
@@ -265,25 +298,19 @@ const Details = () => {
             </div>
           </div>
 
-          {/* Related Locations */}
-          <div className="space-y-6">
-            <h3 className="text-[#0F4C81] text-xl font-bold px-2">Related Locations</h3>
-            <div className="space-y-4">
-              {featuredPlaces.filter(p => p.id !== item.id).slice(0, 3).map(related => (
-                <Link 
-                  key={related.id} 
-                  to={`/details/${related.id}`}
-                  className="bg-white rounded-3xl p-4 flex items-center space-x-5 shadow-sm hover:shadow-md transition-all border border-transparent hover:border-[#FF7F50]/20 group"
-                >
-                  <div className="h-20 w-20 rounded-2xl overflow-hidden flex-shrink-0">
-                    <img src={related.image} alt={related.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  </div>
-                  <div className="flex-1">
-                    <h5 className="text-[#0F4C81] font-bold text-sm mb-1">{related.name}</h5>
-                    <p className="text-gray-400 text-[10px] font-bold">{Math.floor(Math.random() * 5) + 1}.2 km away</p>
-                  </div>
-                </Link>
-              ))}
+          <div className="bg-white rounded-[40px] p-10 shadow-xl border border-white space-y-8">
+            <h3 className="text-[#0F4C81] text-xl font-bold">Related Places</h3>
+            <div className="grid grid-cols-1 gap-4">
+              <PlaceCard item={{
+                id: 'related-1',
+                image: item.cover_image,
+                name: item.name,
+                location: placeWilaya,
+                wilaya: placeWilaya,
+                description: item.short_desc || item.description,
+                type: placeType,
+                linkTo: `/details/${item.id}`
+              }} />
             </div>
           </div>
         </div>

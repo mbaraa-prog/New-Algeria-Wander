@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { blogs, trendingTopics } from '../data/blogData';
+import dataService from '../api/data';
 import BlogCard from '../components/BlogCard';
 
 const Blogs = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      setLoading(true);
+      const response = await dataService.getBlogs();
+      setBlogs(response.results || response);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching blogs:', err);
+      setError('Failed to load blogs');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const trendingTopics = ['Travel Tips', 'Hidden Gems', 'Budget Travel', 'Adventure', 'Culture', 'Food'];
+
   return (
     <div className="bg-[#F8FAFF] min-h-screen pt-32 pb-24 px-6">
       <div className="max-w-7xl mx-auto">
@@ -24,16 +48,22 @@ const Blogs = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16">
           {/* Main Content: Blog List */}
           <main className="space-y-10">
-            {blogs.map(blog => (
+            {loading && <div className="text-center py-12 text-gray-500">Loading blogs...</div>}
+            {error && <div className="text-center py-12 text-red-500">{error}</div>}
+            {!loading && blogs.length === 0 && <div className="text-center py-12 text-gray-500">No blogs yet</div>}
+            
+            {!loading && blogs.map(blog => (
               <BlogCard key={blog.id} blog={blog} />
             ))}
             
             {/* Pagination / Load More */}
-            <div className="flex justify-center pt-10">
-               <button className="px-10 py-4 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
-                 View All Stories
-               </button>
-            </div>
+            {!loading && blogs.length > 0 && (
+              <div className="flex justify-center pt-10">
+                 <button className="px-10 py-4 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
+                   View All Stories
+                 </button>
+              </div>
+            )}
           </main>
 
           {/* Sidebar */}

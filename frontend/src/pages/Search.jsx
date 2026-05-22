@@ -1,34 +1,66 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { featuredPlaces, upcomingEvents, wilayas } from '../data/mockData';
 import PlaceCard from '../components/PlaceCard';
+import dataService from '../api/data';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
   const queryFromUrl = searchParams.get('q') || '';
-  
-  // States for filters
+
+  const [places, setPlaces] = useState([]);
+  const [wilayaOptions, setWilayaOptions] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedWilayas, setSelectedWilayas] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Combine data
-  const allItems = useMemo(() => [...featuredPlaces, ...upcomingEvents], []);
+  useEffect(() => {
+    const fetchSearchData = async () => {
+      try {
+        const [placesResponse, wilayasResponse] = await Promise.all([
+          dataService.getPlaces(),
+          dataService.getWilayas(),
+        ]);
 
-  // Filter Logic
+        let p = placesResponse ?? [];
+        if (p.results) p = p.results;
+        if (p.data) p = p.data;
+        setPlaces(Array.isArray(p) ? p : []);
+
+        let w = wilayasResponse ?? [];
+        if (w.results) w = w.results;
+        if (w.data) w = w.data;
+        setWilayaOptions(Array.isArray(w) ? w : []);
+      } catch (error) {
+        console.error('Failed to load search data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSearchData();
+  }, []);
+
+  const allItems = useMemo(
+    () => places.map(place => ({
+      ...place,
+      image: place.cover_image,
+      description: place.short_desc,
+      type: place.place_type_display || place.place_type,
+      wilaya: place.wilaya_name,
+    })),
+    [places]
+  );
+
   const filteredResults = useMemo(() => {
     return allItems.filter(item => {
-      // 1. Search Query (Name or Wilaya)
-      const matchesQuery = !queryFromUrl || 
+      const matchesQuery = !queryFromUrl ||
         item.name.toLowerCase().includes(queryFromUrl.toLowerCase()) ||
-        item.wilaya.toLowerCase().includes(queryFromUrl.toLowerCase());
+        item.wilaya?.toLowerCase().includes(queryFromUrl.toLowerCase());
 
-      // 2. Category Filter
-      const matchesCategory = selectedCategory === 'All' || 
-        (item.type && item.type.toLowerCase() === selectedCategory.toLowerCase().slice(0, -1)) ||
-        (item.category && item.category.toLowerCase() === selectedCategory.toLowerCase().slice(0, -1));
+      const matchesCategory = selectedCategory === 'All' ||
+        (item.type && item.type.toLowerCase() === selectedCategory.toLowerCase().slice(0, -1));
 
-      // 3. Wilaya Filter
-      const matchesWilaya = selectedWilayas.length === 0 || 
+      const matchesWilaya = selectedWilayas.length === 0 ||
         selectedWilayas.includes(item.wilaya);
 
       return matchesQuery && matchesCategory && matchesWilaya;
@@ -36,9 +68,9 @@ const Search = () => {
   }, [allItems, queryFromUrl, selectedCategory, selectedWilayas]);
 
   const toggleWilaya = (wilayaName) => {
-    setSelectedWilayas(prev => 
-      prev.includes(wilayaName) 
-        ? prev.filter(w => w !== wilayaName) 
+    setSelectedWilayas(prev =>
+      prev.includes(wilayaName)
+        ? prev.filter(w => w !== wilayaName)
         : [...prev, wilayaName]
     );
   };
@@ -46,24 +78,24 @@ const Search = () => {
   return (
     <div className="bg-[#F8FAFF] min-h-screen pt-32 pb-20 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12">
-        
+
         {/* Sidebar Filters */}
         <aside className="space-y-10">
           <h2 className="text-[#0F4C81] text-2xl font-bold px-2">Filters</h2>
-          
+
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 space-y-10">
             {/* Category Filter */}
             <div className="space-y-6">
               <h3 className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest">Category</h3>
               <div className="space-y-4">
-                {['All', 'Hotels', 'Restaurants', 'Landmarks', 'Events'].map(cat => (
+                {['All', 'Hotels', 'Restaurants', 'Landmarks'].map(cat => (
                   <label key={cat} className="flex items-center group cursor-pointer">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       name="category"
                       checked={selectedCategory === cat}
                       onChange={() => setSelectedCategory(cat)}
-                      className="hidden" 
+                      className="hidden"
                     />
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
                       selectedCategory === cat ? 'border-[#006699]' : 'border-gray-200 group-hover:border-gray-300'
@@ -82,13 +114,13 @@ const Search = () => {
             <div className="space-y-6">
               <h3 className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest">Wilayas</h3>
               <div className="space-y-4">
-                {wilayas.slice(0, 5).map(wilaya => (
+                {wilayaOptions.slice(0, 5).map(wilaya => (
                   <label key={wilaya.id} className="flex items-center group cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={selectedWilayas.includes(wilaya.name)}
                       onChange={() => toggleWilaya(wilaya.name)}
-                      className="hidden" 
+                      className="hidden"
                     />
                     <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${
                       selectedWilayas.includes(wilaya.name) ? 'bg-[#006699] border-[#006699]' : 'bg-white border-gray-200 group-hover:border-gray-300'
@@ -116,11 +148,15 @@ const Search = () => {
               {queryFromUrl ? `Search Results for "${queryFromUrl}"` : 'Search All Destinations'}
             </h1>
             <p className="text-gray-400 font-medium">
-              Showing {filteredResults.length} results matching your criteria.
+              {isLoading ? 'Loading search results...' : `Showing ${filteredResults.length} results matching your criteria.`}
             </p>
           </div>
 
-          {filteredResults.length > 0 ? (
+          {isLoading ? (
+            <div className="min-h-[300px] flex items-center justify-center">
+              <div className="w-16 h-16 border-4 border-[#006699] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : filteredResults.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredResults.map(item => (
                 <PlaceCard key={item.id} item={item} />
@@ -138,7 +174,7 @@ const Search = () => {
             </div>
           )}
 
-          {filteredResults.length > 0 && (
+          {filteredResults.length > 0 && !isLoading && (
             <div className="flex justify-center pt-10">
               <button className="px-10 py-3.5 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
                 Load More Results

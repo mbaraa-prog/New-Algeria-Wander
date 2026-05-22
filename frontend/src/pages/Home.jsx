@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
-import { featuredPlaces, upcomingEvents, wilayas } from '../data/mockData';
+import dataService from '../api/data';
 
 import coastHero from '../assets/generated/coast_hero.png';
 import mountainHero from '../assets/generated/mountain_hero.png';
@@ -13,10 +13,33 @@ import download3 from '../assets/download (3).jpg';
 
 const Home = () => {
   const [homeSearch, setHomeSearch] = useState('');
+  const [heroSlides, setHeroSlides] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [featuredDestinations, setFeaturedDestinations] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Theme Slider Data
-  const themes = [
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const response = await dataService.getHomeData();
+        const data = response || {};
+        setHeroSlides(data.hero_slides || []);
+        setCategories(data.categories || []);
+        setFeaturedDestinations(data.featured_destinations || []);
+        setUpcomingEvents(data.upcoming_events || []);
+      } catch (error) {
+        console.error('Failed to load home data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHomeData();
+  }, []);
+
+  const defaultThemes = [
     {
       id: 'beaches',
       category: 'Explore Algeria',
@@ -67,6 +90,23 @@ const Home = () => {
     }
   ];
 
+  const themes = heroSlides.length
+    ? heroSlides.map((slide, index) => ({
+        id: slide.id || `slide-${index}`,
+        category: slide.theme || 'Explore Algeria',
+        title: (slide.full_title || `${slide.title_prefix || ''} ${slide.title_highlight || ''} ${slide.title_suffix || ''}`).trim(),
+        description: slide.description || '',
+        mainImage: slide.background_image || algerLaBlanche,
+        sideImage1: slide.featured_wilayas?.[0]?.cover_image || trainParis,
+        sideImage2: slide.featured_wilayas?.[1]?.cover_image || download3,
+        accent: slide.highlight_color || '#FF7F50',
+        bgImage: slide.background_image || coastHero,
+        label1: slide.featured_wilayas?.[0]?.name || 'Algiers',
+        label2: slide.featured_wilayas?.[1]?.name || 'Journey',
+        label3: slide.featured_wilayas?.[2]?.name || 'Coasts',
+      }))
+    : defaultThemes;
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const activeTheme = themes[currentIndex];
@@ -94,6 +134,20 @@ const Home = () => {
       navigate(`/search?q=${encodeURIComponent(homeSearch)}`);
     }
   };
+
+  const categoriesTabs = ['All', ...categories.map(category => category.name)];
+  const discoverItems = upcomingEvents.map(event => ({
+    id: event.id,
+    name: event.name,
+    image: event.cover_image,
+    description: event.short_desc || event.description,
+    type: 'Event',
+    date: event.date_range,
+    location: event.wilaya_name,
+    rating: event.avg_rating || 5,
+    wilaya: event.wilaya_name,
+    linkTo: `/wilaya/${event.wilaya_id}`,
+  }));
 
   return (
     <div className="bg-white">
@@ -215,7 +269,7 @@ const Home = () => {
         <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-gray-100">
           {/* Search Tabs */}
           <div className="flex items-center space-x-10 mb-8 border-b border-gray-50 pb-4 overflow-x-auto no-scrollbar">
-            {['All', 'Hotels', 'Restaurants', 'Landmarks', 'Events'].map((tab, i) => (
+            {categoriesTabs.map((tab, i) => (
               <button
                 key={tab}
                 className={`text-[13px] font-bold pb-4 whitespace-nowrap transition-all uppercase tracking-wider ${i === 0 ? 'text-[#006699] border-b-2 border-[#006699]' : 'text-gray-300 hover:text-gray-500'
@@ -283,8 +337,8 @@ const Home = () => {
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {featuredPlaces.map(place => (
-            <PlaceCard key={place.id} item={place} />
+          {discoverItems.map(place => (
+            <PlaceCard key={place.id} item={place} type="event" linkTo={place.linkTo} />
           ))}
         </div>
       </section>
@@ -300,9 +354,9 @@ const Home = () => {
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {wilayas.map(wilaya => (
+            {featuredDestinations.map(wilaya => (
               <Link to={`/wilaya/${wilaya.id}`} key={wilaya.id} className="group relative h-80 rounded-[40px] overflow-hidden shadow-2xl transform hover:-translate-y-4 transition-all duration-700">
-                <img src={wilaya.image} alt={wilaya.name} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000" />
+                <img src={wilaya.cover_image || wilaya.image} alt={wilaya.name} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div className="absolute bottom-8 left-0 right-0 text-center">
                   <span className="text-white font-bold text-xl tracking-wide">{wilaya.name}</span>

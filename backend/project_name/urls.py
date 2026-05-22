@@ -14,5 +14,8 @@ urlpatterns = [
     path("api/places/", include("apps.places.urls", namespace="places")),
     path("api/events/", include("apps.events.urls", namespace="events")),
     path("api/reviews/", include("apps.reviews.urls", namespace="reviews")),
+    path("api/favorites/", include("apps.favorites.urls", namespace="favorites")),
+    path("api/blogs/", include("apps.blogs.urls", namespace="blogs")),
+    path("api/notifications/", include("apps.notifications.urls", namespace="notifications")),
 ]
 

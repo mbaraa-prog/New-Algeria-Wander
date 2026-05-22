@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     "apps.events",
     "apps.reviews",
     "apps.home",
+    "apps.favorites",
+    "apps.blogs",
+    "apps.notifications",
 ]
 
 # ── Python 3.14 Compatibility Patch ────────────────────────────────────────

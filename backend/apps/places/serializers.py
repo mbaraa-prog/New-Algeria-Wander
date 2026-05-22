@@ -9,6 +9,19 @@ class PlaceImageSerializer(serializers.ModelSerializer):
         fields = ["id", "image", "caption", "order"]
 
 
+class PlaceSerializer(serializers.ModelSerializer):
+    """Basic place info for nested serializers."""
+    category      = CategorySerializer(read_only=True)
+    place_type_display = serializers.CharField(source="get_place_type_display", read_only=True)
+    wilaya_name   = serializers.CharField(source="wilaya.name", read_only=True)
+
+    class Meta:
+        model  = Place
+        fields = ["id", "name", "slug", "place_type", "place_type_display",
+                  "wilaya_name", "short_desc", "cover_image", "category",
+                  "avg_rating", "review_count", "is_top_choice"]
+
+
 class PlaceListSerializer(serializers.ModelSerializer):
     """Lightweight — cards in wilaya tabs and homepage."""
     category      = CategorySerializer(read_only=True)
