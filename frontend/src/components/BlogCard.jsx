@@ -3,42 +3,41 @@ import { Link } from 'react-router-dom';
 
 const BlogCard = ({ blog }) => {
   return (
-    <div className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-50 flex flex-col md:flex-row group h-full md:h-72">
+    <div className={`bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-50 flex flex-col md:flex-row group h-full md:h-72`}>
       {/* Image Section */}
-      <div className="md:w-2/5 relative h-64 md:h-full overflow-hidden">
-        <img 
-          src={blog.image} 
-          alt={blog.title} 
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-        />
-        <div className="absolute top-6 left-6">
-          <span className="bg-white/90 backdrop-blur-md text-[#0F4C81] px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">
-            {blog.category}
-          </span>
+      {blog.cover_image && (
+        <div className="md:w-2/5 relative h-64 md:h-full overflow-hidden">
+          <img
+            src={blog.cover_image.startsWith('http')
+              ? blog.cover_image
+              : `http://localhost:8000/media/${blog.cover_image}`}
+            alt={blog.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
         </div>
-      </div>
+      )}
 
       {/* Content Section */}
-      <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-between">
+      <div className={`${blog.cover_image ? 'md:w-3/5' : 'w-full'} p-8 md:p-10 flex flex-col justify-between`}>
         <div className="space-y-4">
           <h2 className="text-[#0F4C81] text-2xl font-bold leading-tight group-hover:text-[#FF7F50] transition-colors">
             {blog.title}
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
-            {blog.excerpt}
+            {(blog.content || '').replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1').replace(/^- /gm, '').slice(0, 150)}
           </p>
         </div>
 
         <div className="flex items-center justify-between pt-6 mt-auto">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-100 shadow-sm">
-              <img src={blog.author.avatar} alt={blog.author.name} className="w-full h-full object-cover" />
+              <img src="https://i.pravatar.cc/150?u=default" alt={blog.author || 'Author'} className="w-full h-full object-cover" />
             </div>
-            <span className="text-[#0F4C81] text-[13px] font-bold">{blog.author.name}</span>
+            <span className="text-[#0F4C81] text-[13px] font-bold">{blog.author || 'Anonymous'}</span>
           </div>
-          
-          <Link 
-            to={`/blog/${blog.id}`}
+
+          <Link
+            to={`/blogs/${blog.id}`}
             className="text-[#FF7F50] text-[13px] font-bold flex items-center space-x-1 group/link"
           >
             <span>Read more</span>

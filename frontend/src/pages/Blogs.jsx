@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import dataService from '../api/data';
 import BlogCard from '../components/BlogCard';
 
 const Blogs = () => {
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchBlogs();
   }, []);
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = async (params = {}) => {
     try {
       setLoading(true);
-      const response = await dataService.getBlogs();
+      const response = await dataService.getBlogs(params);
       setBlogs(response.results || response);
       setError(null);
     } catch (err) {
@@ -52,14 +54,14 @@ const Blogs = () => {
             {error && <div className="text-center py-12 text-red-500">{error}</div>}
             {!loading && blogs.length === 0 && <div className="text-center py-12 text-gray-500">No blogs yet</div>}
             
-            {!loading && blogs.map(blog => (
+            {!loading && (showAll ? blogs : blogs.slice(0, 6)).map(blog => (
               <BlogCard key={blog.id} blog={blog} />
             ))}
             
             {/* Pagination / Load More */}
-            {!loading && blogs.length > 0 && (
+            {!loading && blogs.length > 6 && !showAll && (
               <div className="flex justify-center pt-10">
-                 <button className="px-10 py-4 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
+                 <button onClick={() => setShowAll(true)} className="px-10 py-4 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
                    View All Stories
                  </button>
               </div>
@@ -90,7 +92,7 @@ const Blogs = () => {
                 <p className="text-gray-600 text-[15px] font-medium leading-relaxed">
                   Share your unique Algerian journey with thousands of travelers.
                 </p>
-                <button className="w-full bg-[#91470A] text-white py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/10">
+                <button onClick={() => navigate('/blogs/new')} className="w-full bg-[#91470A] text-white py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/10">
                   Start Writing
                 </button>
               </div>

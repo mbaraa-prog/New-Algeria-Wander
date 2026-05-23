@@ -1,21 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import dataService from '../api/data';
+import { marked } from 'marked';
 
 const AddBlog = () => {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const textareaRef = useRef(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     imageUrl: ''
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const applyFormat = (prefix, suffix) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = formData.description;
+    const selected = text.substring(start, end) || 'text';
+    const newText = text.substring(0, start) + prefix + selected + suffix + text.substring(end);
+    setFormData({ ...formData, description: newText });
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = start + prefix.length;
+      textarea.selectionEnd = start + prefix.length + selected.length;
+    }, 0);
+  };
+
+  const handleBold = () => applyFormat('**', '**');
+  const handleItalic = () => applyFormat('*', '*');
+
+  const handleList = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const text = formData.description;
+    const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+    const newText = text.substring(0, lineStart) + '- ' + text.substring(lineStart);
+    setFormData({ ...formData, description: newText });
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = start + 2;
+      textarea.selectionEnd = start + 2;
+    }, 0);
+  };
+
+  const handleLink = () => {
+    const url = prompt('Enter URL:');
+    if (url === null) return;
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = formData.description;
+    const selected = text.substring(start, end) || 'link text';
+    const linkMarkdown = `[${selected}](${url})`;
+    const newText = text.substring(0, start) + linkMarkdown + text.substring(end);
+    setFormData({ ...formData, description: newText });
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = start + linkMarkdown.length;
+      textarea.selectionEnd = start + linkMarkdown.length;
+    }, 0);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate adding to blogs (usually would hit an API)
-    console.log('Publishing Blog:', formData);
-    
-    // Redirect back to blogs
-    navigate('/blogs');
+    setLoading(true);
+    try {
+      const payload = new FormData();
+      payload.append('title', formData.title);
+      payload.append('content', formData.description);
+      if (imageFile) {
+        payload.append('cover_image', imageFile);
+      }
+      await dataService.createBlog(payload);
+      navigate('/blogs');
+    } catch (error) {
+      const message =
+        error.response?.data?.detail ||
+        error.response?.data?.message ||
+        error.message ||
+        'Failed to publish blog. Please try again.';
+      alert(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,18 +124,34 @@ const AddBlog = () => {
           <div className="space-y-4">
             <label className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest ml-1">Cover Image</label>
             <div className="relative group">
-              <div className="border-2 border-dashed border-gray-200 rounded-3xl p-12 flex flex-col items-center justify-center space-y-4 hover:border-[#006699] hover:bg-[#F8FAFF] transition-all cursor-pointer">
-                <div className="bg-[#EEF4FF] p-4 rounded-2xl text-[#006699]">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="text-center">
-                  <p className="text-[#0F4C81] font-bold">
-                    <span className="text-[#006699] hover:underline">Upload a file</span> or drag and drop
-                  </p>
-                  <p className="text-gray-400 text-xs mt-1">PNG, JPG, GIF up to 10MB</p>
-                </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <div
+                onClick={handleUploadClick}
+                className="border-2 border-dashed border-gray-200 rounded-3xl p-12 flex flex-col items-center justify-center space-y-4 hover:border-[#006699] hover:bg-[#F8FAFF] transition-all cursor-pointer"
+              >
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Preview" className="max-h-60 rounded-2xl object-cover" />
+                ) : (
+                  <>
+                    <div className="bg-[#EEF4FF] p-4 rounded-2xl text-[#006699]">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-[#0F4C81] font-bold">
+                        <span className="text-[#006699] hover:underline">Upload a file</span> or drag and drop
+                      </p>
+                      <p className="text-gray-400 text-xs mt-1">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+                  </>
+                )}
               </div>
               <input 
                 type="text" 
@@ -77,28 +181,41 @@ const AddBlog = () => {
             <label className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest ml-1">Story</label>
             <div className="bg-[#F8FAFF] rounded-3xl overflow-hidden border border-transparent focus-within:border-[#006699] focus-within:bg-white transition-all shadow-inner">
               {/* Toolbar Mockup */}
-              <div className="flex items-center space-x-6 px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-                <button type="button" className="text-gray-400 hover:text-[#0F4C81] transition-colors"><span className="font-serif font-bold text-lg">B</span></button>
-                <button type="button" className="text-gray-400 hover:text-[#0F4C81] transition-colors"><span className="font-serif italic text-lg">I</span></button>
-                <button type="button" className="text-gray-400 hover:text-[#0F4C81] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                  </svg>
-                </button>
-                <button type="button" className="text-gray-400 hover:text-[#0F4C81] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <div className="flex items-center space-x-6">
+                  <button type="button" onClick={handleBold} className="text-gray-400 hover:text-[#0F4C81] transition-colors"><span className="font-serif font-bold text-lg">B</span></button>
+                  <button type="button" onClick={handleItalic} className="text-gray-400 hover:text-[#0F4C81] transition-colors"><span className="font-serif italic text-lg">I</span></button>
+                  <button type="button" onClick={handleList} className="text-gray-400 hover:text-[#0F4C81] transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                  </button>
+                  <button type="button" onClick={handleLink} className="text-gray-400 hover:text-[#0F4C81] transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                  </button>
+                </div>
+                <button type="button" onClick={() => setShowPreview(!showPreview)} className="text-[#006699] font-bold text-sm hover:underline">
+                  {showPreview ? 'Edit' : 'Preview'}
                 </button>
               </div>
-              <textarea 
-                required
-                rows="12"
-                placeholder="Tell us about your adventure..."
-                value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
-                className="w-full bg-transparent py-8 px-8 text-sm outline-none font-medium text-gray-600 leading-relaxed resize-none"
-              ></textarea>
+              {showPreview ? (
+                <div 
+                  className="w-full bg-transparent py-8 px-8 text-sm outline-none font-medium text-gray-600 leading-relaxed min-h-[12rem] prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{ __html: marked.parse(formData.description || '') }}
+                />
+              ) : (
+                <textarea 
+                  ref={textareaRef}
+                  required
+                  rows="12"
+                  placeholder="Tell us about your adventure..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  className="w-full bg-transparent py-8 px-8 text-sm outline-none font-medium text-gray-600 leading-relaxed resize-none"
+                ></textarea>
+              )}
             </div>
           </div>
 
@@ -106,9 +223,10 @@ const AddBlog = () => {
           <div className="flex justify-end pt-6">
             <button 
               type="submit"
-              className="bg-[#91470A] text-white px-12 py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/10 transform hover:scale-[1.02]"
+              disabled={loading}
+              className="bg-[#91470A] text-white px-12 py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/10 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              Publish Blog
+              {loading ? 'Publishing...' : 'Publish Blog'}
             </button>
           </div>
         </form>

@@ -13,6 +13,7 @@ import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Blogs from './pages/Blogs';
 import AddBlog from './pages/AddBlog';
+import BlogDetail from './pages/BlogDetail';
 import Search from './pages/Search';
 import Favorites from './pages/Favorites';
 import Notifications from './pages/Notifications';
@@ -42,11 +43,12 @@ function App() {
           <Route path="wilaya/:id" element={<WilayaDetails />} />
           <Route path="details/:id" element={<Details />} />
           <Route path="blogs" element={<Blogs />} />
-          <Route path="blogs/new" element={<AddBlog />} />
+          <Route path="blogs/new" element={<ProtectedRoute><AddBlog /></ProtectedRoute>} />
+          <Route path="blogs/:id" element={<BlogDetail />} />
           <Route path="search" element={<Search />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
-          
+
           {/* User Specific - Protected */}
           <Route path="favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
           <Route path="notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
