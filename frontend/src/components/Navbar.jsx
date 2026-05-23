@@ -37,19 +37,18 @@ const Navbar = () => {
   const isSolid = !isHome || isScrolled;
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 px-6 transition-all duration-500 ${
-        isSolid 
-          ? 'bg-white/95 backdrop-blur-md shadow-md py-4' 
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 px-6 transition-all duration-500 ${isSolid
+          ? 'bg-white/95 backdrop-blur-md shadow-md py-4'
           : 'bg-transparent py-6'
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex-shrink-0 group">
-          <img 
-            src={logo} 
-            alt="Algeria Wander Logo" 
+          <img
+            src={logo}
+            alt="Algeria Wander Logo"
             className={`h-12 w-auto transition-all duration-300 ${isHome && !isScrolled ? 'brightness-0 invert' : ''}`}
           />
         </Link>
@@ -60,17 +59,15 @@ const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
-              className={`relative py-2 text-[14px] font-bold tracking-wide transition-all duration-300 ${
-                isHome && !isScrolled
-                  ? 'text-white hover:text-[#FF7F50]' 
+              className={`relative py-2 text-[14px] font-bold tracking-wide transition-all duration-300 ${isHome && !isScrolled
+                  ? 'text-white hover:text-[#FF7F50]'
                   : (isActive(link.path) ? 'text-[#006699]' : 'text-gray-600 hover:text-[#006699]')
-              }`}
+                }`}
             >
               {link.name}
               {isActive(link.path) && (
-                <span className={`absolute bottom-0 left-0 w-full h-[2.5px] rounded-full animate-grow-width ${
-                  isHome && !isScrolled ? 'bg-[#FF7F50]' : 'bg-[#006699]'
-                }`} />
+                <span className={`absolute bottom-0 left-0 w-full h-[2.5px] rounded-full animate-grow-width ${isHome && !isScrolled ? 'bg-[#FF7F50]' : 'bg-[#006699]'
+                  }`} />
               )}
             </Link>
           ))}
@@ -80,7 +77,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-8">
           {isAuthenticated ? (
             <div className="flex items-center space-x-6">
-              <Link 
+              <Link
                 to="/notifications"
                 className={`${isHome && !isScrolled ? 'text-white' : 'text-gray-600'} hover:text-[#FF7F50] transition-colors`}
               >
@@ -89,7 +86,7 @@ const Navbar = () => {
                 </svg>
               </Link>
 
-              <Link 
+              <Link
                 to="/favorites"
                 className={`${isHome && !isScrolled ? 'text-white' : 'text-gray-600'} hover:text-[#FF7F50] transition-colors`}
               >
@@ -100,9 +97,9 @@ const Navbar = () => {
 
               <Link to="/profile" className="flex items-center">
                 <div className={`h-11 w-11 rounded-full border-2 overflow-hidden transition-colors ${isHome && !isScrolled ? 'border-white/30' : 'border-[#006699]/30'}`}>
-                  <img 
-                    src={user?.avatar || "https://i.pravatar.cc/150?u=algeria-wander"} 
-                    alt="Profile" 
+                  <img
+                    src={user?.avatar ? `http://localhost:8000${user.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`}
+                    alt="Profile"
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -110,19 +107,18 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex items-center space-x-6">
-              <Link 
-                to="/login" 
+              <Link
+                to="/login"
                 className={`font-bold text-[14px] transition-colors ${isHome && !isScrolled ? 'text-white hover:text-[#FF7F50]' : 'text-gray-600 hover:text-[#006699]'}`}
               >
                 Login
               </Link>
-              <Link 
-                to="/register" 
-                className={`px-8 py-2.5 rounded-full font-bold text-[14px] transition-all transform hover:scale-105 ${
-                  isHome && !isScrolled 
-                    ? 'bg-white text-[#0F4C81] hover:bg-[#FF7F50] hover:text-white' 
+              <Link
+                to="/register"
+                className={`px-8 py-2.5 rounded-full font-bold text-[14px] transition-all transform hover:scale-105 ${isHome && !isScrolled
+                    ? 'bg-white text-[#0F4C81] hover:bg-[#FF7F50] hover:text-white'
                     : 'bg-[#006699] text-white hover:bg-[#004d73]'
-                }`}
+                  }`}
               >
                 Register
               </Link>

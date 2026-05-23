@@ -92,19 +92,19 @@ const Home = () => {
 
   const themes = heroSlides.length
     ? heroSlides.map((slide, index) => ({
-        id: slide.id || `slide-${index}`,
-        category: slide.theme || 'Explore Algeria',
-        title: (slide.full_title || `${slide.title_prefix || ''} ${slide.title_highlight || ''} ${slide.title_suffix || ''}`).trim(),
-        description: slide.description || '',
-        mainImage: slide.background_image || algerLaBlanche,
-        sideImage1: slide.featured_wilayas?.[0]?.cover_image || trainParis,
-        sideImage2: slide.featured_wilayas?.[1]?.cover_image || download3,
-        accent: slide.highlight_color || '#FF7F50',
-        bgImage: slide.background_image || coastHero,
-        label1: slide.featured_wilayas?.[0]?.name || 'Algiers',
-        label2: slide.featured_wilayas?.[1]?.name || 'Journey',
-        label3: slide.featured_wilayas?.[2]?.name || 'Coasts',
-      }))
+      id: slide.id || `slide-${index}`,
+      category: slide.theme || 'Explore Algeria',
+      title: (slide.full_title || `${slide.title_prefix || ''} ${slide.title_highlight || ''} ${slide.title_suffix || ''}`).trim(),
+      description: slide.description || '',
+      mainImage: slide.background_image || algerLaBlanche,
+      sideImage1: slide.featured_wilayas?.[0]?.cover_image || trainParis,
+      sideImage2: slide.featured_wilayas?.[1]?.cover_image || download3,
+      accent: slide.highlight_color || '#FF7F50',
+      bgImage: slide.background_image || coastHero,
+      label1: slide.featured_wilayas?.[0]?.name || 'Algiers',
+      label2: slide.featured_wilayas?.[1]?.name || 'Journey',
+      label3: slide.featured_wilayas?.[2]?.name || 'Coasts',
+    }))
     : defaultThemes;
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -167,7 +167,7 @@ const Home = () => {
         <div className={`absolute inset-0 z-40 bg-white transition-opacity duration-500 pointer-events-none ${isTransitioning ? 'opacity-20' : 'opacity-0'}`}></div>
 
         {/* Navigation Arrows */}
-        <button 
+        <button
           onClick={handlePrev}
           className="absolute left-10 z-30 p-5 rounded-full border border-white/20 text-white/40 hover:text-white hover:border-white transition-all backdrop-blur-md group"
         >
@@ -176,7 +176,7 @@ const Home = () => {
           </svg>
         </button>
 
-        <button 
+        <button
           onClick={handleNext}
           className="absolute right-10 z-30 p-5 rounded-full border border-white/20 text-white/40 hover:text-white hover:border-white transition-all backdrop-blur-md group"
         >
@@ -200,7 +200,8 @@ const Home = () => {
                 {activeTheme.description}
               </p>
               <div className="pt-4">
-                <button 
+                <button
+                  onClick={() => navigate('/wilayas')}
                   className="px-14 py-6 rounded-full font-black flex items-center space-x-5 transition-all transform hover:scale-105 active:scale-95 shadow-2xl hover:shadow-orange-500/20"
                   style={{ backgroundColor: activeTheme.accent, color: 'white' }}
                 >
@@ -215,38 +216,38 @@ const Home = () => {
 
           {/* Hero Image Layout (Right) - Locked Position */}
           <div className="hidden lg:flex items-center gap-10 justify-end relative h-[650px]">
-             {/* Center Large Card - Strictly Fixed Dimensions */}
-             <div className="w-[360px] h-[520px] flex-shrink-0">
-               <div className={`relative w-full h-full rounded-[50px] overflow-hidden border-[12px] border-white/5 shadow-2xl group transition-all duration-700 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
-                  <img src={activeTheme.mainImage} alt="Main" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-                  <div className="absolute bottom-12 left-0 right-0 text-center">
-                     <h3 className="text-white text-5xl font-black tracking-tighter opacity-50 uppercase">{activeTheme.label1}</h3>
-                  </div>
-               </div>
-             </div>
+            {/* Center Large Card - Strictly Fixed Dimensions */}
+            <div className="w-[360px] h-[520px] flex-shrink-0">
+              <div className={`relative w-full h-full rounded-[50px] overflow-hidden border-[12px] border-white/5 shadow-2xl group transition-all duration-700 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+                <img src={activeTheme.mainImage} alt="Main" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute bottom-12 left-0 right-0 text-center">
+                  <h3 className="text-white text-5xl font-black tracking-tighter opacity-50 uppercase">{activeTheme.label1}</h3>
+                </div>
+              </div>
+            </div>
 
-             {/* Stacked Cards - Strictly Fixed Dimensions */}
-             <div className="space-y-8 flex flex-col flex-shrink-0">
-                <div className="w-[300px] h-[200px] flex-shrink-0">
-                  <div className={`relative w-full h-full rounded-[40px] overflow-hidden border-[6px] border-white/5 shadow-xl group transition-all duration-700 delay-75 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
-                    <img src={activeTheme.sideImage1} alt="Side 1" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                       <span className="text-white text-4xl font-black opacity-30 tracking-tighter uppercase">{activeTheme.label2}</span>
-                    </div>
+            {/* Stacked Cards - Strictly Fixed Dimensions */}
+            <div className="space-y-8 flex flex-col flex-shrink-0">
+              <div className="w-[300px] h-[200px] flex-shrink-0">
+                <div className={`relative w-full h-full rounded-[40px] overflow-hidden border-[6px] border-white/5 shadow-xl group transition-all duration-700 delay-75 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+                  <img src={activeTheme.sideImage1} alt="Side 1" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-black/20"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-white text-4xl font-black opacity-30 tracking-tighter uppercase">{activeTheme.label2}</span>
                   </div>
                 </div>
-                <div className="w-[300px] h-[200px] flex-shrink-0">
-                  <div className={`relative w-full h-full rounded-[40px] overflow-hidden border-[6px] border-white/5 shadow-xl group transition-all duration-700 delay-150 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
-                    <img src={activeTheme.sideImage2} alt="Side 2" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                       <span className="text-white text-4xl font-black opacity-30 tracking-tighter uppercase">{activeTheme.label3}</span>
-                    </div>
+              </div>
+              <div className="w-[300px] h-[200px] flex-shrink-0">
+                <div className={`relative w-full h-full rounded-[40px] overflow-hidden border-[6px] border-white/5 shadow-xl group transition-all duration-700 delay-150 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+                  <img src={activeTheme.sideImage2} alt="Side 2" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-black/20"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-white text-4xl font-black opacity-30 tracking-tighter uppercase">{activeTheme.label3}</span>
                   </div>
                 </div>
-             </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -256,9 +257,8 @@ const Home = () => {
             <button
               key={idx}
               onClick={() => !isTransitioning && setCurrentIndex(idx)}
-              className={`transition-all duration-700 rounded-full ${
-                currentIndex === idx ? 'w-10 h-3 bg-white shadow-xl' : 'w-3 h-3 bg-white/30 hover:bg-white/50'
-              }`}
+              className={`transition-all duration-700 rounded-full ${currentIndex === idx ? 'w-10 h-3 bg-white shadow-xl' : 'w-3 h-3 bg-white/30 hover:bg-white/50'
+                }`}
             ></button>
           ))}
         </div>
@@ -292,6 +292,7 @@ const Home = () => {
                   type="text"
                   value={homeSearch}
                   onChange={(e) => setHomeSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleHomeSearch()}
                   placeholder="Search destinations, cities..."
                   className="w-full bg-[#F8FAFF] rounded-2xl py-5 pl-16 pr-8 text-sm outline-none border border-transparent focus:border-[#006699] focus:bg-white transition-all shadow-inner"
                 />
@@ -305,8 +306,7 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <input
-                  type="text"
-                  placeholder="mm/dd/yyyy"
+                  type="date"
                   className="w-full bg-[#F8FAFF] rounded-2xl py-5 pl-16 pr-8 text-sm outline-none border border-transparent focus:border-[#006699] focus:bg-white transition-all shadow-inner"
                 />
               </div>
