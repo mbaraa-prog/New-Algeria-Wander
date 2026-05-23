@@ -11,6 +11,7 @@ class Wilaya(models.Model):
     slug            = models.SlugField(unique=True)
     description     = models.TextField()
     short_desc      = models.CharField(max_length=255, blank=True)
+    tagline         = models.CharField(max_length=255, blank=True, help_text="e.g. The White City on the Mediterranean")
     cover_image     = models.ImageField(upload_to="wilayas/covers/")
     banner_image    = models.ImageField(upload_to="wilayas/banners/", blank=True, null=True)
     category        = models.ForeignKey(Category, on_delete=models.SET_NULL,

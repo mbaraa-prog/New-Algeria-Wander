@@ -17,7 +17,7 @@ class WilayaListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model  = Wilaya
-        fields = ["id", "name", "slug", "short_desc", "cover_image",
+        fields = ["id", "name", "slug", "short_desc", "tagline", "cover_image",
                   "category", "tags_list", "is_featured", "image_count"]
 
     def get_tags_list(self, obj):
@@ -36,7 +36,7 @@ class WilayaDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model  = Wilaya
-        fields = ["id", "name", "slug", "description", "short_desc",
+        fields = ["id", "name", "slug", "description", "short_desc", "tagline",
                   "cover_image", "banner_image", "category",
                   "founded", "best_time", "weather_info",
                   "tags", "tags_list", "images", "image_count",

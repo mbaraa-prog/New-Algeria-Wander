@@ -17,18 +17,41 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [featuredDestinations, setFeaturedDestinations] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const [wilayas, setWilayas] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [filteredCards, setFilteredCards] = useState([]);
+  const [discoverIndex, setDiscoverIndex] = useState(0);
+  const [shuffledEvents, setShuffledEvents] = useState([]);
+  const [eventIndex, setEventIndex] = useState(0);
+  const [hotels, setHotels] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [hotels_index, setHotelsIndex] = useState(0);
+  const [restaurants_index, setRestaurantsIndex] = useState(0);
+  const [events_index, setEventsIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  const shuffleArray = (arr) => {
+    return [...arr].sort(() => 0.5 - Math.random());
+  };
 
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const response = await dataService.getHomeData();
-        const data = response || {};
+        const [response, placesResponse, wilayasResponse] = await Promise.all([
+          dataService.getHomeData(),
+          dataService.getPlaces(),
+          dataService.getWilayas()
+        ]);
+        const data = response?.data || response || {};
         setHeroSlides(data.hero_slides || []);
         setCategories(data.categories || []);
         setFeaturedDestinations(data.featured_destinations || []);
         setUpcomingEvents(data.upcoming_events || []);
+
+        setPlaces(placesResponse?.data || placesResponse || []);
+        setWilayas(wilayasResponse?.data || wilayasResponse || []);
       } catch (error) {
         console.error('Failed to load home data:', error);
       } finally {
@@ -38,6 +61,269 @@ const Home = () => {
 
     fetchHomeData();
   }, []);
+
+  useEffect(() => {
+    if (places.length === 0) return;
+    let items = [];
+    let hotelsArray = [];
+    let restaurantsArray = [];
+
+    // Filter by category and build separate arrays for each place type
+    if (activeCategory === 'All') {
+      items = places.filter(p => p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: p.place_type_display || p.place_type || 'Place',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      items = shuffleArray(items);
+      hotelsArray = places.filter(p => p.place_type === 'hotel').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Hotel',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      restaurantsArray = places.filter(p => p.place_type === 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Restaurant',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+    } else if (activeCategory === 'Beaches') {
+      const beachWilayas = ['Oran', 'Annaba', 'Algiers', 'Bejaia'];
+      const filteredWilayas = wilayas.filter(w => beachWilayas.includes(w.name)).map(w => ({
+        id: `wilaya-${w.id}`,
+        name: w.name,
+        image: w.cover_image || w.image,
+        description: w.short_desc || w.description,
+        type: 'Destination',
+        location: 'Algeria',
+        rating: 5.0,
+        linkTo: `/wilaya/${w.id}`
+      }));
+      const filteredPlaces = places.filter(p => beachWilayas.includes(p.wilaya_name) && (p.place_type === 'attraction' || p.category?.name === 'Landmarks') && p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: p.place_type_display || p.place_type || 'Landmark',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      items = shuffleArray([...filteredWilayas, ...filteredPlaces]);
+      hotelsArray = places.filter(p => beachWilayas.includes(p.wilaya_name) && p.place_type === 'hotel').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Hotel',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      restaurantsArray = places.filter(p => beachWilayas.includes(p.wilaya_name) && p.place_type === 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Restaurant',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+    } else if (activeCategory === 'Sahara') {
+      const djanetWilaya = wilayas.filter(w => w.name.toLowerCase().includes('djanet')).map(w => ({
+        id: `wilaya-${w.id}`,
+        name: w.name,
+        image: w.cover_image || w.image,
+        description: w.short_desc || w.description,
+        type: 'Destination',
+        location: 'Algeria',
+        rating: 5.0,
+        linkTo: `/wilaya/${w.id}`
+      }));
+      const djanetPlaces = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && (p.place_type === 'attraction' || p.category?.name === 'Landmarks') && p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: p.place_type_display || p.place_type || 'Landmark',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      items = [...djanetWilaya, ...djanetPlaces];
+      hotelsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && p.place_type === 'hotel').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Hotel',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      restaurantsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && p.place_type === 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Restaurant',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+    } else if (activeCategory === 'Mountains') {
+      const bejaiaWilaya = wilayas.filter(w => w.name.toLowerCase().includes('bejaia')).map(w => ({
+        id: `wilaya-${w.id}`,
+        name: w.name,
+        image: w.cover_image || w.image,
+        description: w.short_desc || w.description,
+        type: 'Destination',
+        location: 'Algeria',
+        rating: 5.0,
+        linkTo: `/wilaya/${w.id}`
+      }));
+      const mtKeywords = ['mountain', 'gouraya', 'carbon', 'clif', 'massif', 'park', 'peak', 'sentinel', 'height'];
+      const bejaiaPlaces = places.filter(p => 
+        p.wilaya_name.toLowerCase().includes('bejaia') && 
+        (p.place_type === 'attraction' || p.category?.name === 'Landmarks') &&
+        p.place_type !== 'hotel' && p.place_type !== 'restaurant' &&
+        mtKeywords.some(kw => (p.name + ' ' + p.description).toLowerCase().includes(kw))
+      ).map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: p.place_type_display || p.place_type || 'Landmark',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      items = [...bejaiaWilaya, ...bejaiaPlaces];
+      hotelsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('bejaia') && p.place_type === 'hotel').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Hotel',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      restaurantsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('bejaia') && p.place_type === 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Restaurant',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+    } else if (activeCategory === 'History') {
+      const constWilaya = wilayas.filter(w => w.name.toLowerCase().includes('constantine')).map(w => ({
+        id: `wilaya-${w.id}`,
+        name: w.name,
+        image: w.cover_image || w.image,
+        description: w.short_desc || w.description,
+        type: 'Destination',
+        location: 'Algeria',
+        rating: 5.0,
+        linkTo: `/wilaya/${w.id}`
+      }));
+      const historyKeywords = ['history', 'ancient', 'ruins', 'roman', 'museum', 'monument', 'timgad', 'djemila', 'bridge'];
+      const historyPlaces = places.filter(p => 
+        (p.place_type === 'attraction' || p.category?.name === 'Landmarks' || p.category?.name === 'Museum' || p.category?.name === 'History') &&
+        p.place_type !== 'hotel' && p.place_type !== 'restaurant' &&
+        historyKeywords.some(kw => (p.name + ' ' + p.description).toLowerCase().includes(kw))
+      ).map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: p.place_type_display || p.place_type || 'Landmark',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      items = [...constWilaya, ...historyPlaces];
+      hotelsArray = places.filter(p => p.place_type === 'hotel').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Hotel',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+      restaurantsArray = places.filter(p => p.place_type === 'restaurant').map(p => ({
+        id: p.id,
+        name: p.name,
+        image: p.cover_image || p.external_image_url,
+        description: p.short_desc || p.description,
+        type: 'Restaurant',
+        location: p.wilaya_name,
+        rating: p.avg_rating || p.rating || 5.0,
+        linkTo: `/details/${p.id}`
+      }));
+    }
+    setFilteredCards(items);
+    setHotels(hotelsArray);
+    setRestaurants(restaurantsArray);
+    setDiscoverIndex(0);
+    setHotelsIndex(0);
+    setRestaurantsIndex(0);
+  }, [activeCategory, places, wilayas]);
+
+  useEffect(() => {
+    if (upcomingEvents.length > 0) {
+      setShuffledEvents(shuffleArray(upcomingEvents));
+      setEventIndex(0);
+    }
+  }, [upcomingEvents]);
+
+  const handleDiscoverPrev = () => {
+    setDiscoverIndex(prev => Math.max(0, prev - 1));
+  };
+  const handleDiscoverNext = () => {
+    setDiscoverIndex(prev => Math.min(Math.max(0, filteredCards.length - 3), prev + 1));
+  };
+
+  const handleHotelsPrev = () => {
+    setHotelsIndex(prev => Math.max(0, prev - 1));
+  };
+  const handleHotelsNext = () => {
+    setHotelsIndex(prev => Math.min(Math.max(0, hotels.length - 3), prev + 1));
+  };
+
+  const handleRestaurantsPrev = () => {
+    setRestaurantsIndex(prev => Math.max(0, prev - 1));
+  };
+  const handleRestaurantsNext = () => {
+    setRestaurantsIndex(prev => Math.min(Math.max(0, restaurants.length - 3), prev + 1));
+  };
+
+  const handleEventPrev = () => {
+    setEventIndex(prev => Math.max(0, prev - 1));
+  };
+  const handleEventNext = () => {
+    setEventIndex(prev => Math.min(Math.max(0, shuffledEvents.length - 3), prev + 1));
+  };
 
   const defaultThemes = [
     {
@@ -330,40 +616,321 @@ const Home = () => {
       <section className="max-w-7xl mx-auto px-6 py-32">
         <div className="flex items-end justify-between mb-16">
           <div>
-            <h2 className="text-[#0F4C81] text-4xl font-bold mb-4">Discover by {activeTheme.id.charAt(0).toUpperCase() + activeTheme.id.slice(1)}</h2>
-            <p className="text-gray-400 text-lg">Explore the unique wonders of Algeria</p>
+            <h2 className="text-[#0F4C81] text-4xl font-bold mb-4">Discover by Category</h2>
+            <p className="text-gray-400 text-lg">Explore the diverse wonders of Algeria</p>
           </div>
+          {filteredCards.length > 3 && (
+            <div className="flex space-x-4">
+              <button 
+                onClick={handleDiscoverPrev} 
+                disabled={discoverIndex === 0}
+                className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${discoverIndex > 0 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button 
+                onClick={handleDiscoverNext} 
+                disabled={discoverIndex >= filteredCards.length - 3}
+                className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${discoverIndex < filteredCards.length - 3 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Category Pills */}
+        <div className="flex items-center space-x-4 mb-12 overflow-x-auto no-scrollbar py-2">
+          {['All', 'Sahara', 'Beaches', 'Mountains', 'History'].map(catName => (
+            <button
+              key={catName}
+              onClick={() => setActiveCategory(catName)}
+              className={`px-8 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${
+                activeCategory === catName 
+                  ? 'text-white shadow-lg' 
+                  : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'
+              }`}
+              style={activeCategory === catName ? { backgroundColor: activeTheme.accent } : {}}
+            >
+              {catName}
+            </button>
+          ))}
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {discoverItems.map(place => (
-            <PlaceCard key={place.id} item={place} type="event" linkTo={place.linkTo} />
-          ))}
-        </div>
+        {filteredCards.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredCards.slice(discoverIndex, discoverIndex + 3).map(card => {
+              return (
+                <div key={card.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
+                  <div className="absolute top-4 right-4 z-10">
+                    <span 
+                      className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-opacity-95 shadow-sm"
+                      style={{ backgroundColor: activeTheme.accent }}
+                    >
+                      {card.type === 'Destination' ? 'WILAYA' : activeCategory.toUpperCase()}
+                    </span>
+                  </div>
+                  
+                  <Link to={card.linkTo} className="block flex-1 flex flex-col">
+                    <div className="h-64 overflow-hidden relative">
+                      <img src={card.image} alt={card.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    <div className="p-8 flex flex-col flex-1">
+                      <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
+                        {card.name}
+                      </h3>
+                      <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
+                        {card.description}
+                      </p>
+                      
+                      <div className="flex items-center text-sm font-bold mt-auto" style={{ color: activeTheme.accent }}>
+                        <span>Learn More</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-12 text-gray-400">
+            No locations available under this category.
+          </div>
+        )}
       </section>
 
-      {/* Wilayas Showcase */}
-      <section className="bg-white py-32">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-[#0F4C81] text-5xl font-bold mb-6 tracking-tight">Our 6 Wilayas</h2>
-            <div className="w-24 h-1.5 mx-auto rounded-full mb-8" style={{ backgroundColor: activeTheme.accent }}></div>
-            <p className="text-gray-400 max-w-3xl mx-auto text-xl leading-relaxed">
-              From the bustling capital to the serene desert, explore the unique charm and heritage of our featured wilayas.
-            </p>
+      {/* Hotels Section */}
+      {hotels.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 py-32">
+          <div className="flex items-end justify-between mb-16">
+            <div>
+              <h2 className="text-[#0F4C81] text-4xl font-bold mb-4">Hotels & Accommodations</h2>
+              <p className="text-gray-400 text-lg">Find the perfect place to stay in Algeria</p>
+            </div>
+            {hotels.length > 3 && (
+              <div className="flex space-x-4">
+                <button 
+                  onClick={handleHotelsPrev} 
+                  disabled={hotels_index === 0}
+                  className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${hotels_index > 0 ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={handleHotelsNext} 
+                  disabled={hotels_index >= Math.max(0, hotels.length - 6)}
+                  className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${hotels_index < Math.max(0, hotels.length - 6) ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {featuredDestinations.map(wilaya => (
-              <Link to={`/wilaya/${wilaya.id}`} key={wilaya.id} className="group relative h-80 rounded-[40px] overflow-hidden shadow-2xl transform hover:-translate-y-4 transition-all duration-700">
-                <img src={wilaya.cover_image || wilaya.image} alt={wilaya.name} className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div className="absolute bottom-8 left-0 right-0 text-center">
-                  <span className="text-white font-bold text-xl tracking-wide">{wilaya.name}</span>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {hotels.slice(hotels_index, hotels_index + 6).map(hotel => {
+              return (
+                <div key={hotel.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
+                  <div className="absolute top-4 right-4 z-10">
+                    <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">
+                      HOTEL
+                    </span>
+                  </div>
+                  
+                  <Link to={hotel.linkTo} className="block flex-1 flex flex-col">
+                    <div className="h-64 overflow-hidden relative">
+                      <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    <div className="p-8 flex flex-col flex-1">
+                      <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
+                        {hotel.name}
+                      </h3>
+                      <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
+                        {hotel.description}
+                      </p>
+                      
+                      <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
+                        <span>Learn More</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
+        </section>
+      )}
+
+      {/* Restaurants Section */}
+      {restaurants.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 py-32">
+          <div className="flex items-end justify-between mb-16">
+            <div>
+              <h2 className="text-[#0F4C81] text-4xl font-bold mb-4">Restaurants & Dining</h2>
+              <p className="text-gray-400 text-lg">Discover the flavors of Algeria</p>
+            </div>
+            {restaurants.length > 3 && (
+              <div className="flex space-x-4">
+                <button 
+                  onClick={handleRestaurantsPrev} 
+                  disabled={restaurants_index === 0}
+                  className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${restaurants_index > 0 ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={handleRestaurantsNext} 
+                  disabled={restaurants_index >= Math.max(0, restaurants.length - 6)}
+                  className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${restaurants_index < Math.max(0, restaurants.length - 6) ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {restaurants.slice(restaurants_index, restaurants_index + 6).map(restaurant => {
+              return (
+                <div key={restaurant.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
+                  <div className="absolute top-4 right-4 z-10">
+                    <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">
+                      RESTAURANT
+                    </span>
+                  </div>
+                  
+                  <Link to={restaurant.linkTo} className="block flex-1 flex flex-col">
+                    <div className="h-64 overflow-hidden relative">
+                      <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    <div className="p-8 flex flex-col flex-1">
+                      <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
+                        {restaurant.name}
+                      </h3>
+                      <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
+                        {restaurant.description}
+                      </p>
+                      
+                      <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
+                        <span>Learn More</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Upcoming Events Section */}
+      <section className="bg-[#FAF7E6] py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-end justify-between mb-16">
+            <div>
+              <h2 className="text-[#0F4C81] text-4xl font-bold mb-4">Upcoming Events in Algeria</h2>
+              <p className="text-gray-500 text-lg">Don't miss out on these amazing cultural experiences</p>
+            </div>
+            {shuffledEvents.length > 3 && (
+              <div className="flex space-x-4">
+                <button 
+                  onClick={handleEventPrev} 
+                  disabled={eventIndex === 0}
+                  className={`p-4 rounded-full border border-gray-300 text-gray-400 bg-white transition-all ${eventIndex > 0 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={handleEventNext} 
+                  disabled={eventIndex >= shuffledEvents.length - 3}
+                  className={`p-4 rounded-full border border-gray-300 text-gray-400 bg-white transition-all ${eventIndex < shuffledEvents.length - 3 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {shuffledEvents.slice(eventIndex, eventIndex + 3).length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {shuffledEvents.slice(eventIndex, eventIndex + 3).map(event => {
+                const eventImage = event.cover_image || event.external_image_url || '';
+                const eventDate = event.period || event.date_range || 'Upcoming';
+                const eventLocation = event.location || event.wilaya_name || 'Algeria';
+                const detailLink = `/details/event-${event.id}`;
+                
+                return (
+                  <div key={event.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-100 flex flex-col h-full">
+                    <Link to={detailLink} className="block flex-1 flex flex-col">
+                      <div className="h-64 overflow-hidden relative">
+                        <img src={eventImage} alt={event.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+                      </div>
+                      
+                      <div className="p-8 flex flex-col flex-1">
+                        <h3 className="text-[#0F4C81] text-2xl font-bold mb-5 group-hover:text-[#FF7F50] transition-colors leading-snug">
+                          {event.name}
+                        </h3>
+                        
+                        <div className="space-y-3 mt-auto">
+                          <div className="flex items-center text-gray-500 text-sm font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>{eventDate}</span>
+                          </div>
+                          
+                          <div className="flex items-center text-gray-500 text-sm font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>{eventLocation}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-gray-400 bg-white/50 rounded-[32px] p-8">
+              No upcoming events listed at this moment.
+            </div>
+          )}
         </div>
       </section>
     </div>

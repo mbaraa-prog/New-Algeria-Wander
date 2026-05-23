@@ -1,4 +1,6 @@
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
@@ -9,6 +11,8 @@ from .serializers import WilayaListSerializer, WilayaDetailSerializer
 
 class WilayaListView(APIView):
     """GET /api/wilayas/"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         qs = Wilaya.objects.filter(is_active=True).select_related("category")
@@ -22,6 +26,8 @@ class WilayaListView(APIView):
 
 class WilayaFeaturedView(APIView):
     """GET /api/wilayas/featured/  — for homepage featured destinations section"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         qs = Wilaya.objects.filter(is_active=True, is_featured=True).select_related("category")[:6]
@@ -31,9 +37,11 @@ class WilayaFeaturedView(APIView):
 
 class WilayaDetailView(APIView):
     """GET /api/wilayas/<id>/"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
-        wilaya = get_object_or_404(Wilaya, pk=pk, is_active=True)
+        wilaya = get_object_or_404(Wilaya, pk=pk)
         serializer = WilayaDetailSerializer(wilaya, context={"request": request})
         return Response({"success": True, "data": serializer.data})
 
@@ -44,12 +52,14 @@ class WilayaPlacesView(APIView):
     Returns places for a wilaya split by type (Things to Do / Hotels / Restaurants).
     Supports ?type=attraction|hotel|restaurant query param.
     """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         from apps.places.models import Place
         from apps.places.serializers import PlaceListSerializer
 
-        wilaya = get_object_or_404(Wilaya, pk=pk, is_active=True)
+        wilaya = get_object_or_404(Wilaya, pk=pk)
         place_type = request.query_params.get("type")
 
         qs = Place.objects.filter(wilaya=wilaya, is_active=True).select_related("category")
@@ -78,12 +88,14 @@ class WilayaPlacesView(APIView):
 
 class WilayaEventsView(APIView):
     """GET /api/wilayas/<id>/events/"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         from apps.events.models import Event
         from apps.events.serializers import EventSerializer
 
-        wilaya = get_object_or_404(Wilaya, pk=pk, is_active=True)
+        wilaya = get_object_or_404(Wilaya, pk=pk)
         qs = Event.objects.filter(wilaya=wilaya, is_active=True).order_by("start_date")
         from apps.events.serializers import EventSerializer
         return Response({
@@ -95,12 +107,14 @@ class WilayaEventsView(APIView):
 
 class WilayaReviewsView(APIView):
     """GET /api/wilayas/<id>/reviews/"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         from apps.reviews.models import Review
         from apps.reviews.serializers import ReviewSerializer
 
-        wilaya = get_object_or_404(Wilaya, pk=pk, is_active=True)
+        wilaya = get_object_or_404(Wilaya, pk=pk)
         qs = Review.objects.filter(wilaya=wilaya).select_related("user").order_by("-created_at")
         return Response({
             "success": True,

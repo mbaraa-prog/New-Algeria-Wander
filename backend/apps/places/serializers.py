@@ -47,6 +47,9 @@ class PlaceDetailSerializer(serializers.ModelSerializer):
         model  = Place
         fields = ["id", "name", "slug", "place_type", "place_type_display",
                   "wilaya_id", "wilaya_name", "category",
-                  "description", "short_desc", "cover_image", "images",
+                  "description", "short_desc", "cover_image", "external_image_url", "images",
                   "address", "avg_rating", "review_count", "is_top_choice",
+                  "cuisine", "price_range", "must_try",
+                  "stars", "highlights",
+                  "opening_hours", "practical_info",
                   "created_at"]

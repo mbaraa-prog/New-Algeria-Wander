@@ -7,11 +7,13 @@ const dataService = {
   },
   getWilayas: async (params = {}) => {
     const response = await axiosInstance.get('wilayas/', { params });
-    return response.data;
+    // The API wraps the list in a "data" field; return that array directly for consumer components
+    return response.data.data;
   },
   getWilayaDetail: async (id) => {
     const response = await axiosInstance.get(`wilayas/${id}/`);
-    return response.data;
+    // API returns { success: true, data: { ... } }
+    return response.data.data ?? response.data;
   },
   getWilayaPlaces: async (id) => {
     const response = await axiosInstance.get(`wilayas/${id}/places/`);
@@ -25,12 +27,25 @@ const dataService = {
     const response = await axiosInstance.get(`wilayas/${id}/reviews/`);
     return response.data;
   },
+  // Favorites
+  getFavorites: async () => {
+    const response = await axiosInstance.get('favorites/');
+    return response.data;
+  },
+  deleteFavorite: async (id) => {
+    const response = await axiosInstance.delete(`favorites/${id}/`);
+    return response.data;
+  },
   getPlaces: async (params = {}) => {
     const response = await axiosInstance.get('places/', { params });
     return response.data;
   },
   getPlaceDetail: async (id) => {
     const response = await axiosInstance.get(`places/${id}/`);
+    return response.data;
+  },
+  getEventDetail: async (id) => {
+    const response = await axiosInstance.get(`events/${id}/`);
     return response.data;
   },
   getReviews: async (params = {}) => {
@@ -48,6 +63,13 @@ const dataService = {
   getBlogDetail: async (id) => {
     const response = await axiosInstance.get(`blogs/${id}/`);
     return response.data;
+  },
+  createBlogComment: async (blogId, content) => {
+    const response = await axiosInstance.post(`blogs/${blogId}/comments/`, { content });
+    return response.data;
+  },
+  deleteBlogComment: async (commentId) => {
+    await axiosInstance.delete(`blogs/comments/${commentId}/`);
   },
   createBlog: async (blogData) => {
     const response = await axiosInstance.post('blogs/', blogData, {

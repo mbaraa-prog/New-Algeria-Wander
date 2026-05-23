@@ -1,0 +1,720 @@
+{
+  "country": "Algeria",
+  "wilayas": [
+    {
+      "id": "algiers",
+      "name": "Algiers",
+      "arabic": "الجزائر",
+      "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484617/3501e1681cbb79a207dd824c1f12d6c6_djpnsd.jpg",
+      "tagline": "The White City on the Mediterranean",
+      "description": "Algiers, the capital and largest city of Algeria, stretches dramatically along the Bay of Algiers. A city of contrasts, it blends Ottoman heritage, French colonial grandeur, and vibrant modern life. Known as 'Alger la Blanche' (Algiers the White) for its whitewashed hillside buildings, the city pulses with history, culture, and an irresistible Mediterranean energy.",
+      "landmarks": [
+        {
+          "id": "casbah",
+          "name": "La Casbah",
+          "type": "UNESCO Heritage Site",
+          "image_hint": "ancient medina algiers casbah",
+          "description": "A UNESCO World Heritage Site since 1992, La Casbah is the ancient heart of Algiers — a dense, labyrinthine medina tumbling down a steep hillside toward the sea. Built over centuries of Berber, Ottoman, and Andalusian influence, its narrow winding alleys are flanked by tall whitewashed houses with ornate wooden balconies, hidden courtyards, and centuries-old mosques. Walking through La Casbah is like stepping into a living museum: the scent of jasmine mingles with the aroma of freshly baked bread, and the sounds of daily life echo off ancient stone walls. Key landmarks within include the Ketchaoua Mosque, the Palace of the Dey (Dar Hassan Pacha), and numerous Ottoman-era palaces. It remains one of North Africa's most remarkable and atmospheric urban spaces.",
+          "practical_info": "Best visited in the morning. Guided tours are strongly recommended to navigate the medina safely and discover hidden gems.",
+          "opening_hours": "Open daily, monuments 8:00–17:00",
+           "image": "https://res.cloudinary.com/df9dmkiuj/image/upload/v1779481659/5e2ec141a62800034f051de7aab190e3_m4gsyl.jpg"
+        },
+        {
+          "id": "notre_dame_afrique",
+          "name": "Notre-Dame d'Afrique",
+          "type": "Historic Basilica",
+          "image_hint": "notre dame afrique algiers basilica",
+          "description": "Perched dramatically on a cliff above the sea in the Bouzaréah hills, Notre-Dame d'Afrique is one of the most striking landmarks of Algiers. Built between 1858 and 1872 in a Romano-Byzantine style, the basilica is adorned with intricate mosaics and its iconic black Madonna statue, above which reads the inscription 'Notre-Dame d'Afrique, priez pour nous et pour les musulmans' — a remarkable testament to Algeria's spirit of coexistence. The panoramic views of Algiers Bay from the basilica terrace are simply breathtaking, especially at sunset when the city glows gold against the Mediterranean.",
+          "practical_info": "Accessible by road or the historic Téléphérique (cable car). Modest dress is required for entry.",
+          "opening_hours": "Daily 8:30–12:00 and 14:30–18:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779481807/09cf6163760144044a39b97004968bb0_f1ydbn.jpg"
+        },
+        {
+          "id": "memorial_martyr",
+          "name": "Maqam Echahid (Martyrs' Memorial)",
+          "type": "National Monument",
+          "image_hint": "maqam echahid algiers martyrs memorial",
+          "description": "Dominating the Algiers skyline from its hilltop perch, the Maqam Echahid (Martyrs' Memorial) is the most iconic monument of modern Algeria. Built in 1982 to commemorate the 20th anniversary of independence, it consists of three massive concrete palms rising 92 meters into the sky, sheltering a central flame beneath. The structure blends modernist architecture with traditional North African symbolism — the three palms represent the three historic periods of Algeria: the colonial era, the revolution, and independence. At the base, bronze sculptures depict soldiers of the liberation war. The surrounding park offers sweeping views over Algiers and the bay, making it a beloved gathering spot for locals and a pilgrimage site for visitors.",
+          "practical_info": "Surrounded by a large public park, ideal for an evening stroll. The monument is dramatically lit at night.",
+          "opening_hours": "Park open daily, monument open Tuesday–Sunday 9:00–17:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779481836/8df15474be8beb0c1e8295ac067fe8f8_opvxow.jpg"
+        },
+        {
+          "id": "bardo_museum",
+          "name": "Bardo National Museum of Prehistory and Ethnography",
+          "type": "Museum",
+          "image_hint": "bardo museum algiers ethnography",
+          "description": "Housed in an exquisite 18th-century Ottoman palace surrounded by lush gardens, the Bardo National Museum is a treasure house of Algerian prehistory and cultural heritage. Its collections span tens of thousands of years — from prehistoric rock art of the Sahara and Neolithic artifacts to Berber jewelry, traditional costumes, and domestic objects from across the country's diverse regions. The museum itself is as remarkable as its contents: ornate tilework, carved stucco, and painted ceilings make every room a visual delight. It offers a fascinating journey through the deep human history of Algeria, long before written records.",
+          "practical_info": "Photography allowed in most areas. Excellent gift shop with quality reproductions and craft items.",
+          "opening_hours": "Tuesday–Sunday 9:00–17:00, closed Monday",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779481857/0366c802379f7e3edfc8926a9e88e4c4_stvcp0.jpg"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Le Bosphore",
+          "cuisine": "Algerian & Mediterranean",
+          "price_range": "$$",
+          "address": "Rue Didouche Mourad, Algiers",
+          "description": "An elegant restaurant in the heart of the city, Le Bosphore serves refined takes on Algerian classics alongside Mediterranean dishes. The couscous royale — piled high with lamb, chicken, merguez, and seasonal vegetables — is legendary among regulars. The terrace overlooking the boulevard is perfect for a long, leisurely lunch.",
+          "must_try": "Couscous Royale, Chorba Frik, Baklawa Maison",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779481990/fd2418ebd4afbc1c095c7ad87564cf02_xocazv.jpg"
+        },
+        {
+          "name": "Dar Zitoun",
+          "cuisine": "Traditional Algerian",
+          "price_range": "$$",
+          "address": "La Casbah Quarter, Algiers",
+          "description": "Hidden inside a restored Ottoman house in La Casbah, Dar Zitoun is a true culinary gem. Low wooden tables, zellige tile walls, and the scent of saffron and ras el hanout transport you to another era. The menu focuses on authentic Algerian recipes passed down through generations — mechoui, chakhchoukha, and their legendary rechta noodles.",
+          "must_try": "Mechoul d'Agneau, Rechta au Poulet, M'halbi",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482006/5c932c10d157d233ad7bbd5a5e11f579_pn2p7i.jpg"
+        },
+        {
+          "name": "La Méditerranée",
+          "cuisine": "Seafood & French-Algerian",
+          "price_range": "$$$",
+          "address": "Boulevard Front de Mer, Algiers",
+          "description": "With a prime position on the seafront, La Méditerranée specializes in the freshest local seafood — red mullet, sea bass, and shrimp straight from the Bay of Algiers. The décor is nautical-chic with white linen and blue accents. Their fish tagine with preserved lemon and olives is considered one of the best in the capital.",
+          "must_try": "Tagine de Poisson, Gambas Flambées, Crème Caramel Maison",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482030/dd9cdeaf89954e1d50dc4b4952437ca1_vjjtet.jpg"
+        },
+        {
+          "name": "Café-Restaurant El Djazaïr",
+          "cuisine": "Algerian Brasserie",
+          "price_range": "$",
+          "address": "Rue Larbi Ben M'hidi, Algiers",
+          "description": "A beloved local institution that has been serving generous Algerian home cooking since the 1970s. Busy, loud, and wonderfully authentic, it's the place locals go for a proper bowl of harira on a cold morning or a hearty midday plate of loubia. Cash only, no reservations — just show up and join the queue.",
+          "must_try": "Harira, Loubia, Kesra with Olive Oil",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482044/7a844e55b2e754161f1338d9103959bc_p6xn30.jpg"
+        }
+      ],
+      "hotels": [
+        {
+          "name": "El Aurassi Hotel",
+          "stars": 5,
+          "price_range": "$$$",
+          "address": "Avenue Frantz Fanon, Telemly, Algiers",
+          "description": "Algiers' grande dame of hospitality, the El Aurassi has dominated the city's skyline since 1975. This five-star landmark offers panoramic views of Algiers Bay from nearly every room, elegant suites decorated with Algerian artisan crafts, multiple restaurants, a rooftop pool, and a full spa. The service is impeccably formal and the Sunday brunch is a social event in itself.",
+          "highlights": "Bay-view rooms, rooftop pool, multiple dining venues, business center",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482117/74bb25eff7c75233236b5418d59d3e22_hrawvg.jpg"
+        },
+        {
+          "name": "Hôtel Sofitel Algiers Hamma Garden",
+          "stars": 5,
+          "price_range": "$$$",
+          "address": "Rue Hassiba Ben Bouali, Algiers",
+          "description": "Adjacent to the Hamma Botanical Garden, this contemporary five-star property combines modern luxury with lush green surroundings. Rooms are spacious and sleek, featuring floor-to-ceiling windows. The garden terrace restaurant and rooftop bar are among the most fashionable spots in the capital.",
+          "highlights": "Garden views, rooftop bar, contemporary design, spa",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482132/a9fbb137d41e9d8a3a5e90c276659222_tavjte.jpg"
+        },
+        {
+          "name": "Hôtel Marriott",
+          "stars": 5,
+          "price_range": "$$",
+          "address": "Bab Ezzouar Algiers",
+          "description": "Algiers Marriott Hotel Bab Ezzouar is a modern 5-star luxury hotel located in the heart of the Bab Ezzouar business district in Algiers, just a few minutes from Houari Boumediene International Airport. The hotel combines elegant contemporary design with premium comfort, making it ideal for both business travelers and tourists looking for a high-end stay in the capital.",
+          "highlights": "Prime location,Luxury wellness facilities,Elegant atmosphere",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482147/747df46d334a79f20bafd337cc3749db_dqchdu.jpg"
+        },
+        {
+          "name": "Ryad Rais Hotel & Spa",
+          "stars": 4,
+          "price_range": "$$$",
+          "address": "Route de la Corniche, Algiers",
+          "description": "A boutique four-star property built in traditional Moorish riad style, with a central courtyard fountain, mosaic tilework, and carved stucco archways. Only 24 rooms, each individually decorated with Algerian antiques. The hammam and spa use locally sourced argan oil and ghassoul clay for treatments.",
+          "highlights": "Boutique riad style, hammam & spa, personalized service, rooftop terrace",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482167/267115-210321_tqmlvk.jpg"
+        }
+      ],
+      "events": [
+        {
+          "name": "Algiers International Book Fair (SILA)",
+          "type": "Cultural",
+          "period": "October–November",
+          "description": "One of the largest book fairs in the Arab world, SILA draws publishers, authors, and readers from across Algeria and the Francophone world to the Palais des Expositions. Hundreds of thousands of visitors browse thousands of titles, attend literary panels, and discover emerging Algerian writers over two vibrant weeks.",
+          "location": "Palais des Expositions, Pins Maritimes",
+         "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482203/2aRWyVdv8ImXEEBfFEEcdNBTtUZPiZRYPD9NB2AI2wiGYaUPXIKk8qUNSVEcNgrS0mpFt0howz-ZavNbQGV_tmENOSMs1G3pRLthWYVhFa5C1_JVYltj_xXBEH9l7lpQiNZt-EEEU89g6D_JjVYXtA_3O48CBtFjlHQtU-WvjltDpaQ6trff94uXQozn6flv_zhlvhq.jpg"
+        },
+         {
+
+          "name": "Alger en Fête — Midsummer Cultural Festival",
+          "type": "Arts & Music",
+          "period": "July",
+          "description": "A week-long open-air festival celebrating Algerian music, theatre, and crafts. Stages are set up along the waterfront corniche and in public squares, featuring raï, chaabi, and contemporary Algerian artists performing free concerts every evening. Food stalls serve traditional Algerian street food under string lights by the sea.",
+          "location": "Waterfront Corniche & Place des Martyrs",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482402/9bd29383501c16e85a424adc6355cff7_abwhgv.jpg"
+        }
+      ]
+    },
+    {
+      "id": "oran",
+      "name": "Oran",
+      "arabic": "وهران",
+      "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484681/9319eece00c41ac6182fa0d01cb5bd19_hzxzbg.jpg",
+      "tagline": "The Radiant — Capital of the West",
+      "description": "Algeria's second city, Oran is a port city of infectious energy, bold architecture, and a deeply proud cultural identity. Birthplace of raï music, Oran has always marched to its own beat — louder, freer, and more flamboyant than anywhere else in Algeria. Its Spanish and Ottoman heritage fuses with French colonial grandeur along wide tree-lined boulevards, and its people are renowned for their warmth, humor, and passion for life.",
+      "landmarks": [
+        {
+          "id": "fort_santa_cruz",
+          "name": "Fort Santa Cruz",
+          "type": "Historic Fortress",
+          "image_hint": "fort santa cruz oran algeria",
+          "description": "Crowning the summit of the Murdjadjo Mountain, Fort Santa Cruz is the most dramatic landmark in Oran, visible from virtually anywhere in the city. Built by the Spanish in the 16th century and later expanded by the Ottomans, the fortress is a formidable complex of ramparts, towers, and cisterns that once guarded the city from both sea and land. The road up winds through fragrant scrubland, rewarding those who reach the top with jaw-dropping panoramic views of the entire Bay of Oran and the sprawling city below. Adjacent to the fort stands the Chapel of Santa Cruz, a small whitewashed church that remains a place of quiet contemplation.",
+          "practical_info": "Best visited in the late afternoon for golden hour views. Accessible by car or a steep 45-minute hike.",
+          "opening_hours": "Daily 8:00–18:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482450/4b9fb79a43fbd8876802672552b557d8_ierpur.jpg"
+        },
+        {
+          "id": "great_mosque_oran",
+          "name": "Great Mosque of Oran (Mosquée du Bey)",
+          "type": "Historic Mosque",
+          "image_hint": "great mosque oran bey mosque",
+          "description": "One of the finest examples of Ottoman-Algerian religious architecture, the Great Mosque of Oran was built in 1796 under Bey Mohammed El Kebir. Its elegant minaret rises above the old city quarter, and the interior is a masterpiece of zellige tilework, carved stucco, and chandelier-lit prayer halls. The surrounding neighborhood still retains much of its 18th-century character, with covered market lanes and traditional craftsmen.",
+          "practical_info": "Non-Muslim visitors may admire the exterior; entry to the interior may be possible outside prayer times with respectful dress.",
+          "opening_hours": "Open daily except during prayer times",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482476/cEechVI7NSxEXtLBpd2z89tjf_sjhjspp8xt09YvjWFAvC1CQRdfcPfEJo8Q9RqqNQ_CT4ER6LXNTnQ59ZjtMUca1IcH9EXjHAIarx2ub6rOmpQNqx9PzJ78J7WTiWOnyyAWyQs8-EsPGNVt8hOAuW1sd-qbAo56v3XUT58LHSqVZS_aNuJiQz7j_RPT4EQg_kblh7u.jpg"
+        },
+        {
+          "id": "place_premier_novembre",
+          "name": "Place du 1er Novembre",
+          "type": "City Square & Landmark",
+          "image_hint": "place premier novembre oran square",
+          "description": "The beating heart of modern Oran, Place du 1er Novembre (formerly Place d'Armes) is a grand colonial square surrounded by the ornate City Hall, the Opera House, and Haussmann-style facades that would not look out of place in Paris. In the evenings, the square fills with families, street performers, and café-goers. The ornamental fountain at its center and the wide café terraces along its perimeter make it the quintessential Oranese gathering place — the ideal spot to absorb the city's legendary joie de vivre.",
+          "practical_info": "Most vibrant in the evenings. The surrounding streets have excellent patisseries and coffee shops.",
+          "opening_hours": "Always open",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482495/96d9a3112387cf8c8280f2c3ad5e2cfe_cwhdbu.jpg"
+        },
+        {
+          "id": "palace_bey",
+          "name": "Palace of the Bey (Dar El Senaa)",
+          "type": "Historic Palace",
+          "image_hint": "dar el senaa oran palace bey",
+          "description": "An opulent 18th-century Ottoman palace, Dar El Senaa was the residence of the Beys who governed western Algeria. Its architecture is a splendid fusion of Ottoman, Andalusian, and Moorish styles: multi-columned reception halls, intricate mosaic floors, carved cedar wood ceilings, and a serene inner garden. The palace was a center of power, culture, and patronage for nearly a century, and today it houses a museum of regional artifacts, historic weapons, and documents relating to the Ottoman period in western Algeria.",
+          "practical_info": "Guided tours recommended to appreciate the history of each room. Photography permitted.",
+          "opening_hours": "Tuesday–Sunday 9:00–17:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482518/FGv6z316sr-cmLxzYlpIX-zpcGu3_gNJphpYYpZ5yw6FdYfaiQfha96t-TZaWmS7uA3CbyFx89XaFNmX9WRxYxW8HPQYpFvqGkKwNBy9oqc692cGDRqduk0oFvKIqo2-D6WzrnwvRdFmzxE5eMGgzLdcb00ZvN1VtYWUaiCv0ekYk3e5skJWE6yQ4Eip0cye_r4vrsq.jpg"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Le Terminus",
+          "cuisine": "French-Algerian Brasserie",
+          "price_range": "$$",
+          "address": "Rue Docteur Benzerdjeb, Oran",
+          "description": "A legendary Oran institution housed in a restored art nouveau building near the old train station. Le Terminus has been serving faithful customers for decades with its unwavering formula: generous French-Algerian cuisine, excellent house wine, and a convivial atmosphere. Their escalope Oranaise — breaded veal with tomato and olive sauce — is the city's unofficial signature dish.",
+          "must_try": "Escalope Oranaise, Moules Marinières, Tarte Tatin",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482539/OVn2Fk4nByDVX2yoXPyR_o7fOfbyKpJv8xU3GYFQIthpoiyMpxYObSPZUaK3Qs6THp-OSNxufCfSbXejR3NSy_IZylZxdR4UzMXqKKZ0zHj2LWylLt-bWy3UJe-p4jlPNnZSqcvebBvyuUNx-TnBdsnwegmUazlFTwPERD-bujYv1bp8M5ERABBZHSLAp8Ng_cdfmhc.jpg"
+        },
+        {
+          "name": "Chez Fatma el Wahraniya",
+          "cuisine": "Traditional Oranais",
+          "price_range": "$",
+          "address": "Quartier Medina Jedida, Oran",
+          "description": "A small, no-frills family restaurant run by three generations of the same family, serving the most authentic Oranais home cooking in the city. The daily menu is written on a chalkboard and changes with the market. The guarantee? Everything is made from scratch, every morning. Their sferia — chickpeas in a rich slow-cooked broth — is reason enough to visit.",
+          "must_try": "Sferia aux Pois Chiches, Chakhchoukha Wahraniya, Kalb el Louz",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482557/caption_zqzk2w.jpg"
+        },
+        {
+          "name": "La Corniche Seafood & Grill",
+          "cuisine": "Seafood",
+          "price_range": "$$$",
+          "address": "Boulevard de la Corniche, Oran",
+          "description": "Perched on the clifftop corniche with a breathtaking view of the bay, this upscale seafood restaurant is the place to go for a celebratory meal in Oran. Fresh daily catches are displayed on ice at the entrance — you choose your fish, and the chef does the rest. Whole grilled sea bream with chermoula, seafood pastilla, and a tower of grilled prawns are among the highlights.",
+          "must_try": "Daurade Grillée Chermoula, Pastilla de Fruits de Mer, Salade Wakame",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482572/4238bc8c4329ad75e8c8fb5a0542c686_lala8x.jpg"
+        }
+      ],
+      "hotels": [
+        {
+          "name": "Le Méridien Oran Hotel & Convention Centre",
+          "stars": 5,
+          "price_range": "$$$",
+          "address": "Plateau de Canastel, Oran",
+          "description": "Oran's premier five-star luxury property, the Méridien commands spectacular views of the Mediterranean from its clifftop location. With 250 rooms and suites, a large outdoor pool, a world-class spa, and multiple dining outlets, it sets the standard for luxury hospitality in western Algeria. The rooftop bar is the city's most glamorous cocktail destination.",
+          "highlights": "Sea views, rooftop pool & bar, full spa, convention facilities",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482595/ca7eef7e8ef3fa35f668ee54780828af_oyq46c.jpg"
+
+        },
+        {
+          "name": "Grand Hôtel d'Oran",
+          "stars": 4,
+          "price_range": "$$",
+          "address": "Place du 1er Novembre, Oran",
+          "description": "A beautifully restored colonial-era hotel occupying a prime position on the main square, the Grand Hôtel d'Oran blends art nouveau architecture with contemporary Algerian interior design. High ceilings, mosaic floors, and a spectacular central staircase greet guests. The rooftop terrace offers views over the square and old city.",
+          "highlights": "Prime central location, heritage architecture, rooftop terrace, excellent breakfast",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482613/VcFO3h5Z73K42eGwFV74fju7xSsMIcXZhBGU6I4swPNRq-ECuMUj0hyxDZIP5RreTfqIIQfyza9xFnnrE8ZexJAT-pAtogEFXx37HUdlHtuaHk6u9Pjetz3uygXP7M-M-nhNSR_1tw_SytVHJGuKy7qsnaFAiv5dgvF6SVn2Efe21phwUhn_UAuwmdTHIKk6_cg6cms.jpg"
+        },
+        {
+          "name": "Hôtel Royal Oran",
+          "stars": 3,
+          "price_range": "$",
+          "address": "Rue Khemisti, Oran",
+          "description": "A reliable and comfortable budget option in a convenient central location. Rooms are clean and well-maintained, with a cheerful staff that embodies Oran's famous hospitality. A solid breakfast buffet, secure parking, and proximity to the main sights make it an excellent base for exploring the city.",
+          "highlights": "Central location, good value, secure parking, friendly staff",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482632/1c4338ff8c31623984ea1a978e431ca8_yziwru.jpg"
+        }
+      ],
+      "events": [
+        {
+          "name": "Festival International de Raï d'Oran",
+          "type": "Music Festival",
+          "period": "August",
+          "description": "A celebration of raï — the genre born in the streets of Oran — this three-day international festival transforms the city into a giant concert venue. Artists from Algeria, France, Morocco, and beyond perform across multiple outdoor stages in the city center. The festival draws tens of thousands of fans and ends with a massive free concert at the seafront amphitheater.",
+          "location": "Place de la Bastille & Waterfront Amphitheater",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482650/qVY26kVsxIjnCq0Snw9NfE8Ns2VUf2AS72M9bE-6OfYoywTS1rscsoUme-D31RNltw-lXzB9o90QUKajdEN9pYBadzcnZrX4zC6xzFosvfudtv0GfZh1o_uaE9HIYEWc5QYHUzIqJvdozXn12DgIW0NYtbc_Yda7SDPsdxa672Y_ujzows.jpg"
+        },
+        {
+          "name": "Journées Culturelles du Patrimoine Oranais",
+          "type": "Cultural Heritage",
+          "period": "April",
+          "description": "A four-day festival celebrating the rich cultural heritage of the Oran region. Events include traditional music performances inside the Dar El Senaa palace, craft exhibitions of Oranais embroidery and ceramics, cooking demonstrations of traditional dishes, and guided heritage walks through the historic neighborhoods. Free entry to all city museums during the festival days.",
+          "location": "Various historic venues across Oran",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482666/rsOwfympSS1oBJTLmU9kF3703tT2VgLJ5pWDJwtcEodgpJRI9xa9bxl5AhJxJz9bD9V0nJCa3cVnTsckveQ1jxnNIN0NkGXg0TaUupT7pFD71hnPgWrmaiZdhz9Yt_bMDfx9NQgTLwyPTglnhmq1_GM6kxCbsb3M6Y8jFRF8G2if-CgA_CeyFfkQftGNFus3_qvhhru.jpg"
+        }
+      ]
+    },
+    {
+      "id": "bejaia",
+      "name": "Béjaïa",
+      "arabic": "بجاية",
+      "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg",
+      "tagline": "Pearl of the Kabyle Coast",
+      "description": "Béjaïa (historically known as Bougie or Bgayet) is one of Algeria's most naturally spectacular cities, nestled at the foot of the forested Gouraya Mountain where it meets the crystalline Mediterranean. An ancient Phoenician port with Berber, Roman, and Ottoman layers of history, it's surrounded by dramatic fjords, turquoise coves, and some of the most beautiful coastline in North Africa. The city is also the gateway to the wild, culturally rich Kabyle heartland.",
+      "landmarks": [
+        {
+          "id": "gouraya_national_park",
+          "name": "Gouraya National Park & Summit",
+          "type": "Natural Park",
+          "image_hint": "gouraya national park bejaia algeria",
+          "description": "Looming directly above the city, the Gouraya Mountain and its national park form one of Algeria's most spectacular natural settings. Declared a national park in 1984, Gouraya protects dense cedar and oak forests, dramatic limestone cliffs plunging into the sea, hidden coves accessible only by boat, and a rich wildlife including the rare Barbary macaque monkey. A road winds up to the fort and summit, offering vertiginous panoramic views of the entire Gulf of Béjaïa, the city, and the coastline stretching to the horizon. The park has numerous hiking trails of varying difficulty and is a paradise for birdwatchers and nature lovers.",
+          "practical_info": "The summit is accessible by car or on foot (2–3 hour hike). Bring water and sunscreen. Look for Barbary macaques along the road.",
+          "opening_hours": "Park always open; fort daily 8:00–17:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482688/f2ade48c8ea2777e82c15f085732c2fb_dz9xpc.jpg"
+        },
+        {
+          "id": "fort_moussa",
+          "name": "Fort Moussa (Fort Abdelkader)",
+          "type": "Historic Fortress",
+          "image_hint": "fort moussa bejaia algeria coast",
+          "description": "Standing at the tip of Gouraya's headland like a stone sentinel over the sea, Fort Moussa is a layered historical monument that was built, destroyed, and rebuilt by successive rulers — Romans, Hammadids, Spanish, Ottomans, and French. The current structure dates largely from the Ottoman period and the French colonial era. Its walls enclose the ruins of multiple periods of occupation, and the views from its ramparts over the sea and the city below are among the most dramatic in Algeria.",
+          "practical_info": "Often combined with a visit to Gouraya National Park. Wear sturdy shoes for uneven terrain.",
+          "opening_hours": "Daily 8:00–17:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482707/mRziSyrQBHt3yOigM31KPphzfld74s86n2_oqNZknlNtG19Q3xRqwa4CBPvvT1NIyXsplOUvzZ_8gJeBnNBZnH3Y4gTRfxm7LrhcwDmuAwikd1MO_ulcRWQZK4dG85bHQDZYQo-bfrXIlOItMnXjmAWBp3kK-vwEf8Ma90jUDWU3E0hF_tz7PWmNQ1tEEoSQ_i4ne9p.jpg"
+        },
+        {
+          "id": "cap_carbon",
+          "name": "Cap Carbon",
+          "type": "Natural Landmark",
+          "image_hint": "cap carbon bejaia lighthouse cliffs",
+          "description": "A wild and windswept headland at the edge of the Gouraya massif, Cap Carbon is one of the most dramatic natural landmarks on the Algerian coast. The cape's lighthouse — perched atop sheer cliffs that drop directly into the Mediterranean — has guided sailors for over a century. The surrounding area is a labyrinth of rocky trails, sea caves, and hidden pebble beaches accessible only to those willing to scramble. The view from the cliff edge, looking out at the infinite blue Mediterranean with the forested mountains behind, is genuinely awe-inspiring.",
+          "practical_info": "Accessible via a coastal path from Béjaïa port or by car to the lighthouse. Some sections require care on narrow cliff paths.",
+          "opening_hours": "Always accessible; lighthouse exterior only",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482723/c1d93b6b3d364ffe428a245d040926a6_yngmwx.jpg"
+        },
+        {
+          "id": "old_port_bejaia",
+          "name": "Historic Port & Medina",
+          "type": "Historic Area",
+          "image_hint": "bejaia old port medina algeria",
+          "description": "Béjaïa's ancient port has been a hub of Mediterranean trade for over 2,000 years. The area around the old port retains much of its historic character, with Ottoman-era gates, the remains of Hammadid-period walls, and a lively traditional market. This is also where — according to historians — the Italian mathematician Fibonacci learned the Hindu-Arabic numeral system from Arab traders, which he then introduced to medieval Europe. A commemorative plaque marks the historic importance of the port in the story of global mathematics.",
+          "practical_info": "The market around the port is most vibrant in the morning. A historical plaque near the port commemorates Fibonacci's connection to the city.",
+          "opening_hours": "Market daily except Friday mornings",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482742/7f55e7820c0910e8ee5d02208b259aa9_nt3dmq.jpg"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Le Goéland",
+          "cuisine": "Seafood & Mediterranean",
+          "price_range": "$$",
+          "address": "Boulevard des Aures, Béjaïa",
+          "description": "Named after the seagull and positioned with a view of the harbor, Le Goéland is the finest seafood restaurant in Béjaïa. The menu celebrates local fishing traditions: grilled octopus, sea urchin pasta, whole stuffed squid, and a remarkable fish soup that locals claim rivals anything in Marseille. The terrace fills with fishermen, families, and tourists alike at lunchtime.",
+          "must_try": "Soupe de Poisson Kabyle, Poulpe Grillé, Oursins de Saison",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482761/xIyPcbjNp5N49JLjiVbDx3mRZTrLtzq_jQhLPGql4xH_s8UYENPMYgYx4MWZID4rkGhfKQITYEdNYS0YHrLpujUrPBIlsT1631Goajtz4-Lu4TWWUjo6L1tszGoMhwu_UfMMKq1AenzrZYsABzyfsbTOxSADQD6k17QqXxU_n1Q2HWxiOwaQ-YiooAjPbk-w_qnj1tj.jpg"
+        },
+        {
+          "name": "Taddart — Maison de la Cuisine Kabyle",
+          "cuisine": "Kabyle / Berber Traditional",
+          "price_range": "$",
+          "address": "Route des Aures, Béjaïa",
+          "description": "A warmly decorated restaurant dedicated entirely to the traditional cuisine of the Kabyle people — one of Algeria's most distinctive and underexplored food cultures. Dishes are made using ancestral recipes: azeqqi (dried figs and nuts), tisilt (barley couscous), and lamb spit-roasted over olive wood. The handmade pottery, Kabyle carpets, and embroidered tablecloths make the dining room feel like an ethnographic museum.",
+          "must_try": "Couscous Kabyle au Beurre Rance, Azeqqi, Agneau au Four",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482780/hCumG3JbNM7mCZA6I-byMG57AmmLe48o_4mE-LDgsbKnVRcJC_Xdh5FLGTB4Fzq8WfijTESNnXO1o003glmqOm9chDnYilrCnsEmAXcJcM9jcE5xCzHeF2G97fACwfKiWMsEes7er3eGXNhlfjvD4qsSrjJt7leTw8t2MRlKIGO5R-QoMxUJ8N3gERjC6Ksd_rtb7bl.jpg"
+        },
+        {
+          "name": "Brasserie du Port",
+          "cuisine": "Algerian-French",
+          "price_range": "$$",
+          "address": "Quai du Port, Béjaïa",
+          "description": "A casual but charming café-restaurant right on the working port. The simple daily menu depends on what the fishing boats bring in, which means the freshest possible grilled fish, shrimp, and mussels. In the morning, it doubles as a popular breakfast spot for dock workers and early-rising tourists, with excellent coffee and msemen flatbreads.",
+          "must_try": "Moules du Jour, Poisson Grillé du Pêcheur, Msemen au Miel",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482799/rWXxAybXvGyy498pgRxYmr5U-FXNNmOHtr2ER7pfyb79cwLc6SIRa6HcvH8H1OR4p8-rbL_EHPwru6iQsYyCbMxl3PRjOLBUmOYK-eeWrGE6wdpWoOS5cBhVBydGx4HQSAL_vzL78Wnn_iLM9fY0fEJZuGDPolslo2tKzv_4FV4dBxpz5zI8JkMImEjcTk9__hhqoqo.jpg"
+        }
+      ],
+      "hotels": [
+        {
+          "name": "Hôtel Gouraya",
+          "stars": 4,
+          "price_range": "$$",
+          "address": "Route Touristique, Béjaïa",
+          "description": "Spectacularly positioned on the mountainside above the city, Hôtel Gouraya offers panoramic views of the bay and the Gulf of Béjaïa from every room. Rooms are decorated in a contemporary Kabyle style with natural wood and local textiles. The outdoor terrace restaurant is magical in the evenings, with the city lights below and the stars above.",
+          "highlights": "Panoramic bay views, mountain setting, outdoor pool, Kabyle-inspired décor",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482841/nktpdzQRUGp5kyqeziNBQO4TSTKw-CNyw3H54Ca-vDq_qKGAm0OGAaCTE3o4f-5qeqTRdR_C6btfTCFsFyx7NgENNoqMG6nUngw5Vx1AMlTThogwWzT4NN9Ah0_RRUuQTY4C9q-gmDFag89-QEuKmVJvxUkrP4syoqWlk5zJYOrYRDIevgE1KCJu4APFU2hf_aufiid.jpg"},
+        {
+          "name": "Les Hammadites Hotel",
+          "stars": 3,
+          "price_range": "$",
+          "address": "Avenue de la Soummam, Béjaïa",
+          "description": "A reliable and centrally located three-star hotel, the Hammadites is popular with business travelers and tourists alike. Rooms are comfortable and functional, and the rooftop breakfast terrace offers surprising views over the city toward the mountains. Good value and excellent proximity to the port and shopping areas.",
+          "highlights": "Central location, rooftop breakfast, comfortable rooms, good value",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482860/d85f252c4a1f2c13582bd591b5efca9f_twcxfu.jpg"
+        }
+      ],
+      "events": [
+        {
+          "name": "Festival des Arts et de la Culture Amazighe",
+          "type": "Cultural & Music",
+          "period": "June",
+          "description": "An annual celebration of Amazigh (Berber) culture held over five days in Béjaïa. The festival showcases Kabyle poetry, traditional music (including tifrer and ahellil chants), contemporary Amazigh-language films, craft exhibitions, and a major open-air concert on the last night. The event brings together Berber artists and cultural figures from across North Africa.",
+          "location": "Maison de la Culture et Théâtre Régional, Béjaïa",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482883/9WCVIVQWlqyTcJWxQdaoY81Cd3WU6qqtLIeXqPAndHM8GS9FihB5NP_Xf2HP8U39g4iGs9tMBGZGdqTM5kXzuIQP7oQsx38DHEQYNRtGRaSpSqRfSLWypYozB2x2MXlD1nJj5Imov2jNCtEIE7lvr-updRNIUWjdgzewv1FwDDbKzUg7PwFZKbpQzY4qQ7hW_iux7cq.jpg"
+        },
+        {
+          "name": "Fête de la Mer — Festival des Pêcheurs",
+          "type": "Local Tradition",
+          "period": "July",
+          "description": "A two-day festival celebrating Béjaïa's deep connection to the sea. Fishing boats decorated with flags and colored lights parade across the harbor at sunset, followed by a communal feast on the quay featuring grilled fish, seafood stews, and traditional Kabyle bread. Live music, folk dances, and boat races round out the festivities.",
+          "location": "Port de Béjaïa",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482904/msfMl1G1tYhBdAAJCfu7ADLv7JSi4xl9BU9lt00YGV2CkzHC5U_uQBOEWf-d00gs33MkmgrrVOllruQ7GJyhQwViN7fOltEo7fLjoC8TdKAGz7FbwA0JtQCkdCBRE_o-UPz4uZXovxGXQZ5gmBNjMEsLAK7vtN7ab3_KpNtfERgdO4ZYlRsFvLRrw0Sa58Sq_gr2lzp.jpg"
+        }
+      ]
+    },
+    {
+      "id": "annaba",
+      "name": "Annaba",
+      "arabic": "عنابة",
+      "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484889/7013c9c242c194a7ea9a8970e971adae_q0eeb5.jpg",
+      "tagline": "The City of Jujube Trees & Ancient Souls",
+      "description": "Annaba, Algeria's fourth-largest city, is a place where antiquity breathes through every street corner. Built over and beside the ancient Roman city of Hippo Regius — where Saint Augustine served as bishop for over three decades — it carries an extraordinary weight of history. Combined with miles of fine sandy beaches, the fragrant jujube (sidr) trees that give the city its name, and a vibrant steel-and-trade economy, Annaba is a city of remarkable depth and unexpected beauty.",
+      "landmarks": [
+        {
+          "id": "hippo_regius",
+          "name": "Hippo Regius Archaeological Site",
+          "type": "Roman Ruins",
+          "image_hint": "hippo regius roman ruins annaba algeria",
+          "description": "One of the most important archaeological sites in North Africa, Hippo Regius was a major Roman city that flourished from the 2nd century BC through the 5th century AD. Today, its ruins stretch across a hillside just outside central Annaba, revealing the bones of a great city: a remarkably preserved forum, mosaic-floored villas, public baths, a basilica, and a theater. The site is adjacent to the Basilique Saint-Augustin, built on the hill where Saint Augustine — one of the most influential theologians in Western history — served as bishop from 396 to 430 AD. A monumental bronze statue of Augustine stands before the basilica, gazing out over the ruins of his city.",
+          "practical_info": "Allow at least 2–3 hours to explore both the ruins and the basilica. Combined tickets available. A small on-site museum houses mosaics and artifacts.",
+          "opening_hours": "Tuesday–Sunday 9:00–17:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482931/gJ9DVdEEFU3p-9k9rC960fjezaxlBlQ-Hpz042_R6Q0R5f6m5xb1-lPyfLgxplXhygzqQdk9FvKXOh3yk4-z6Ec2anE4yxu_NDE_JXuW9QhQDJCKNloFra0TjecX4k-X_aiZ4kB-BvVDP10U4uf3alJG2GYMvBhyu9JgDW3MkAy0oiGK7ZTI6ROQrwfkxaDr_upjya0.jpg"
+        },
+        {
+          "id": "basilique_saint_augustin",
+          "name": "Basilique Saint-Augustin",
+          "type": "Historic Basilica",
+          "image_hint": "basilique saint augustin annaba algeria",
+          "description": "Perched on a hilltop with commanding views over Annaba and the sea, the Basilique Saint-Augustin is a late 19th-century neo-Byzantine church built by French architects and modeled loosely on the Sacré-Cœur in Paris. Its interior houses a relic of Saint Augustine (a fragment of his arm) brought from Pavia, Italy, in 1842. The basilica is still an active place of pilgrimage and worship, drawing visitors from around the world who come to honor Augustine — one of history's greatest intellectual figures — in the city where he lived and died.",
+          "practical_info": "Respectful dress required. The hilltop offers some of the best views in Annaba at any time of day.",
+          "opening_hours": "Daily 7:00–19:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482946/06d9882314237e845b9820e19d12c43c_n2yc5i.jpg"
+        },
+        {
+          "id": "corniche_annaba",
+          "name": "La Corniche d'Annaba",
+          "type": "Natural & Urban Landmark",
+          "image_hint": "corniche annaba beach algeria",
+          "description": "Annaba is blessed with some of the finest beaches in Algeria, and the corniche — a winding coastal road flanked by pine trees and golden sandy beaches — is where the city comes to breathe. The stretch between the Seraïdi resort hills and the city beaches is particularly stunning, with clear turquoise water and rocky headlands. The beach at Chapuis and the long sandy expanse of El Battah are especially popular, while the corniches road offers a picturesque drive or cycle at any hour.",
+          "practical_info": "Beaches are busiest in July and August. Early mornings in spring and autumn offer a quieter experience.",
+          "opening_hours": "Always accessible; beaches free of charge",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482963/Rx90py4xsfwz9Ly--Kw2aR8YpbsFiAO0Q0_-P6bZaqq_nwEkbizPobcBTdrFzJ-Vi_YANDUT4N-37Lx5T4DL8It2t6CmYGKrhktNrNPxTnUZvpdQ09FAhKcBYzNmD3zkFZIogx56APqB_COL5vs6Mj9kuTXai3tlRpJU0SEz_UtrLTGL0kuhltaL7KPj5jOY_rcssra.jpg"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Restaurant Le Phenix",
+          "cuisine": "Algerian & Seafood",
+          "price_range": "$$",
+          "address": "Rue du 1er Novembre, Annaba",
+          "description": "One of Annaba's most beloved restaurants, Le Phenix has been feeding the city since the 1980s. Specializing in local seafood caught fresh from the Gulf of Annaba and served with traditional Algerian sauces, their signature dish — red mullet stuffed with chermoula and roasted in the wood oven — is the stuff of local legend.",
+          "must_try": "Rouget Farci Chermoula, Chorba de Pêcheur, Baklawa Maison",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779482982/cjxHM5MZ30tvW9O4Bx7kqH_Pvu8_MlnXE-He9s9_pkrR2ggElyS42GJ_6vQg3qf8gRC4p-s-xQ8pPPuaf4Le40C8KJ1up2My9F1yQlLKPDsEEIFact1whSaAw2eDPHYj7I3FEj_bjCPJOm7KKTOMiirEedlrSBxMZfLuyeHQoTQlaaSMTj6H9HN0QtjETZMP_ithnzu.jpg"
+        },
+        {
+          "name": "La Pergola d'Hippone",
+          "cuisine": "Mediterranean-Algerian",
+          "price_range": "$$",
+          "address": "Route Archéologique, Annaba",
+          "description": "Located near the Hippo Regius ruins, La Pergola serves upscale Algerian and Mediterranean food in a shaded garden setting that feels like a Roman villa. Perfect for a long post-ruins lunch. Lamb tagines, homemade pasta, and a remarkable vine-shaded terrace make it a memorable experience.",
+          "must_try": "Tagine Dagneau aux Abricots, Linguine Annabie, Crème Brûlée au Miel",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483035/5a47ba31a4c72f04d4e8ffd1e6d1d9b4_tstr1m.jpg"
+        },
+        {
+          "name": "Café des Arcades",
+          "cuisine": "Algerian Café & Snacks",
+          "price_range": "$",
+          "address": "Place Ibn Khaldoun, Annaba",
+          "description": "An iconic Art Deco café under the arched colonnade of Annaba's central square. The perfect place to start the day with a café noisette and a warm croissant, or to stop mid-afternoon for a glass of lemonade and a slice of frigga. Locals have been meeting here under the arcades for generations.",
+          "must_try": "Café Noisette, Frigga au Citron, Baghrir avec Miel",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483048/5a293ee1ef97380cf7d30912df6b24dc_theial.jpg"
+        }
+      ],
+      "hotels": [
+        {
+          "name": "Hôtel Seybouse International",
+          "stars": 4,
+          "price_range": "$$",
+          "address": "Place du 1er Novembre, Annaba",
+          "description": "The classic address in Annaba, the Seybouse International is a four-star property in the heart of the city with spacious, well-furnished rooms and attentive service. Its position on the main square gives guests immediate access to the city's best shops, cafés, and cultural sites. The rooftop restaurant with views over the city is a highlight.",
+          "highlights": "Prime central location, rooftop restaurant, business facilities, excellent service",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483065/f7a3511c4235ae1e710a13dc1eb992db_wbsqgm.jpg"
+        
+        },
+        {
+          "name": "Hôtel Rym Beach",
+          "stars": 3,
+          "price_range": "$$",
+          "address": "Corniche Seraïdi, Annaba",
+          "description": "A comfortable beachside hotel set in pine-shaded grounds along the corniche, the Rym Beach is ideal for those who want the sea at their doorstep. Rooms have balconies, many with sea views, and the hotel has a private beach access, outdoor pool, and casual seafood restaurant. A very popular choice in summer.",
+          "highlights": "Direct beach access, outdoor pool, sea-view balconies, pine garden",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483081/OhjBth9SgJVicHUpqmq6U-9LFU7PBkDygdW2dGNB9jXj2GggbBKwsQoSLtm_cyhOnqdtfaUxKE-MSwpfbnlPhq1gjRoLo3LsIOPAapgSATiLhF3eNHL4ND5w_AGsObrCEpMcNLVW6c5PDk28LeRfCx0wzd--EAJNkpmmtmSJ2IZjtdR9hrH30nmz0Q3Ns-Kr_ppduvv.jpg"
+        }
+      ],
+      "events": [
+        {
+          "name": "Festival International de la Musique Classique d'Annaba",
+          "type": "Classical Music",
+          "period": "May",
+          "description": "An annual classical music festival held in the historic Theatre de Annaba, attracting orchestras and soloists from Algeria, France, Italy, and beyond. Over five evenings, concerts ranging from chamber music to full orchestral performances fill the beautifully restored art deco theatre. The event honors Annaba's deep connection to Saint Augustine, one of Western civilization's great philosophical and musical thinkers.",
+          "location": "Théâtre Régional d'Annaba",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483099/z9BKwHw4LKQqmHREHibKpmRLUaW0XdSRyx6ic8oBzNLcTU16hZ6KrfayhCdk1d3cufotzTrBf6xJ0uqQvSVMCUZnGX2sV_xWHnSzUJOGoIvPvpboJsprhhFvU_LQJKQVSKXwOshjUFfeelggR1LT_FwIcszqSlm3ZMZX9WKEtlUzzIbqef4Z3hjgBOhKMsN1_pj2wl7.jpg"
+        },
+        {
+          "name": "Journées d'Hippone — Festival Archéologique",
+          "type": "Archaeological & Cultural",
+          "period": "September",
+          "description": "A unique annual event that brings the ruins of Hippo Regius to life. Actors in period costume recreate scenes from Roman and early Christian life among the ancient stones. Academic lectures, guided night tours of the ruins, and a reenactment of a Roman market make this a fascinating event for history enthusiasts of all ages.",
+          "location": "Site Archéologique de Hippone",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483115/lRqseJhqGdCCebBlqagu3xbVyyTI5wUa7fWaarKgKsFVfnuyfyTdV_70CJnpYYIjmpVBURMfDWo2t4U5idL2fj6zkOkR9flWpqSvnOJPOT0sUup6IO60YikVTgy75xXx4e8gsyH4nIJzHxvYt-GhKf1zhEjswEkAqdi_FTLq4I5UYZMWiGSPAavEdctN8e9i_ipw2nc.jpg"
+      }
+        ]
+
+    },
+    {
+      "id": "constantine",
+      "name": "Constantine",
+      "arabic": "قسنطينة",
+      "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485015/ecaa1f141dcfed8d00c85267cd0b27d5_cyseda.jpg",
+      "tagline": "The City of Bridges — Suspended Between Heaven and Earth",
+      "description": "There is no city in Algeria quite like Constantine — and arguably no city in the world quite like it either. Built entirely on a dramatic plateau of rock, encircled by the Rhumel River gorge on three sides, Constantine is a city that seems to defy gravity. Dramatic suspension bridges arch over gorges hundreds of meters deep, connecting neighborhoods perched on sheer cliff faces. This ancient city — one of the oldest continuously inhabited cities in the world — has been Numidian, Roman, Byzantine, Arab, Ottoman, and French, each layer leaving its mark on a staggering urban landscape.",
+      "landmarks": [
+        {
+          "id": "suspension_bridges",
+          "name": "The Bridges of Constantine",
+          "type": "Architectural Marvel",
+          "image_hint": "constantine suspension bridges gorge algeria",
+          "description": "Constantine's defining feature — and one of the most extraordinary urban sights in North Africa — is its collection of bridges spanning the deep Rhumel River gorge. The most spectacular is the Pont Sidi M'Cid, a slender suspension bridge hanging 175 meters above the gorge floor, completed in 1912. From its walkway, the view is vertigo-inducing: sheer rock walls drop away on both sides, with the glittering ribbon of the Rhumel River far below and the ancient city spreading out on all sides. The older Pont El Kantara, with its Roman origins and Ottoman reconstruction, and the modern Viaduc de Constantine complete the extraordinary collection. Walking across these bridges at sunset, with the rock face glowing orange and the city lights beginning to twinkle, is an unforgettable experience.",
+          "practical_info": "Pont Sidi M'Cid is the most dramatic and is best crossed on foot. Not recommended for those with severe vertigo.",
+          "opening_hours": "Always accessible",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483136/f79494de61d840c769dfe53e9a7bfd88_pfgiqy.jpg"
+        },
+        {
+          "id": "palais_ahmed_bey",
+          "name": "palais ahmed bey",
+          "type": "Historic Palace",
+          "image_hint": "palais ahmed bey constantine algeria",
+          "description": "The greatest architectural masterpiece of Ottoman Algeria, the Palais du Bey Ahmed was completed in 1835 for Ahmed Bey ben Mohamed Chérif — the last Ottoman ruler of Constantine — and is a staggering display of wealth, artistry, and political ambition. Over 20 years in construction, using craftsmen brought from across the Ottoman Empire, Andalusia, and Italy, the palace is a vast complex of interconnected courtyards, marble fountains, gilded reception halls, hammams, stables, and gardens. The tilework, carved stucco, painted ceilings, and inlaid marble floors are without equal in Algerian civil architecture. Today it functions as a national museum and remains one of the most visited monuments in Algeria.",
+          "practical_info": "Guided tours are highly recommended to understand the complex layout and history of each hall. Allow 2+ hours.",
+          "opening_hours": "Tuesday–Sunday 9:00–17:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483152/d68269f887c28fef544e40bb9cadd3f0_djm2kb.jpg"
+        },
+        {
+          "id": "cirta_museum",
+          "name": "Musée Cirta",
+          "type": "Museum",
+          "image_hint": "musee cirta constantine algeria",
+          "description": "Named after the ancient Numidian name for Constantine, the Musée Cirta is one of Algeria's finest museums, occupying a grand neoclassical building in the city center. Its collections are remarkably diverse: ancient Numidian and Roman artifacts from the region (including stunning bronze sculptures and Punic stelae), Islamic art and manuscripts, Ottoman-era weapons and costumes, and a significant collection of North African painting from the 19th and 20th centuries. The museum provides essential context for understanding Constantine's extraordinary 2,500-year history.",
+          "practical_info": "Photography permitted in most rooms. Combined tickets with Palais Ahmed Bey are available at a discount.",
+          "opening_hours": "Tuesday–Sunday 9:00–17:00",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483166/ceeaebf3f520260a1207168364bfefda_hpmrkw.jpg"
+        },
+        {
+          "id": "old_city_constantine",
+          "name": "Rochers & Old City — Scenic Overlooks",
+          "type": "Natural Landmark & Historic Area",
+          "image_hint": "constantine rock gorge scenic overlook",
+          "description": "The rock plateau of Constantine, carved over millennia by the Rhumel River, offers some of the most dramatic urban landscapes in the world. Multiple belvedere viewpoints — particularly around the old city walls and along the cliff-edge promenades — let you peer down into the gorge far below, where the river threads between sheer 100-meter walls of ochre rock. The old city above is a dense fabric of Ottoman houses, covered markets, mosques, and colonial buildings. Wandering without a plan, following stairways and alleyways toward the cliff edge, reveals the city's true character — wild, vertiginous, and unforgettable.",
+          "practical_info": "The cliff edge promenades are safest during daylight. The view from near Pont Sidi M'cid at sunset is unmissable.",
+          "opening_hours": "Always accessible",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483183/a2b1b351a3ee6c4fdf66955820bf7e65_czy83g.jpg"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Le Bey Gourmand",
+          "cuisine": "Traditional Constantinois",
+          "price_range": "$$",
+          "address": "Rue Larbi Ben M'hidi, Constantine",
+          "description": "The finest address in Constantine for authentic local cuisine, Le Bey Gourmand is named for the last Ottoman Bey of the city. The restaurant is housed in a beautifully restored Ottoman townhouse, and the menu is a love letter to Constantinois culinary tradition: mutton couscous with seven vegetables, shkhina (slow-cooked wheat berries and meat), and the legendary Constantine-style baklawa — layered with honey and pistachio and unlike anything found elsewhere in Algeria.",
+          "must_try": "Shkhina, Couscous aux Sept Légumes, Baklawa Qsentiniya",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483203/kTXKfFYVo0r84SgZpIqRQZj5byzR6my2_eHmL4L5a5HQ8wJ72icWfFd4eZQmxL11ps0JjHU8-jIrQuJ182MgwVyZOlLCUhad_T6x4UzqYDwtIEo5hHwQpAceA09owEWEx57itjAVVzNNwzjLjoLcgHmB4rTyfN0uZn8fko7egJfhZejp853o4-3D8viSk3B__mbswk4.jpg"
+        },
+        {
+          "name": "Panoramic du Gouffre",
+          "cuisine": "Mediterranean-Algerian",
+          "price_range": "$$$",
+          "address": "Boulevard Zighoud Youcef, Constantine",
+          "description": "Without question the most dramatically located restaurant in Algeria, the Panoramic du Gouffre is built literally at the edge of the Rhumel gorge, with a glass wall and wraparound terrace suspended over the abyss. The food — modern takes on Algerian and Mediterranean classics — is excellent, but the view is the real star: 200 meters straight down to the river, with swifts wheeling past your table.",
+          "must_try": "Agneau Braisé Constantine, Salade des Rochers, Crème Qsentini",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483221/w3GljjJzYWu--ZhIFse3bWOs8ey1-NEI2tc9JPvM_asLfKXOuvjcJX4cO0oNLqKkLhEtmKfAadUor9xJjtGVpkQzUYTXKYkhS4M0zagqfyXKWMRl2FQtB5R51RfIKSM6oVZPxOZeXaaQnRB4dXGhqAq8Uw1ATfeA22JFtlWaZxr4BXfxvoCjBWldCwJ0VaaD_jiggvv.jpg"
+        },
+        {
+          "name": "Chez Mama Yemna",
+          "cuisine": "Home-style Algerian",
+          "price_range": "$",
+          "address": "Quartier El Kantara, Constantine",
+          "description": "A tiny, beloved family restaurant with no menu and no choices — you eat what Mama Yemna cooked that morning, full stop. Mondays she makes rechta, Wednesdays it's couscous, Fridays it's chakhchoukha. The portions are heroic, the prices absurdly low, and the welcome genuinely warm. A bucket-list experience for any foodie visiting Constantine.",
+          "must_try": "Whatever's being served — it changes daily and it's always extraordinary",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483239/0AmGu8VWYmw_A6fv_XIRw4JJwBj1XBz-k4AcFTVbQDoaSh_7ZePI5KqnuWNFNV4jktg89TOAhp6HhAi0g5nK445X9LuZGldrBAhRRLUpC429CE9KBm1hFB5PORAP8bTbC9hWdlBXtNWSssLOvZ_ZQPimwPTuA4u4_Mc9eLLIQ7yd6FA-FwaLmc8ozXOddhXS_xx6dwj.jpg"
+        }
+      ],
+      "hotels": [
+        {
+          "name": "Hôtel Cirta",
+          "stars": 4,
+          "price_range": "$$",
+          "address": "Place du 1er Novembre, Constantine",
+          "description": "Constantine's historic grande dame, the Hôtel Cirta has welcomed guests on the main square since the colonial era. Recently renovated to a high standard, it blends heritage architecture with modern comfort. Rooms facing the square have excellent city views. The location couldn't be better for exploring the bridges, the palace, and the old city on foot.",
+          "highlights": "Historic address, central location, renovated rooms, rooftop café",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483252/ada7103acda4ad6e9faf3c8f7a7d61cb_aefc6i.jpg"
+        },
+        {
+          "name": "Hôtel Panorama Constantine",
+          "stars": 3,
+          "price_range": "$$",
+          "address": "Avenue Aouati Mustapha, Constantine",
+          "description": "A modern, comfortable hotel positioned to take maximum advantage of Constantine's dramatic topography. The terrace and several rooms offer unobstructed views of the Rhumel gorge and the suspension bridges — a sight that never gets old, especially at night when the bridges are illuminated. Clean, well-run, and good value.",
+          "highlights": "Gorge and bridge views, modern rooms, great terrace, good value",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483268/f9f8be0262f90c5ef225b13eea7872b5_dxhft3.jpg"
+        }
+      ],
+      "events": [
+        {
+          "name": "Festival International du Malouf de Constantine",
+          "type": "Music Festival",
+          "period": "December",
+          "description": "Constantine is the undisputed capital of malouf — the sublime Andalusian-Arabic classical music brought to Algeria by Moorish refugees from Spain in the 15th century. This annual international festival, held in the ornate Palais de la Culture, brings together the finest malouf orchestras and vocalists from Algeria, Tunisia, and Morocco for three evenings of performances. The festival is one of the most important events in North African classical music.",
+          "location": "Palais de la Culture Mohamed Laid Al Khalifa",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483288/pGMtAhXwEyQk6pD1LfXvgAyTDTIgRMmB9cYt_v7nbwsuua-UK_49eLFt3cOqNVJBWTxN4plqOK01VRN146Qnc_Nyl9My2P966eVTFsVA-YbxdZuIcuS-o2nuTXLMkeYQP1aJ3p-e_1VqOmFoHIBr7fwQBIXI3Of-Atqfasb7Dw8cQMVftI5jU33AXWs3pRLQ_nyxewq.jpg"
+        }
+      ]
+    },
+    {
+      "id": "djanet",
+      "name": "Djanet",
+      "arabic": "جانت",
+      "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485068/ad4a0b5730797c72680d54d720383fc5_wbrgr8.jpg",
+      "tagline": "Gateway to the Sahara's Greatest Masterpiece",
+      "description": "In the far southeast of Algeria, 2,500 kilometers from Algiers, Djanet sits at the edge of the Tassili n'Ajjer — one of the most extraordinary landscapes on Earth. An ancient Tuareg oasis town with tall, fortress-like mud-brick houses clustered around a palm grove, Djanet is the base camp for exploring Tassili n'Ajjer National Park: a UNESCO World Heritage Site of immense ancient plateaus, vertiginous sandstone arches, and tens of thousands of prehistoric rock paintings that constitute the world's largest open-air gallery of prehistoric art. This is Algeria's most remote and most breathtaking destination.",
+      "landmarks": [
+        {
+          "id": "tassili_najjer",
+          "name": "Tassili n'Ajjer National Park",
+          "type": "UNESCO World Heritage Site / Natural Wonder",
+          "image_hint": "tassili najjer national park algeria sahara",
+          "description": "There are places in the world that defy description, and Tassili n'Ajjer is firmly among them. This UNESCO World Heritage Site — covering over 72,000 square kilometers — is a geological and cultural wonder unlike anything else on the planet. The Tassili plateau is a labyrinth of ancient sandstone formations: soaring natural arches, narrow canyons, forests of petrified rock, and eroded mushroom-shaped structures sculpted by wind over millions of years. Most astonishing are the prehistoric rock paintings and engravings — over 15,000 documented works spanning 12,000 years — depicting savannah wildlife (elephants, giraffes, hippos, crocodiles) and human scenes from an era when the Sahara was green and fertile. Walking through the plateau is one of the most profound experiences available to any traveler: absolute silence, infinite space, and the accumulated weight of human history painted on every cliff face.",
+          "practical_info": "Access requires a 4x4 vehicle and a registered Tuareg guide (legally mandatory). Minimum 3-day trek to see major sites. Permits required and are arranged through Djanet-based agencies.",
+          "opening_hours": "Year-round; October–April is the ideal season (summer temperatures exceed 45°C)",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483325/8f9e382b2bca0937f2a611118c3548fb_gbb0on.jpg"
+        },
+        {
+          "id": "arch_tin_akachaker",
+          "name": "Tin Akachaker Rock Arch",
+          "type": "Natural Landmark",
+          "image_hint": "tin akachaker rock arch tassili algeria sahara",
+          "description": "Among the most photographed natural formations in all of Africa, the Tin Akachaker arch is a massive sandstone natural bridge rising from the desert plateau with a span of over 30 meters. At sunrise and sunset, the arch glows in shades of deep orange, red, and gold against the limitless blue of the Saharan sky. Reaching it requires a full-day 4x4 journey across spectacular desert terrain — but the sight of this ancient stone arch, carved by wind and time, standing alone in an infinite landscape, is one of the defining experiences of travel in Algeria.",
+          "practical_info": "Accessed via a full-day guided 4x4 excursion from Djanet. Best photographed at sunrise or sunset.",
+          "opening_hours": "Accessible year-round with a licensed guide",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483338/080b7890320a85399dd044b44450f137_kxh4rm.jpg"
+        },
+        {
+          "id": "old_djanet_town",
+          "name": "Old Djanet (Aggour & Adjahil Quarters)",
+          "type": "Historic Town",
+          "image_hint": "old djanet town tuareg mud brick algeria",
+          "description": "The old quarters of Djanet — particularly Aggour and Adjahil — are a remarkable example of Saharan vernacular architecture. Tall, fortress-like houses made of mud-brick, palm timber, and gypsum plaster rise in compact clusters within the palm grove, providing natural insulation against the extreme desert heat. The narrow, shaded alleyways connect family compounds, small mosques, and communal water points. Walking through the old town with a local Tuareg guide reveals the deep traditions of this ancient oasis community — the indigo-clad men of the desert, the silver jewelry of the women, and the languid rhythms of oasis life that have persisted for centuries.",
+          "practical_info": "Guided walks through the old town can be arranged through any hotel or agency in Djanet. The evening light on the mud-brick walls is particularly beautiful.",
+          "opening_hours": "Always accessible; market is most active on Thursdays",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483350/9d842a3a123937971a6e863beb8490d4_m8g47a.jpg"
+        },
+        {
+          "id": "oued_iherir",
+          "name": "Oued Iherir — Hidden Saharan Oasis",
+          "type": "Natural Oasis",
+          "image_hint": "oued iherir oasis tassili algeria",
+          "description": "One of the most magical places in the entire Sahara, Oued Iherir is a hidden canyon oasis a few hours from Djanet where freshwater gueltas (pools) nestle between towering sandstone walls. Fed by underground springs, the gueltas support a lush strip of date palms, tamarisk trees, and reeds — an explosion of green life in the heart of the stone desert. The pools are home to the critically endangered Saharan crocodile, a relict population that has survived here since the time when the Sahara was wet. Wading into the cool, clear waters with golden cliff walls rising all around you is an almost surreal experience.",
+          "practical_info": "A full-day guided excursion from Djanet. Bring water, a hat, and swimwear for the gueltas. The resident Saharan crocodiles are shy and harmless.",
+          "opening_hours": "Accessible year-round with a licensed guide",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483361/oasis-of-iherir-nera_wkhmgk.jpg"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Tinfariwen — Restaurant du Désert",
+          "cuisine": "Tuareg & Saharan",
+          "price_range": "$$",
+          "address": "Centre-Ville Djanet",
+          "description": "Named after the famous Tuareg band, Tinfariwen restaurant is Djanet's most celebrated dining spot — a low-roofed, carpet-strewn space where guests eat cross-legged on cushions and are served by hosts in full Tuareg dress. The menu is rooted in authentic nomadic desert cuisine: taguella (Tuareg bread baked under hot sand and embers), lamb cooked in a buried clay pot, dates and dried figs, and the intensely sweet Tuareg mint tea served in three progressively sweeter rounds — as the saying goes, 'bitter as life, sweet as love, gentle as death.'",
+          "must_try": "Taguella avec Beurre de Chamelle, Agneau au Feu de Bois, Thé à la Menthe Touareg",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483376/ZeeRCVSIHWDVzGaFAZUD5aVVD6Czw8X3Ox77PPLRktDvhgSWoMrtuCWBa1fkIshnaHJ3Chs9135K_cgaKyBwPmoQ2sEACDlkISlJWqz_JRiRZpYt3aAUlcGQFtvpqrVpv-7wtpp1fqe4NC81iV1eKGONexFwMisvgHaX0dm7L_5YorAi53u0M3oByaGfkItW_czhxwx.jpg"
+        },
+        {
+          "name": "Le Guelta",
+          "cuisine": "Algerian with Saharan influence",
+          "price_range": "$",
+          "address": "Route de l'Aéroport, Djanet",
+          "description": "A simple, honest restaurant that serves reliable Algerian food to travelers arriving from or departing on long desert expeditions. The harira is thick and restorative, the merguez is grilled to perfection, and the mechanically-simple but deeply satisfying couscous with braised lamb has fueled countless Saharan adventures. A great place to eat before a three-day trek into Tassili.",
+          "must_try": "Harira, Couscous Sahraoui, Merguez Grillée",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483396/Saf1E6HLDUx7EV5wCJUSy6YBHRNQs5DZjweCJ5xsIlxwCpVJp37ZOZM4wwVHhf3x2I8DzE-lmZ9Dkizr6_r2fUtaCaMRW8Acue_ggWag_canfU6p5-5SmiBcaEoomxFlY3Ovn2D2IAUiV5oklzL4E_TAjPQ8P3LvAr4bEroNDen8uLIE-ClzcAS4bmbkV9gZ_cfn3ic.jpg"
+
+        }
+      ],
+      "hotels": [
+        {
+          "name": "Hôtel Zeriba",
+          "stars": 4,
+          "price_range": "$$$",
+          "address": "Route Touristique, Djanet",
+          "description": "The most atmospheric hotel in Djanet, the Zeriba is built in the traditional Tuareg palm-frond and mud-brick style (a zeriba is a Saharan shelter). Rooms open onto a central sandy courtyard shaded by enormous palms, and the stargazing from the rooftop terrace under the Saharan sky — with virtually zero light pollution — is genuinely life-changing. The hotel organizes desert excursions, camel treks, and guided tours into Tassili.",
+          "highlights": "Tuareg architecture, exceptional stargazing terrace, desert excursion packages, authentic atmosphere",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483410/caption_ecryj7.jpg"
+        },
+        {
+          "name": "Tadrart Camp & Lodge",
+          "stars": 3,
+          "price_range": "$$",
+          "address": "Oasis de Djanet",
+          "description": "A beautifully run desert camp-lodge at the edge of the palm oasis, offering a choice between comfortable lodge rooms and traditional Tuareg goat-hair tents under the stars. The lodge's guides are all local Tuareg with decades of experience in Tassili and the surrounding desert. Perfect for travelers who want comfort as a base while immersing themselves in the desert experience.",
+          "highlights": "Oasis setting, Tuareg tent option, experienced local guides, authentic camp atmosphere",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483428/s_CRQbHjk-3ODmLPRc7UHJ889iWh5EF0o6jyvZUBidBdlro6CwQghPsZqwWMcl5suPQHzGmOrCZx9z7eUBPrLfN0a_3yfGrQj3q7o81gVhqQDHFBbQ61BlNMPZqnTxXuYo66yOKcv-GFtXbLBkRQBo9Xpg9McTqCO9lDwEUGmwPDkraDQX9tCyKHW6rtb8HO_ruf3u7.jpg"
+        }
+      ],
+      "events": [
+        {
+          "name": "Festival du Tassili — Sebiba de Djanet",
+          "type": "Traditional Tuareg Festival",
+          "period": "Muharram (Islamic New Year)",
+          "description": "The Sebiba is the most sacred and spectacular traditional festival of the Tuareg people of Djanet, held annually over two days during the Islamic New Year period. The two ancient quarters of Djanet — Aggour and Adjahil — face off in a ceremonial 'battle' that is in reality a magnificent display of traditional Tuareg culture: warriors in full indigo robes and silver jewelry perform sword dances, chant poetry, and parade on camels, while musicians play the imzad (a single-stringed Tuareg violin) and crowds surround the spectacle. This is one of the most authentic and visually extraordinary traditional festivals in all of North Africa.",
+          "location": "Place de la Sebiba, Old Djanet",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483445/3gbAqKGFjftSvpvZw_Yl3H3-8AjhIN6tsiZefsbD6q3XsFuRsFIpcuCFpmmMbyjDMMr0q7exmmLa02xCf7iKUwaTu0CSgmgpaDnIp2Xf2LjGoi8iIV383u57Z3SUvdmMRnmYJ19gl06H175YzgTRVpMxCjLV3c4nz9xSgO3fxVaORdApyD8Y_Xh8SO4AuRne_wznhow.jpg"
+        },
+        {
+          "name": "Nuit des Étoiles du Sahara",
+          "type": "Astronomy & Culture",
+          "period": "October",
+          "description": "A three-day festival celebrating the extraordinary skies of the Sahara, organized in partnership with astronomy associations from Algiers and France. Participants camp under the stars in the desert outside Djanet, guided by expert astronomers with high-powered telescopes. Daytime activities include guided walks to prehistoric rock art sites, Tuareg music performances around campfires, and storytelling sessions about Tuareg celestial navigation traditions.",
+          "location": "Desert camp outside Djanet — Tassili n'Ajjer foothills",
+          "image":"https://res.cloudinary.com/df9dmkiuj/image/upload/v1779483459/9c5491a34f5c94ad1bac27c2986e2d0e_xcwuye.jpg"
+        }
+      ]
+    }
+  ]
+}

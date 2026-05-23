@@ -1,5 +1,7 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -9,6 +11,8 @@ from .serializers import EventSerializer
 
 class EventListView(APIView):
     """GET /api/events/"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         qs = Event.objects.filter(is_active=True).select_related("wilaya")
@@ -21,6 +25,8 @@ class EventUpcomingView(APIView):
     GET /api/events/upcoming/
     Returns events whose end_date >= today, limited to 6 for the homepage carousel.
     """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         today = timezone.now().date()
@@ -35,6 +41,8 @@ class EventByDateView(APIView):
     Returns all events happening on the given date.
     Used by the search bar WHEN filter.
     """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         date_str = request.query_params.get("date")
@@ -60,6 +68,8 @@ class EventByDateView(APIView):
 
 class EventDetailView(APIView):
     """GET /api/events/<id>/"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         event = get_object_or_404(Event, pk=pk, is_active=True)

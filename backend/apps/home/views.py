@@ -1,3 +1,5 @@
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils import timezone
@@ -11,6 +13,8 @@ class HeroSlidesView(APIView):
     GET /api/home/hero-slides/
     Returns all active hero carousel slides with their featured wilaya cards.
     """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         slides = HeroSlide.objects.filter(is_active=True).prefetch_related(
@@ -29,6 +33,8 @@ class HomePageView(APIView):
     - Featured wilayas
     - Upcoming events
     """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         from apps.categories.models import Category

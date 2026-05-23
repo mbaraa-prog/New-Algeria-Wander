@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -14,6 +16,8 @@ class PlaceListView(APIView):
       ?type=attraction|hotel|restaurant
       ?wilaya=<id>
     """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request):
         qs = Place.objects.filter(is_active=True).select_related("wilaya", "category")
@@ -36,6 +40,8 @@ class PlaceListView(APIView):
 
 class PlaceDetailView(APIView):
     """GET /api/places/<id>/"""
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         place = get_object_or_404(Place, pk=pk, is_active=True)

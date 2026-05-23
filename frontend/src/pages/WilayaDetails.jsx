@@ -30,32 +30,20 @@ const WilayaDetails = () => {
           dataService.getWilayaReviews(id),
         ]);
 
-        const wilayaPayload = wilayaResponse?.data ?? wilayaResponse ?? null;
+        const wilayaPayload = wilayaResponse?.data?.data ?? wilayaResponse?.data ?? wilayaResponse ?? null;
         setWilaya(wilayaPayload);
 
-        // Normalize places response: backend may return array or an object with categorized lists
-        let rawPlaces = placesResponse ?? [];
-        if (rawPlaces.results) rawPlaces = rawPlaces.results;
+        // Normalize places response: extract inner data object
+        const placesData = placesResponse?.data?.data ?? placesResponse?.data ?? {};
+        setPlaces({
+          attractions: placesData.attractions || [],
+          hotels: placesData.hotels || [],
+          restaurants: placesData.restaurants || [],
+        });
 
-        if (Array.isArray(rawPlaces)) {
-          const hotels = rawPlaces.filter(p => (p.place_type || '').toLowerCase().includes('hotel') || (p.category?.name || '').toLowerCase().includes('hotel'));
-          const restaurants = rawPlaces.filter(p => (p.place_type || '').toLowerCase().includes('rest') || (p.category?.name || '').toLowerCase().includes('rest'));
-          const attractions = rawPlaces.filter(p => !( (p.place_type || '').toLowerCase().includes('hotel') || (p.place_type || '').toLowerCase().includes('rest') ));
-          setPlaces({ attractions, hotels, restaurants });
-        } else if (rawPlaces && (rawPlaces.hotels || rawPlaces.restaurants || rawPlaces.attractions)) {
-          setPlaces({
-            attractions: rawPlaces.attractions || [],
-            hotels: rawPlaces.hotels || [],
-            restaurants: rawPlaces.restaurants || [],
-          });
-        } else {
-          setPlaces({ attractions: [], hotels: [], restaurants: [] });
-        }
-
-        let ev = eventsResponse ?? [];
-        if (ev.results) ev = ev.results;
-        if (ev.data) ev = ev.data;
-        setEvents(Array.isArray(ev) ? ev : []);
+        // Normalize events response: extract inner list
+        const eventsData = eventsResponse?.data?.data ?? eventsResponse?.data ?? [];
+        setEvents(Array.isArray(eventsData) ? eventsData : []);
 
         let rv = reviewsResponse ?? [];
         if (rv.results) rv = rv.results;
@@ -117,13 +105,13 @@ const WilayaDetails = () => {
 
   const eventItems = events.map(event => ({
     ...event,
-    image: event.cover_image,
+    image: event.cover_image || event.external_image_url,
     description: event.description,
     type: 'Event',
     location: event.location,
-    date: event.date_range,
+    date: event.period || event.date_range,
     wilaya: event.wilaya_name,
-    linkTo: `/wilaya/${id}`,
+    linkTo: `/details/event-${event.id}`,
   }));
 
   const activeItems = activeTab === 'Hotels'

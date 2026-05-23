@@ -40,6 +40,7 @@ class RegisterView(APIView):
     Returns JWT tokens on success.
     """
 
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -84,6 +85,7 @@ class LoginView(APIView):
         remember_me (bool) - optional, extends refresh token to 30 days
     """
 
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):

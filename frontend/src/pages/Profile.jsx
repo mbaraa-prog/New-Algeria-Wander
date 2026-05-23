@@ -35,7 +35,16 @@ const Profile = () => {
       }
     };
     fetchProfile();
-    setFavorites([]);
+    const fetchFavorites = async () => {
+      try {
+        const favResponse = await dataService.getFavorites();
+        const favList = favResponse.results || favResponse;
+        setFavorites(favList);
+      } catch (err) {
+        console.error('Failed to load favorites:', err);
+      }
+    };
+    fetchFavorites();
     setComments([]);
   }, []);
 
@@ -81,7 +90,6 @@ const Profile = () => {
               </div>
               <div className="flex items-center justify-center md:justify-start gap-4">
                 <span className="bg-[#4B5563] text-white px-6 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Explorer</span>
-                <span className="bg-[#EEF4FF] text-[#006699] px-6 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Joined 2023</span>
               </div>
             </div>
           </div>
@@ -115,12 +123,6 @@ const Profile = () => {
                   </div>
                   <h2 className="text-[#0F4C81] text-3xl font-bold">My Favorites</h2>
                 </div>
-                <Link to="/favorites" className="text-[#006699] font-bold text-sm flex items-center gap-2 hover:underline">
-                  <span>View All</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {favorites.length === 0 ? (
@@ -128,15 +130,15 @@ const Profile = () => {
                     <p className="text-gray-400 font-medium">No favorites yet</p>
                   </div>
                 ) : (
-                  favorites.slice(0, 3).map(item => (
-                    <div key={item.id} className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                      <div className="absolute bottom-6 left-6 right-6">
-                        <h4 className="text-white font-bold mb-1 truncate">{item.name}</h4>
-                      </div>
-                    </div>
-                  ))
+                                        favorites.map(item => (
+                        <div key={item.id} className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50">
+                          <img src={item.place_details?.cover_image || item.image} alt={item.place_details?.name || item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                          <div className="absolute bottom-6 left-6 right-6">
+                            <h4 className="text-white font-bold mb-1 truncate">{item.place_details?.name || item.name}</h4>
+                          </div>
+                        </div>
+                      ))
                 )}
               </div>
             </div>

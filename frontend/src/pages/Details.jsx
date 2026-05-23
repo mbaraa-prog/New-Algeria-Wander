@@ -7,27 +7,58 @@ const Details = () => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [relatedPlaces, setRelatedPlaces] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [placeResponse, reviewsResponse] = await Promise.all([
-          dataService.getPlaceDetail(id),
-          dataService.getReviews({ place: id }),
-        ]);
-
-        // normalize place response: backend returns envelope { success, data }
-        const placePayload = placeResponse?.data ?? placeResponse ?? null;
+        let placePayload = null;
+        let rawReviews = [];
+        
+        if (id && id.startsWith('event-')) {
+          const realId = id.replace('event-', '');
+          const [eventResponse, reviewsResponse] = await Promise.all([
+            dataService.getEventDetail(realId),
+            dataService.getReviews({ event: realId }),
+          ]);
+          placePayload = eventResponse?.data ?? eventResponse ?? null;
+          
+          let parsedReviews = reviewsResponse ?? [];
+          if (parsedReviews.results) parsedReviews = parsedReviews.results;
+          if (parsedReviews.data) parsedReviews = parsedReviews.data;
+          rawReviews = parsedReviews || [];
+        } else {
+          const [placeResponse, reviewsResponse] = await Promise.all([
+            dataService.getPlaceDetail(id),
+            dataService.getReviews({ place: id }),
+          ]);
+          placePayload = placeResponse?.data ?? placeResponse ?? null;
+          
+          let parsedReviews = reviewsResponse ?? [];
+          if (parsedReviews.results) parsedReviews = parsedReviews.results;
+          if (parsedReviews.data) parsedReviews = parsedReviews.data;
+          rawReviews = parsedReviews || [];
+        }
+        
         setItem(placePayload);
+        setReviews(rawReviews);
 
-        // normalize reviews : envelope { success, data }
-        let rawReviews = reviewsResponse ?? [];
-        if (rawReviews.results) rawReviews = rawReviews.results;
-        if (rawReviews.data) rawReviews = rawReviews.data;
-        setReviews(rawReviews || []);
+        // Fetch related places in the same wilaya
+        if (placePayload) {
+          const wilayaId = placePayload.wilaya_id || placePayload.wilaya?.id;
+          if (wilayaId) {
+            const relatedResponse = await dataService.getPlaces({ wilaya: wilayaId });
+            const relatedData = relatedResponse?.data || relatedResponse || [];
+            // Filter out current place if it is a place
+            const filtered = relatedData.filter(p => p.id !== placePayload.id);
+            // Shuffle
+            const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+            setRelatedPlaces(shuffled.slice(0, 3));
+          }
+        }
       } catch (error) {
-        console.error('Failed to load place details:', error);
+        console.error('Failed to load details:', error);
       } finally {
         setIsLoading(false);
       }
@@ -55,14 +86,14 @@ const Details = () => {
     );
   }
 
-  const placeType = item.place_type_display || item.place_type || 'Place';
+  const placeType = id.startsWith('event-') ? 'Event' : (item.place_type_display || item.place_type || 'Place');
   const placeName = item.name || item.title;
   const placeDescription = item.description || item.short_desc || 'No description available.';
-  const placeImage = item.cover_image || item.image;
+  const placeImage = item.cover_image || item.image || item.external_image_url || 'https://via.placeholder.com/1200';
   const placeWilaya = item.wilaya_name || item.wilaya?.name || 'Unknown';
-  const placeRating = item.avg_rating || item.rating || 0;
+  const placeRating = item.avg_rating || item.rating || (id.startsWith('event-') ? 4.9 : 0);
   const placeReviewCount = reviews.length;
-  const placeOpenHours = item.open_hours || item.opening_hours || 'Daily 9:00 - 18:00';
+  const placeOpenHours = item.open_hours || item.opening_hours || item.period || 'Daily 9:00 - 18:00';
 
   return (
     <div className="bg-[#F8FAFF] min-h-screen pb-20">
@@ -253,8 +284,8 @@ const Details = () => {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Address</h4>
-                  <p className="text-gray-700 text-sm font-medium">{item.address}</p>
+                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">{id.startsWith('event-') ? 'Venue' : 'Address'}</h4>
+                  <p className="text-gray-700 text-sm font-medium">{item.address || item.location}</p>
                 </div>
               </div>
 
@@ -265,52 +296,61 @@ const Details = () => {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Opening Hours</h4>
-                  <p className="text-gray-700 text-sm font-medium">Daily: {placeOpenHours}</p>
+                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">{id.startsWith('event-') ? 'Event Period' : 'Opening Hours'}</h4>
+                  <p className="text-gray-700 text-sm font-medium">{id.startsWith('event-') ? '' : 'Daily: '}{placeOpenHours}</p>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-5">
-                <div className="text-[#006699] mt-1 shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
+              {item.phone && (
+                <div className="flex items-start space-x-5">
+                  <div className="text-[#006699] mt-1 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Contact</h4>
+                    <p className="text-gray-700 text-sm font-medium">{item.phone}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Contact</h4>
-                  <p className="text-gray-700 text-sm font-medium">{item.phone}</p>
-                </div>
-              </div>
+              )}
 
-              <div className="flex items-start space-x-5">
-                <div className="text-[#006699] mt-1 shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
-                  </svg>
+              {item.website && (
+                <div className="flex items-start space-x-5">
+                  <div className="text-[#006699] mt-1 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Website</h4>
+                    <a href={`https://${item.website}`} target="_blank" rel="noopener noreferrer" className="text-[#006699] text-sm font-bold hover:underline">
+                      {item.website}
+                    </a>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Website</h4>
-                  <a href={`https://${item.website}`} target="_blank" rel="noopener noreferrer" className="text-[#006699] text-sm font-bold hover:underline">
-                    {item.website}
-                  </a>
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
           <div className="bg-white rounded-[40px] p-10 shadow-xl border border-white space-y-8">
             <h3 className="text-[#0F4C81] text-xl font-bold">Related Places</h3>
-            <div className="grid grid-cols-1 gap-4">
-              <PlaceCard item={{
-                id: 'related-1',
-                image: item.cover_image,
-                name: item.name,
-                location: placeWilaya,
-                wilaya: placeWilaya,
-                description: item.short_desc || item.description,
-                type: placeType,
-                linkTo: `/details/${item.id}`
-              }} />
+            <div className="grid grid-cols-1 gap-6">
+              {relatedPlaces.length > 0 ? (
+                relatedPlaces.map(rel => (
+                  <PlaceCard key={rel.id} item={{
+                    ...rel,
+                    image: rel.cover_image || rel.external_image_url,
+                    location: placeWilaya,
+                    wilaya: placeWilaya,
+                    description: rel.short_desc || rel.description,
+                    type: rel.place_type_display || rel.place_type || 'Place',
+                    linkTo: `/details/${rel.id}`
+                  }} />
+                ))
+              ) : (
+                <p className="text-gray-400 text-sm">No other places in the same wilaya.</p>
+              )}
             </div>
           </div>
         </div>

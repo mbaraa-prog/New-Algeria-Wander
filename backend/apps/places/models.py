@@ -30,7 +30,21 @@ class Place(models.Model):
     description  = models.TextField()
     short_desc   = models.CharField(max_length=255, blank=True)
     cover_image  = models.ImageField(upload_to="places/covers/")
+    external_image_url = models.URLField(blank=True, null=True, help_text="Cloudinary or external image URL")
     address      = models.CharField(max_length=300, blank=True)
+    
+    # For restaurants
+    cuisine      = models.CharField(max_length=100, blank=True, help_text="e.g. Algerian, Mediterranean")
+    price_range  = models.CharField(max_length=10, blank=True, help_text="e.g. $, $$, $$$")
+    must_try     = models.TextField(blank=True, help_text="Recommended dishes, comma-separated")
+    
+    # For hotels
+    stars        = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
+    highlights   = models.TextField(blank=True, help_text="Key amenities/highlights, comma-separated")
+    
+    # For attractions
+    opening_hours = models.CharField(max_length=255, blank=True, help_text="e.g. Daily 9:00-17:00")
+    practical_info = models.TextField(blank=True, help_text="Visitor information and tips")
     # Rating (aggregated, stored for performance)
     avg_rating   = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     review_count = models.PositiveIntegerField(default=0)
