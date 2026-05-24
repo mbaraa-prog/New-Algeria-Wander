@@ -28,7 +28,10 @@ DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 
 _allowed_hosts_str = config(
     "DJANGO_ALLOWED_HOSTS",
-    default="localhost,127.0.0.1,testserver,[::1]",
+    default=config(
+        "ALLOWED_HOSTS",
+        default="localhost,127.0.0.1,testserver,[::1]",
+    ),
 )
 _parsed_hosts = _parse_allowed_hosts(_allowed_hosts_str)
 _local_hosts = ["localhost", "127.0.0.1", "testserver", "[::1]"]
