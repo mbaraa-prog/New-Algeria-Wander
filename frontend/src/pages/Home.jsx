@@ -17,6 +17,7 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [featuredDestinations, setFeaturedDestinations] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [places, setPlaces] = useState([]);
   const [wilayas, setWilayas] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
@@ -29,7 +30,7 @@ const Home = () => {
   const [hotels_index, setHotelsIndex] = useState(0);
   const [restaurants_index, setRestaurantsIndex] = useState(0);
   const [events_index, setEventsIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const shuffleArray = (arr) => {
@@ -52,6 +53,7 @@ const Home = () => {
 
         setPlaces(placesResponse?.data || placesResponse || []);
         setWilayas(wilayasResponse?.data || wilayasResponse || []);
+        setDataLoaded(true);
       } catch (error) {
         console.error('Failed to load home data:', error);
       } finally {
@@ -198,8 +200,8 @@ const Home = () => {
         linkTo: `/wilaya/${w.id}`
       }));
       const mtKeywords = ['mountain', 'gouraya', 'carbon', 'clif', 'massif', 'park', 'peak', 'sentinel', 'height'];
-      const bejaiaPlaces = places.filter(p => 
-        p.wilaya_name.toLowerCase().includes('bejaia') && 
+      const bejaiaPlaces = places.filter(p =>
+        p.wilaya_name.toLowerCase().includes('bejaia') &&
         (p.place_type === 'attraction' || p.category?.name === 'Landmarks') &&
         p.place_type !== 'hotel' && p.place_type !== 'restaurant' &&
         mtKeywords.some(kw => (p.name + ' ' + p.description).toLowerCase().includes(kw))
@@ -246,7 +248,7 @@ const Home = () => {
         linkTo: `/wilaya/${w.id}`
       }));
       const historyKeywords = ['history', 'ancient', 'ruins', 'roman', 'museum', 'monument', 'timgad', 'djemila', 'bridge'];
-      const historyPlaces = places.filter(p => 
+      const historyPlaces = places.filter(p =>
         (p.place_type === 'attraction' || p.category?.name === 'Landmarks' || p.category?.name === 'Museum' || p.category?.name === 'History') &&
         p.place_type !== 'hotel' && p.place_type !== 'restaurant' &&
         historyKeywords.some(kw => (p.name + ' ' + p.description).toLowerCase().includes(kw))
@@ -295,7 +297,7 @@ const Home = () => {
       setShuffledEvents(shuffleArray(upcomingEvents));
       setEventIndex(0);
     }
-  }, [upcomingEvents]);
+  }, [upcomingEvents, dataLoaded]);
 
   const handleDiscoverPrev = () => {
     setDiscoverIndex(prev => Math.max(0, prev - 1));
@@ -621,8 +623,8 @@ const Home = () => {
           </div>
           {filteredCards.length > 3 && (
             <div className="flex space-x-4">
-              <button 
-                onClick={handleDiscoverPrev} 
+              <button
+                onClick={handleDiscoverPrev}
                 disabled={discoverIndex === 0}
                 className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${discoverIndex > 0 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
               >
@@ -630,8 +632,8 @@ const Home = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              <button 
-                onClick={handleDiscoverNext} 
+              <button
+                onClick={handleDiscoverNext}
                 disabled={discoverIndex >= filteredCards.length - 3}
                 className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${discoverIndex < filteredCards.length - 3 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
               >
@@ -649,11 +651,10 @@ const Home = () => {
             <button
               key={catName}
               onClick={() => setActiveCategory(catName)}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${
-                activeCategory === catName 
-                  ? 'text-white shadow-lg' 
-                  : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'
-              }`}
+              className={`px-8 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${activeCategory === catName
+                ? 'text-white shadow-lg'
+                : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'
+                }`}
               style={activeCategory === catName ? { backgroundColor: activeTheme.accent } : {}}
             >
               {catName}
@@ -668,20 +669,20 @@ const Home = () => {
               return (
                 <div key={card.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
                   <div className="absolute top-4 right-4 z-10">
-                    <span 
+                    <span
                       className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-opacity-95 shadow-sm"
                       style={{ backgroundColor: activeTheme.accent }}
                     >
                       {card.type === 'Destination' ? 'WILAYA' : activeCategory.toUpperCase()}
                     </span>
                   </div>
-                  
+
                   <Link to={card.linkTo} className="block flex-1 flex flex-col">
                     <div className="h-64 overflow-hidden relative">
                       <img src={card.image} alt={card.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                     </div>
-                    
+
                     <div className="p-8 flex flex-col flex-1">
                       <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
                         {card.name}
@@ -689,7 +690,7 @@ const Home = () => {
                       <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
                         {card.description}
                       </p>
-                      
+
                       <div className="flex items-center text-sm font-bold mt-auto" style={{ color: activeTheme.accent }}>
                         <span>Learn More</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -719,8 +720,8 @@ const Home = () => {
             </div>
             {hotels.length > 3 && (
               <div className="flex space-x-4">
-                <button 
-                  onClick={handleHotelsPrev} 
+                <button
+                  onClick={handleHotelsPrev}
                   disabled={hotels_index === 0}
                   className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${hotels_index > 0 ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
                 >
@@ -728,8 +729,8 @@ const Home = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                <button 
-                  onClick={handleHotelsNext} 
+                <button
+                  onClick={handleHotelsNext}
                   disabled={hotels_index >= Math.max(0, hotels.length - 6)}
                   className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${hotels_index < Math.max(0, hotels.length - 6) ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
                 >
@@ -750,13 +751,13 @@ const Home = () => {
                       HOTEL
                     </span>
                   </div>
-                  
+
                   <Link to={hotel.linkTo} className="block flex-1 flex flex-col">
                     <div className="h-64 overflow-hidden relative">
                       <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                     </div>
-                    
+
                     <div className="p-8 flex flex-col flex-1">
                       <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
                         {hotel.name}
@@ -764,7 +765,7 @@ const Home = () => {
                       <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
                         {hotel.description}
                       </p>
-                      
+
                       <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
                         <span>Learn More</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -790,8 +791,8 @@ const Home = () => {
             </div>
             {restaurants.length > 3 && (
               <div className="flex space-x-4">
-                <button 
-                  onClick={handleRestaurantsPrev} 
+                <button
+                  onClick={handleRestaurantsPrev}
                   disabled={restaurants_index === 0}
                   className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${restaurants_index > 0 ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
                 >
@@ -799,8 +800,8 @@ const Home = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                <button 
-                  onClick={handleRestaurantsNext} 
+                <button
+                  onClick={handleRestaurantsNext}
                   disabled={restaurants_index >= Math.max(0, restaurants.length - 6)}
                   className={`p-4 rounded-full border border-gray-200 text-gray-400 transition-all ${restaurants_index < Math.max(0, restaurants.length - 6) ? 'hover:bg-[#FF7F50] hover:text-white hover:border-[#FF7F50] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
                 >
@@ -821,13 +822,13 @@ const Home = () => {
                       RESTAURANT
                     </span>
                   </div>
-                  
+
                   <Link to={restaurant.linkTo} className="block flex-1 flex flex-col">
                     <div className="h-64 overflow-hidden relative">
                       <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                     </div>
-                    
+
                     <div className="p-8 flex flex-col flex-1">
                       <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
                         {restaurant.name}
@@ -835,7 +836,7 @@ const Home = () => {
                       <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
                         {restaurant.description}
                       </p>
-                      
+
                       <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
                         <span>Learn More</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -861,8 +862,8 @@ const Home = () => {
             </div>
             {shuffledEvents.length > 3 && (
               <div className="flex space-x-4">
-                <button 
-                  onClick={handleEventPrev} 
+                <button
+                  onClick={handleEventPrev}
                   disabled={eventIndex === 0}
                   className={`p-4 rounded-full border border-gray-300 text-gray-400 bg-white transition-all ${eventIndex > 0 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
                 >
@@ -870,8 +871,8 @@ const Home = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                <button 
-                  onClick={handleEventNext} 
+                <button
+                  onClick={handleEventNext}
                   disabled={eventIndex >= shuffledEvents.length - 3}
                   className={`p-4 rounded-full border border-gray-300 text-gray-400 bg-white transition-all ${eventIndex < shuffledEvents.length - 3 ? 'hover:bg-[#006699] hover:text-white hover:border-[#006699] cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
                 >
@@ -890,7 +891,7 @@ const Home = () => {
                 const eventDate = event.period || event.date_range || 'Upcoming';
                 const eventLocation = event.location || event.wilaya_name || 'Algeria';
                 const detailLink = `/details/event-${event.id}`;
-                
+
                 return (
                   <div key={event.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-100 flex flex-col h-full">
                     <Link to={detailLink} className="block flex-1 flex flex-col">
@@ -898,12 +899,12 @@ const Home = () => {
                         <img src={eventImage} alt={event.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
                       </div>
-                      
+
                       <div className="p-8 flex flex-col flex-1">
                         <h3 className="text-[#0F4C81] text-2xl font-bold mb-5 group-hover:text-[#FF7F50] transition-colors leading-snug">
                           {event.name}
                         </h3>
-                        
+
                         <div className="space-y-3 mt-auto">
                           <div className="flex items-center text-gray-500 text-sm font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -911,7 +912,7 @@ const Home = () => {
                             </svg>
                             <span>{eventDate}</span>
                           </div>
-                          
+
                           <div className="flex items-center text-gray-500 text-sm font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

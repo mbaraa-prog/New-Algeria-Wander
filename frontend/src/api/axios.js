@@ -42,15 +42,14 @@ axiosInstance.interceptors.response.use(
 
           const { access } = response.data;
           localStorage.setItem('access_token', access);
-          
+
           originalRequest.headers.Authorization = `Bearer ${access}`;
           return axiosInstance(originalRequest);
         } catch (refreshError) {
-          // If refresh fails, log out the user
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
           localStorage.removeItem('user');
-          window.location.href = '/login';
+          return Promise.reject(refreshError);
         }
       }
     }

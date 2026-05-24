@@ -39,7 +39,7 @@ function App() {
         {/* Main Application Routes (With Navbar/Footer) */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="wilayas" element={<Wilayas />} />
+          <Route path="wilayas" element={<Wilayas key="wilayas" />} />
           <Route path="wilaya/:id" element={<WilayaDetails />} />
           <Route path="details/:id" element={<Details />} />
           <Route path="blogs" element={<Blogs />} />

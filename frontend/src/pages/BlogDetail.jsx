@@ -170,11 +170,14 @@ const BlogDetail = () => {
               <form onSubmit={handleSubmitComment} className="space-y-4">
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
-                    {user?.avatar ? (
-                      <img src={user.avatar} alt={user.username} className="w-full h-full object-cover" />
-                    ) : (
-                      <img src="https://i.pravatar.cc/150?u=user" alt={user.username} className="w-full h-full object-cover" />
-                    )}
+                    <img
+                      src={user?.avatar
+                        ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`)
+                        : `https://i.pravatar.cc/150?u=${user?.username}`
+                      }
+                      alt={user?.username}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1">
                     <p className="text-[#0F4C81] text-sm font-bold mb-3">{user.username}</p>

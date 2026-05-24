@@ -14,38 +14,48 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchAll = async () => {
       try {
+        // Fetch profile
         const response = await authService.getProfile();
         let currentUser = user;
         if (response.success) {
           setProfile(response.data.user);
           currentUser = response.data.user;
         }
+
+        // Fetch blogs and filter by current user
         const blogsResponse = await dataService.getBlogs();
-        const blogsList = blogsResponse.results || blogsResponse;
+        const blogsList = blogsResponse.results || blogsResponse || [];
         const userBlogs = blogsList.filter(blog =>
-          blog.author === currentUser?.username || blog.author === currentUser?.email
+          blog.author?.username === currentUser?.username ||
+          blog.author?.id === currentUser?.id ||
+          blog.author === currentUser?.username
         );
         setMyBlogs(userBlogs);
+
+        // Fetch favorites
+        const favResponse = await dataService.getFavorites();
+        const favList = favResponse.results || favResponse || [];
+        setFavorites(Array.isArray(favList) ? favList : []);
+
+        // Fetch comments from blogs
+        const userComments = blogsList
+          .flatMap(blog => blog.comments || [])
+          .filter(comment =>
+            comment.author?.username === currentUser?.username ||
+            comment.author?.id === currentUser?.id
+          );
+        setComments(userComments);
+
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchProfile();
-    const fetchFavorites = async () => {
-      try {
-        const favResponse = await dataService.getFavorites();
-        const favList = favResponse.results || favResponse;
-        setFavorites(favList);
-      } catch (err) {
-        console.error('Failed to load favorites:', err);
-      }
-    };
-    fetchFavorites();
-    setComments([]);
+
+    fetchAll();
   }, []);
 
   const handleLogout = async () => {
@@ -130,15 +140,15 @@ const Profile = () => {
                     <p className="text-gray-400 font-medium">No favorites yet</p>
                   </div>
                 ) : (
-                                        favorites.map(item => (
-                        <div key={item.id} className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50">
-                          <img src={item.place_details?.cover_image || item.image} alt={item.place_details?.name || item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                          <div className="absolute bottom-6 left-6 right-6">
-                            <h4 className="text-white font-bold mb-1 truncate">{item.place_details?.name || item.name}</h4>
-                          </div>
-                        </div>
-                      ))
+                  favorites.map(item => (
+                    <div key={item.id} className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50">
+                      <img src={item.place_details?.cover_image || item.image} alt={item.place_details?.name || item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                      <div className="absolute bottom-6 left-6 right-6">
+                        <h4 className="text-white font-bold mb-1 truncate">{item.place_details?.name || item.name}</h4>
+                      </div>
+                    </div>
+                  ))
                 )}
               </div>
             </div>
@@ -163,8 +173,8 @@ const Profile = () => {
                     <p className="text-gray-400 font-medium">No comments yet</p>
                   </div>
                 ) : (
-                  comments.map(comment => (
-                    <div key={comment.id} className="p-6 bg-[#F8FAFF] rounded-3xl space-y-3">
+                  comments.map((comment, index) => (
+                    <div key={comment.id || index} className="p-6 bg-[#F8FAFF] rounded-3xl space-y-3">
                       <p className="text-gray-500 text-sm leading-relaxed italic">"{comment.content}"</p>
                     </div>
                   ))
@@ -198,7 +208,7 @@ const Profile = () => {
                   myBlogs.map(blog => {
                     const coverImage = blog.cover_image
                       ? (blog.cover_image.startsWith('http') ? blog.cover_image : `http://localhost:8000/media/${blog.cover_image}`)
-                      : 'https://via.placeholder.com/150';
+                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.title || 'Blog')}&background=006699&color=fff&size=150`;
                     return (
                       <div key={blog.id} className="flex items-center gap-6 group cursor-pointer" onClick={() => navigate(`/blogs/${blog.id}`)}>
                         <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm flex-shrink-0">

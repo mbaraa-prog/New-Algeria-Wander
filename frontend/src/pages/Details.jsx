@@ -2,20 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
+import { useAuth } from '../context/AuthContext';
 
 const Details = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const [item, setItem] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [relatedPlaces, setRelatedPlaces] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [reviewRating, setReviewRating] = useState(0);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewError, setReviewError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         let placePayload = null;
         let rawReviews = [];
-        
+
         if (id && id.startsWith('event-')) {
           const realId = id.replace('event-', '');
           const [eventResponse, reviewsResponse] = await Promise.all([
@@ -23,36 +31,36 @@ const Details = () => {
             dataService.getReviews({ event: realId }),
           ]);
           placePayload = eventResponse?.data ?? eventResponse ?? null;
-          
+
           let parsedReviews = reviewsResponse ?? [];
           if (parsedReviews.results) parsedReviews = parsedReviews.results;
           if (parsedReviews.data) parsedReviews = parsedReviews.data;
-          rawReviews = parsedReviews || [];
+          rawReviews = Array.isArray(parsedReviews) ? parsedReviews : [];
         } else {
           const [placeResponse, reviewsResponse] = await Promise.all([
             dataService.getPlaceDetail(id),
             dataService.getReviews({ place: id }),
           ]);
           placePayload = placeResponse?.data ?? placeResponse ?? null;
-          
+
           let parsedReviews = reviewsResponse ?? [];
           if (parsedReviews.results) parsedReviews = parsedReviews.results;
           if (parsedReviews.data) parsedReviews = parsedReviews.data;
-          rawReviews = parsedReviews || [];
+          rawReviews = Array.isArray(parsedReviews) ? parsedReviews : [];
         }
-        
+
         setItem(placePayload);
         setReviews(rawReviews);
 
-        // Fetch related places in the same wilaya
         if (placePayload) {
           const wilayaId = placePayload.wilaya_id || placePayload.wilaya?.id;
           if (wilayaId) {
             const relatedResponse = await dataService.getPlaces({ wilaya: wilayaId });
-            const relatedData = relatedResponse?.data || relatedResponse || [];
-            // Filter out current place if it is a place
+            const relatedRaw = relatedResponse?.data || relatedResponse || [];
+            const relatedData = Array.isArray(relatedRaw)
+              ? relatedRaw
+              : relatedRaw.results || relatedRaw.data || [];
             const filtered = relatedData.filter(p => p.id !== placePayload.id);
-            // Shuffle
             const shuffled = [...filtered].sort(() => 0.5 - Math.random());
             setRelatedPlaces(shuffled.slice(0, 3));
           }
@@ -66,6 +74,42 @@ const Details = () => {
 
     fetchData();
   }, [id]);
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      setReviewError('You must be logged in to leave a review.');
+      return;
+    }
+    if (reviewRating === 0) {
+      setReviewError('Please select a star rating.');
+      return;
+    }
+    if (!reviewComment.trim()) {
+      setReviewError('Please write a comment.');
+      return;
+    }
+    try {
+      setSubmittingReview(true);
+      setReviewError(null);
+      const reviewData = {
+        rating: reviewRating,
+        body: reviewComment,
+        title: reviewComment.slice(0, 50),
+        place: id.startsWith('event-') ? undefined : parseInt(id),
+      };
+      const response = await dataService.createReview(reviewData);
+      const newReview = response?.data ?? response;
+      setReviews(prev => [newReview, ...prev]);
+      setReviewComment('');
+      setReviewRating(0);
+    } catch (err) {
+      console.error('Error submitting review:', err);
+      setReviewError('Failed to submit review. Please try again.');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -98,9 +142,9 @@ const Details = () => {
   return (
     <div className="bg-[#F8FAFF] min-h-screen pb-20">
       <section className="relative h-[600px] w-full overflow-hidden">
-        <img 
-          src={placeImage} 
-          alt={placeName} 
+        <img
+          src={placeImage}
+          alt={placeName}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
@@ -192,78 +236,117 @@ const Details = () => {
         <div className="lg:col-span-2 space-y-16">
           <div className="space-y-6">
             <h2 className="text-[#0F4C81] text-3xl font-bold">About this Location</h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              {placeDescription}
-            </p>
+            <p className="text-gray-600 text-lg leading-relaxed">{placeDescription}</p>
           </div>
 
           <div className="space-y-10">
             <h2 className="text-[#0F4C81] text-3xl font-bold">Visitor Opinions</h2>
+
+            {/* Review Form */}
             <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
-              <div className="flex items-start space-x-6">
-                <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
-                  <img src="https://i.pravatar.cc/150?u=user" alt="User" />
-                </div>
-                <div className="flex-1 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-[#0F4C81]">user profile</span>
-                    <div className="flex text-gray-200">
-                      {[...Array(5)].map((_, i) => (
-                        <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                      ))}
+              <form onSubmit={handleSubmitReview}>
+                <div className="flex items-start space-x-6">
+                  <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
+                    <img
+                      src={user?.avatar
+                        ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`)
+                        : `https://i.pravatar.cc/150?u=${user?.username}`
+                      }
+                      alt="User"
+                      className="w-full h-full object-cover"
+                    />                  </div>
+                  <div className="flex-1 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-[#0F4C81]">
+                        {user ? user.username : 'Sign in to leave a review'}
+                      </span>
+                      {/* Star Rating */}
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setReviewRating(star)}
+                            onMouseEnter={() => setHoveredRating(star)}
+                            onMouseLeave={() => setHoveredRating(0)}
+                            className="focus:outline-none p-0.5"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={`h-6 w-6 transition-colors ${star <= (hoveredRating || reviewRating)
+                                ? 'text-[#FF7F50]'
+                                : 'text-gray-200'
+                                }`}
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                            </svg>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <textarea
+                      value={reviewComment}
+                      onChange={(e) => setReviewComment(e.target.value)}
+                      placeholder="Share your experience about this place..."
+                      className="w-full bg-[#F8FAFF] rounded-2xl p-6 text-sm outline-none border border-transparent focus:border-[#FF7F50] transition-all min-h-[120px] resize-none"
+                    />
+                    {reviewError && (
+                      <p className="text-red-500 text-xs font-medium">{reviewError}</p>
+                    )}
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={submittingReview || !user}
+                        className="bg-[#006699] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#004d73] transition-all shadow-lg shadow-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {submittingReview ? 'Submitting...' : 'Add Your Comment'}
+                      </button>
                     </div>
                   </div>
-                  <textarea 
-                    placeholder="add your comment..." 
-                    className="w-full bg-[#F8FAFF] rounded-2xl p-6 text-sm outline-none border border-transparent focus:border-[#FF7F50] transition-all min-h-[120px] resize-none"
-                  ></textarea>
-                  <div className="flex justify-end">
-                    <button className="bg-[#006699] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#004d73] transition-all shadow-lg shadow-blue-100">
-                      Add Your Comment
-                    </button>
-                  </div>
                 </div>
-              </div>
+              </form>
             </div>
 
+            {/* Reviews List */}
             <div className="space-y-6">
+              {reviews.length === 0 && (
+                <p className="text-gray-400 text-center py-8">No reviews yet. Be the first to share your experience!</p>
+              )}
               {reviews.map(review => (
                 <div key={review.id} className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
                   <div className="flex items-start space-x-6">
                     <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
-                      <img src={review.avatar || `https://i.pravatar.cc/150?u=${review.user || review.username || review.id}`} alt={review.user || review.username || 'Guest'} />
+                      <img
+                        src={review.avatar || `https://i.pravatar.cc/150?u=${review.username || review.id}`}
+                        alt={review.username || 'Guest'}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="flex-1 space-y-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <h4 className="font-bold text-[#0F4C81]">{review.user || review.username || 'Guest'}</h4>
-                          <p className="text-gray-400 text-xs">{review.created_at ? new Date(review.created_at).toLocaleDateString() : review.date || 'Unknown date'}</p>
+                          <h4 className="font-bold text-[#0F4C81]">{review.full_name || review.username || 'Guest'}</h4>
+                          <p className="text-gray-400 text-xs">
+                            {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'Unknown date'}
+                          </p>
                         </div>
-                        <div className="flex text-[#FF7F50]">
-                          {[...Array(5)].map((_, i) => (
-                            <svg key={i} xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${i < (review.rating || 0) ? 'fill-current' : 'text-gray-200'}`} viewBox="0 0 20 20">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <svg
+                              key={star}
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={`h-4 w-4 ${star <= (review.rating || 0) ? 'text-[#FF7F50]' : 'text-gray-200'}`}
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                             </svg>
                           ))}
                         </div>
                       </div>
-                      <p className="text-gray-600 leading-relaxed">{review.comment || review.body || review.text || review.review}</p>
-                      <div className="flex items-center space-x-6 text-gray-400 text-xs font-bold uppercase tracking-widest">
-                        <button className="flex items-center space-x-2 hover:text-[#FF7F50] transition-colors">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                          </svg>
-                          <span>24</span>
-                        </button>
-                        <button className="flex items-center space-x-2 hover:text-[#FF7F50] transition-colors">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                          </svg>
-                          <span>Reply</span>
-                        </button>
-                      </div>
+                      <p className="text-gray-600 leading-relaxed">{review.body || review.comment || review.text || ''}</p>
                     </div>
                   </div>
                 </div>
@@ -284,7 +367,9 @@ const Details = () => {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">{id.startsWith('event-') ? 'Venue' : 'Address'}</h4>
+                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">
+                    {id.startsWith('event-') ? 'Venue' : 'Address'}
+                  </h4>
                   <p className="text-gray-700 text-sm font-medium">{item.address || item.location}</p>
                 </div>
               </div>
@@ -296,8 +381,12 @@ const Details = () => {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">{id.startsWith('event-') ? 'Event Period' : 'Opening Hours'}</h4>
-                  <p className="text-gray-700 text-sm font-medium">{id.startsWith('event-') ? '' : 'Daily: '}{placeOpenHours}</p>
+                  <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">
+                    {id.startsWith('event-') ? 'Event Period' : 'Opening Hours'}
+                  </h4>
+                  <p className="text-gray-700 text-sm font-medium">
+                    {id.startsWith('event-') ? '' : 'Daily: '}{placeOpenHours}
+                  </p>
                 </div>
               </div>
 

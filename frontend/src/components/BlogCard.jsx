@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 const BlogCard = ({ blog }) => {
   return (
     <div className={`bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-50 flex flex-col md:flex-row group h-full md:h-72`}>
-      {/* Image Section */}
       {blog.cover_image && (
         <div className="md:w-2/5 relative h-64 md:h-full overflow-hidden">
           <img
@@ -17,7 +16,6 @@ const BlogCard = ({ blog }) => {
         </div>
       )}
 
-      {/* Content Section */}
       <div className={`${blog.cover_image ? 'md:w-3/5' : 'w-full'} p-8 md:p-10 flex flex-col justify-between`}>
         <div className="space-y-4">
           <h2 className="text-[#0F4C81] text-2xl font-bold leading-tight group-hover:text-[#FF7F50] transition-colors">
@@ -31,9 +29,15 @@ const BlogCard = ({ blog }) => {
         <div className="flex items-center justify-between pt-6 mt-auto">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-100 shadow-sm">
-              <img src="https://i.pravatar.cc/150?u=default" alt={blog.author || 'Author'} className="w-full h-full object-cover" />
+              {blog.author?.avatar ? (
+                <img src={blog.author.avatar} alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
+              ) : (
+                <img src="https://i.pravatar.cc/150?u=default" alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
+              )}
             </div>
-            <span className="text-[#0F4C81] text-[13px] font-bold">{blog.author || 'Anonymous'}</span>
+            <span className="text-[#0F4C81] text-[13px] font-bold">
+              {blog.author?.username || blog.author || 'Anonymous'}
+            </span>
           </div>
 
           <Link

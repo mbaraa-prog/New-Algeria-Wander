@@ -14,11 +14,11 @@ const WilayaDetails = () => {
   const { id } = useParams();
   const [wilaya, setWilaya] = useState(null);
   const [places, setPlaces] = useState({ attractions: [], hotels: [], restaurants: [] });
-  const [error, setError] = useState(null);
   const [events, setEvents] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [activeTab, setActiveTab] = useState('Hotels');
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchWilaya = async () => {
@@ -30,27 +30,28 @@ const WilayaDetails = () => {
           dataService.getWilayaReviews(id),
         ]);
 
-        const wilayaPayload = wilayaResponse?.data?.data ?? wilayaResponse?.data ?? wilayaResponse ?? null;
+        // wilayaResponse is response.data = { success, data: {...} }
+        const wilayaPayload = wilayaResponse?.data ?? wilayaResponse ?? null;
         setWilaya(wilayaPayload);
 
-        // Normalize places response: extract inner data object
-        const placesData = placesResponse?.data?.data ?? placesResponse?.data ?? {};
+        // placesResponse is response.data = { success, data: { hotels, restaurants, attractions } }
+        const placesData = placesResponse?.data ?? placesResponse ?? {};
         setPlaces({
           attractions: placesData.attractions || [],
           hotels: placesData.hotels || [],
           restaurants: placesData.restaurants || [],
         });
 
-        // Normalize events response: extract inner list
-        const eventsData = eventsResponse?.data?.data ?? eventsResponse?.data ?? [];
+        // eventsResponse is response.data = { success, data: [...] }
+        const eventsData = eventsResponse?.data ?? eventsResponse ?? [];
         setEvents(Array.isArray(eventsData) ? eventsData : []);
 
-        let rv = reviewsResponse ?? [];
-        if (rv.results) rv = rv.results;
-        if (rv.data) rv = rv.data;
-        setReviews(Array.isArray(rv) ? rv : []);
-      } catch (error) {
-        console.error('Failed to load wilaya details:', error);
+        // reviewsResponse is response.data = { success, count, data: [...] }
+        const reviewsData = reviewsResponse?.data ?? reviewsResponse ?? [];
+        setReviews(Array.isArray(reviewsData) ? reviewsData : []);
+
+      } catch (err) {
+        console.error('Failed to load wilaya details:', err);
         setError('Failed to load wilaya details.');
       } finally {
         setIsLoading(false);
@@ -68,23 +69,23 @@ const WilayaDetails = () => {
     );
   }
 
-  if (!wilaya) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFF]">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-[#0F4C81] mb-4">Wilaya Not Found</h1>
-          <Link to="/wilayas" className="text-[#FF7F50] font-bold hover:underline">Back to Wilayas</Link>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFF]">
         <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
           <p className="text-gray-600 mb-4">{error}</p>
           <Link to="/wilayas" className="text-[#006699] font-bold">Back to Wilayas</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!wilaya) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFF]">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-[#0F4C81] mb-4">Wilaya Not Found</h1>
+          <Link to="/wilayas" className="text-[#FF7F50] font-bold hover:underline">Back to Wilayas</Link>
         </div>
       </div>
     );
@@ -141,13 +142,12 @@ const WilayaDetails = () => {
   return (
     <div className="bg-[#F8FAFF] min-h-screen pb-24">
       <section className="relative h-[650px] w-full overflow-hidden">
-        <img 
+        <img
           src={wilaya.banner_image || wilaya.cover_image}
           alt={wilaya.name}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-
         <div className="absolute bottom-20 left-0 right-0">
           <div className="max-w-7xl mx-auto px-6">
             <span className="bg-white/20 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 inline-block">
@@ -175,14 +175,13 @@ const WilayaDetails = () => {
       <section className="bg-white border-b border-gray-100 sticky top-[72px] z-40 px-6">
         <div className="max-w-7xl mx-auto flex items-center space-x-12">
           {tabs.map(tab => (
-            <button 
+            <button
               key={tab.name}
               onClick={() => setActiveTab(tab.name)}
-              className={`flex items-center space-x-3 py-6 text-sm font-bold border-b-2 transition-all ${
-                activeTab === tab.name 
-                  ? 'text-[#006699] border-[#006699]' 
+              className={`flex items-center space-x-3 py-6 text-sm font-bold border-b-2 transition-all ${activeTab === tab.name
+                  ? 'text-[#006699] border-[#006699]'
                   : 'text-gray-400 border-transparent hover:text-gray-600'
-              }`}
+                }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} />
@@ -278,7 +277,9 @@ const WilayaDetails = () => {
                   <div className="p-6 flex-1">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center text-[#FF7F50] text-xs font-bold">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1 fill-current" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
                         {hotel.avg_rating || '4.5'}
                       </div>
                       <span className="text-[#006699] text-[10px] font-bold uppercase">Details</span>
@@ -332,7 +333,11 @@ const WilayaDetails = () => {
                 <div key={review.id} className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
                   <div className="flex items-start gap-6">
                     <div className="h-14 w-14 rounded-full overflow-hidden flex-shrink-0">
-                      <img src={review.avatar || 'https://i.pravatar.cc/150?u=review'} alt={review.full_name || review.username} className="w-full h-full object-cover" />
+                      <img
+                        src={review.avatar || 'https://i.pravatar.cc/150?u=review'}
+                        alt={review.full_name || review.username}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between gap-6 mb-3">
