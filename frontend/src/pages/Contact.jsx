@@ -1,4 +1,5 @@
 import React from 'react';
+import algiersImg from '../assets/algiers.jpg';
 
 const Contact = () => {
   const handleSubmit = (e) => {
@@ -40,7 +41,7 @@ const Contact = () => {
   return (
     <div className="bg-[#F8FAFF] min-h-screen pt-32 pb-24 px-6">
       <div className="max-w-7xl mx-auto space-y-16">
-        
+
         {/* Header */}
         <div className="text-center space-y-6">
           <h1 className="text-[#0F4C81] text-6xl font-extrabold tracking-tight">Get in Touch</h1>
@@ -56,8 +57,8 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="space-y-3">
                 <label className="text-[#0F4C81] text-xs font-bold uppercase tracking-widest ml-2">Full Name</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="e.g., Tariq El-Amin"
                   className="w-full bg-[#F8FAFF] rounded-2xl py-4 px-8 text-sm outline-none border border-transparent focus:border-[#006699] transition-all shadow-inner"
                   required
@@ -65,8 +66,8 @@ const Contact = () => {
               </div>
               <div className="space-y-3">
                 <label className="text-[#0F4C81] text-xs font-bold uppercase tracking-widest ml-2">Email Address</label>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   placeholder="hello@example.com"
                   className="w-full bg-[#F8FAFF] rounded-2xl py-4 px-8 text-sm outline-none border border-transparent focus:border-[#006699] transition-all shadow-inner"
                   required
@@ -74,8 +75,8 @@ const Contact = () => {
               </div>
               <div className="md:col-span-2 space-y-3">
                 <label className="text-[#0F4C81] text-xs font-bold uppercase tracking-widest ml-2">Subject</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="How can we help you?"
                   className="w-full bg-[#F8FAFF] rounded-2xl py-4 px-8 text-sm outline-none border border-transparent focus:border-[#006699] transition-all shadow-inner"
                   required
@@ -83,7 +84,7 @@ const Contact = () => {
               </div>
               <div className="md:col-span-2 space-y-3">
                 <label className="text-[#0F4C81] text-xs font-bold uppercase tracking-widest ml-2">Message</label>
-                <textarea 
+                <textarea
                   rows="6"
                   placeholder="Tell us about your travel plans..."
                   className="w-full bg-[#F8FAFF] rounded-3xl py-6 px-8 text-sm outline-none border border-transparent focus:border-[#006699] transition-all shadow-inner resize-none leading-relaxed text-gray-500"
@@ -91,7 +92,7 @@ const Contact = () => {
                 ></textarea>
               </div>
               <div className="md:col-span-2 flex justify-end pt-6">
-                <button 
+                <button
                   type="submit"
                   className="bg-[#006699] text-white px-12 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-[#004d73] transition-all shadow-xl shadow-blue-100"
                 >
@@ -145,15 +146,14 @@ const Contact = () => {
 
         {/* Bottom Banner */}
         <section className="relative rounded-[40px] overflow-hidden h-96 group shadow-2xl">
-          <img 
-            src="https://images.unsplash.com/photo-1596395817202-6028590c67e7?q=80&w=2000" 
-            alt="Algiers City" 
+          <img
+            src={algiersImg} alt="Algiers City"
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
           <div className="absolute bottom-12 left-12 space-y-2">
-             <p className="text-white/70 text-[10px] font-bold uppercase tracking-[0.3em]">Headquarters</p>
-             <h3 className="text-white text-5xl font-extrabold tracking-tight">Algiers, The White City</h3>
+            <p className="text-white/70 text-[10px] font-bold uppercase tracking-[0.3em]">Headquarters</p>
+            <h3 className="text-white text-5xl font-extrabold tracking-tight">Algiers, The White City</h3>
           </div>
         </section>
 

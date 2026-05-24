@@ -34,10 +34,9 @@ const Profile = () => {
         );
         setMyBlogs(userBlogs);
 
-        // Fetch favorites
-        const favResponse = await dataService.getFavorites();
-        const favList = favResponse.results || favResponse || [];
-        setFavorites(Array.isArray(favList) ? favList : []);
+        // Load favorites from localStorage (same source as PlaceCard)
+        const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        setFavorites(savedFavorites);
 
         // Fetch comments from blogs
         const userComments = blogsList
@@ -56,6 +55,14 @@ const Profile = () => {
     };
 
     fetchAll();
+
+    // Keep favorites in sync if updated from another tab/component
+    const handleFavUpdate = () => {
+      const saved = JSON.parse(localStorage.getItem('favorites') || '[]');
+      setFavorites(saved);
+    };
+    window.addEventListener('favoritesUpdated', handleFavUpdate);
+    return () => window.removeEventListener('favoritesUpdated', handleFavUpdate);
   }, []);
 
   const handleLogout = async () => {
@@ -133,21 +140,38 @@ const Profile = () => {
                   </div>
                   <h2 className="text-[#0F4C81] text-3xl font-bold">My Favorites</h2>
                 </div>
+                <Link to="/favorites" className="text-[#006699] text-sm font-bold hover:underline">
+                  View all
+                </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {favorites.length === 0 ? (
                   <div className="col-span-3 text-center py-10">
                     <p className="text-gray-400 font-medium">No favorites yet</p>
+                    <Link to="/search" className="text-[#006699] text-sm font-bold mt-2 inline-block hover:underline">
+                      Discover places
+                    </Link>
                   </div>
                 ) : (
-                  favorites.map(item => (
-                    <div key={item.id} className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50">
-                      <img src={item.place_details?.cover_image || item.image} alt={item.place_details?.name || item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  favorites.slice(0, 9).map(item => (
+                    <Link
+                      key={item.id}
+                      to={item.linkTo || `/details/${item.id}`}
+                      className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50 block"
+                    >
+                      <img
+                        src={item.image || item.cover_image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                       <div className="absolute bottom-6 left-6 right-6">
-                        <h4 className="text-white font-bold mb-1 truncate">{item.place_details?.name || item.name}</h4>
+                        <h4 className="text-white font-bold mb-1 truncate">{item.name}</h4>
+                        {item.location && (
+                          <p className="text-white/60 text-xs truncate">{item.location}</p>
+                        )}
                       </div>
-                    </div>
+                    </Link>
                   ))
                 )}
               </div>

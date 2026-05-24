@@ -51,8 +51,20 @@ const Home = () => {
         setFeaturedDestinations(data.featured_destinations || []);
         setUpcomingEvents(data.upcoming_events || []);
 
-        setPlaces(placesResponse?.data || placesResponse || []);
-        setWilayas(wilayasResponse?.data || wilayasResponse || []);
+        // ── FIX: normalize places array regardless of API response shape ──
+        let placesItems = [];
+        if (Array.isArray(placesResponse)) placesItems = placesResponse;
+        else if (Array.isArray(placesResponse?.data)) placesItems = placesResponse.data;
+        else if (Array.isArray(placesResponse?.results)) placesItems = placesResponse.results;
+        setPlaces(placesItems);
+
+        // ── FIX: normalize wilayas array regardless of API response shape ──
+        let wilayasItems = [];
+        if (Array.isArray(wilayasResponse)) wilayasItems = wilayasResponse;
+        else if (Array.isArray(wilayasResponse?.data)) wilayasItems = wilayasResponse.data;
+        else if (Array.isArray(wilayasResponse?.results)) wilayasItems = wilayasResponse.results;
+        setWilayas(wilayasItems);
+
         setDataLoaded(true);
       } catch (error) {
         console.error('Failed to load home data:', error);
@@ -70,7 +82,6 @@ const Home = () => {
     let hotelsArray = [];
     let restaurantsArray = [];
 
-    // Filter by category and build separate arrays for each place type
     if (activeCategory === 'All') {
       items = places.filter(p => p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
         id: p.id,
@@ -299,33 +310,14 @@ const Home = () => {
     }
   }, [upcomingEvents, dataLoaded]);
 
-  const handleDiscoverPrev = () => {
-    setDiscoverIndex(prev => Math.max(0, prev - 1));
-  };
-  const handleDiscoverNext = () => {
-    setDiscoverIndex(prev => Math.min(Math.max(0, filteredCards.length - 3), prev + 1));
-  };
-
-  const handleHotelsPrev = () => {
-    setHotelsIndex(prev => Math.max(0, prev - 1));
-  };
-  const handleHotelsNext = () => {
-    setHotelsIndex(prev => Math.min(Math.max(0, hotels.length - 3), prev + 1));
-  };
-
-  const handleRestaurantsPrev = () => {
-    setRestaurantsIndex(prev => Math.max(0, prev - 1));
-  };
-  const handleRestaurantsNext = () => {
-    setRestaurantsIndex(prev => Math.min(Math.max(0, restaurants.length - 3), prev + 1));
-  };
-
-  const handleEventPrev = () => {
-    setEventIndex(prev => Math.max(0, prev - 1));
-  };
-  const handleEventNext = () => {
-    setEventIndex(prev => Math.min(Math.max(0, shuffledEvents.length - 3), prev + 1));
-  };
+  const handleDiscoverPrev = () => setDiscoverIndex(prev => Math.max(0, prev - 1));
+  const handleDiscoverNext = () => setDiscoverIndex(prev => Math.min(Math.max(0, filteredCards.length - 3), prev + 1));
+  const handleHotelsPrev = () => setHotelsIndex(prev => Math.max(0, prev - 1));
+  const handleHotelsNext = () => setHotelsIndex(prev => Math.min(Math.max(0, hotels.length - 3), prev + 1));
+  const handleRestaurantsPrev = () => setRestaurantsIndex(prev => Math.max(0, prev - 1));
+  const handleRestaurantsNext = () => setRestaurantsIndex(prev => Math.min(Math.max(0, restaurants.length - 3), prev + 1));
+  const handleEventPrev = () => setEventIndex(prev => Math.max(0, prev - 1));
+  const handleEventNext = () => setEventIndex(prev => Math.min(Math.max(0, shuffledEvents.length - 3), prev + 1));
 
   const defaultThemes = [
     {
@@ -424,24 +416,11 @@ const Home = () => {
   };
 
   const categoriesTabs = ['All', ...categories.map(category => category.name)];
-  const discoverItems = upcomingEvents.map(event => ({
-    id: event.id,
-    name: event.name,
-    image: event.cover_image,
-    description: event.short_desc || event.description,
-    type: 'Event',
-    date: event.date_range,
-    location: event.wilaya_name,
-    rating: event.avg_rating || 5,
-    wilaya: event.wilaya_name,
-    linkTo: `/wilaya/${event.wilaya_id}`,
-  }));
 
   return (
     <div className="bg-white">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-28 pb-48 overflow-hidden">
-        {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
             src={activeTheme.bgImage}
@@ -451,10 +430,8 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/30 to-transparent"></div>
         </div>
 
-        {/* Transition Overlay */}
         <div className={`absolute inset-0 z-40 bg-white transition-opacity duration-500 pointer-events-none ${isTransitioning ? 'opacity-20' : 'opacity-0'}`}></div>
 
-        {/* Navigation Arrows */}
         <button
           onClick={handlePrev}
           className="absolute left-10 z-30 p-5 rounded-full border border-white/20 text-white/40 hover:text-white hover:border-white transition-all backdrop-blur-md group"
@@ -474,7 +451,6 @@ const Home = () => {
         </button>
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-16 items-center">
-          {/* Hero Content - Fixed Column */}
           <div className="flex flex-col justify-center min-h-[500px]">
             <div className={`space-y-10 transition-all duration-700 transform ${isTransitioning ? 'opacity-0 -translate-x-12' : 'opacity-100 translate-x-0'}`}>
               <div className="inline-block px-5 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-[12px] font-bold text-white uppercase tracking-widest">
@@ -502,9 +478,7 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Hero Image Layout (Right) - Locked Position */}
           <div className="hidden lg:flex items-center gap-10 justify-end relative h-[650px]">
-            {/* Center Large Card - Strictly Fixed Dimensions */}
             <div className="w-[360px] h-[520px] flex-shrink-0">
               <div className={`relative w-full h-full rounded-[50px] overflow-hidden border-[12px] border-white/5 shadow-2xl group transition-all duration-700 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
                 <img src={activeTheme.mainImage} alt="Main" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
@@ -515,7 +489,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Stacked Cards - Strictly Fixed Dimensions */}
             <div className="space-y-8 flex flex-col flex-shrink-0">
               <div className="w-[300px] h-[200px] flex-shrink-0">
                 <div className={`relative w-full h-full rounded-[40px] overflow-hidden border-[6px] border-white/5 shadow-xl group transition-all duration-700 delay-75 transform ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
@@ -539,14 +512,12 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Dot Pagination */}
         <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 flex items-center gap-6">
           {themes.map((_, idx) => (
             <button
               key={idx}
               onClick={() => !isTransitioning && setCurrentIndex(idx)}
-              className={`transition-all duration-700 rounded-full ${currentIndex === idx ? 'w-10 h-3 bg-white shadow-xl' : 'w-3 h-3 bg-white/30 hover:bg-white/50'
-                }`}
+              className={`transition-all duration-700 rounded-full ${currentIndex === idx ? 'w-10 h-3 bg-white shadow-xl' : 'w-3 h-3 bg-white/30 hover:bg-white/50'}`}
             ></button>
           ))}
         </div>
@@ -555,20 +526,17 @@ const Home = () => {
       {/* Floating Search Widget */}
       <div className="relative z-30 max-w-5xl mx-auto -mt-24 px-6 pb-20">
         <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-gray-100">
-          {/* Search Tabs */}
           <div className="flex items-center space-x-10 mb-8 border-b border-gray-50 pb-4 overflow-x-auto no-scrollbar">
             {categoriesTabs.map((tab, i) => (
               <button
                 key={tab}
-                className={`text-[13px] font-bold pb-4 whitespace-nowrap transition-all uppercase tracking-wider ${i === 0 ? 'text-[#006699] border-b-2 border-[#006699]' : 'text-gray-300 hover:text-gray-500'
-                  }`}
+                className={`text-[13px] font-bold pb-4 whitespace-nowrap transition-all uppercase tracking-wider ${i === 0 ? 'text-[#006699] border-b-2 border-[#006699]' : 'text-gray-300 hover:text-gray-500'}`}
               >
                 {tab}
               </button>
             ))}
           </div>
 
-          {/* Search Inputs */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-8 items-end">
             <div className="space-y-3">
               <label className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] ml-2">Where to go</label>
@@ -602,7 +570,7 @@ const Home = () => {
 
             <button
               onClick={handleHomeSearch}
-              className="bg-[#FF7F50] text-white rounded-2xl py-5 px-10 font-bold hover:bg-[#E67348] transition-all shadow-xl shadow-orange-100 flex items-center justify-center space-x-3 transform hover:scale-[1.02]"
+              className="text-white rounded-2xl py-5 px-10 font-bold hover:opacity-90 transition-all shadow-xl shadow-orange-100 flex items-center justify-center space-x-3 transform hover:scale-[1.02]"
               style={{ backgroundColor: activeTheme.accent }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -651,10 +619,7 @@ const Home = () => {
             <button
               key={catName}
               onClick={() => setActiveCategory(catName)}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${activeCategory === catName
-                ? 'text-white shadow-lg'
-                : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'
-                }`}
+              className={`px-8 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${activeCategory === catName ? 'text-white shadow-lg' : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'}`}
               style={activeCategory === catName ? { backgroundColor: activeTheme.accent } : {}}
             >
               {catName}
@@ -662,46 +627,40 @@ const Home = () => {
           ))}
         </div>
 
-        {/* Cards Grid */}
         {filteredCards.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {filteredCards.slice(discoverIndex, discoverIndex + 3).map(card => {
-              return (
-                <div key={card.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
-                  <div className="absolute top-4 right-4 z-10">
-                    <span
-                      className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-opacity-95 shadow-sm"
-                      style={{ backgroundColor: activeTheme.accent }}
-                    >
-                      {card.type === 'Destination' ? 'WILAYA' : activeCategory.toUpperCase()}
-                    </span>
-                  </div>
-
-                  <Link to={card.linkTo} className="block flex-1 flex flex-col">
-                    <div className="h-64 overflow-hidden relative">
-                      <img src={card.image} alt={card.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                    </div>
-
-                    <div className="p-8 flex flex-col flex-1">
-                      <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
-                        {card.name}
-                      </h3>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
-                        {card.description}
-                      </p>
-
-                      <div className="flex items-center text-sm font-bold mt-auto" style={{ color: activeTheme.accent }}>
-                        <span>Learn More</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
-                    </div>
-                  </Link>
+            {filteredCards.slice(discoverIndex, discoverIndex + 3).map(card => (
+              <div key={card.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
+                <div className="absolute top-4 right-4 z-10">
+                  <span
+                    className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-opacity-95 shadow-sm"
+                    style={{ backgroundColor: activeTheme.accent }}
+                  >
+                    {card.type === 'Destination' ? 'WILAYA' : activeCategory.toUpperCase()}
+                  </span>
                 </div>
-              );
-            })}
+                <Link to={card.linkTo} className="block flex-1 flex flex-col">
+                  <div className="h-64 overflow-hidden relative">
+                    <img src={card.image} alt={card.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                  </div>
+                  <div className="p-8 flex flex-col flex-1">
+                    <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
+                      {card.name}
+                    </h3>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
+                      {card.description}
+                    </p>
+                    <div className="flex items-center text-sm font-bold mt-auto" style={{ color: activeTheme.accent }}>
+                      <span>Learn More</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="text-center py-12 text-gray-400">
@@ -741,42 +700,30 @@ const Home = () => {
               </div>
             )}
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {hotels.slice(hotels_index, hotels_index + 6).map(hotel => {
-              return (
-                <div key={hotel.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">
-                      HOTEL
-                    </span>
-                  </div>
-
-                  <Link to={hotel.linkTo} className="block flex-1 flex flex-col">
-                    <div className="h-64 overflow-hidden relative">
-                      <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                    </div>
-
-                    <div className="p-8 flex flex-col flex-1">
-                      <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
-                        {hotel.name}
-                      </h3>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
-                        {hotel.description}
-                      </p>
-
-                      <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
-                        <span>Learn More</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
-                    </div>
-                  </Link>
+            {hotels.slice(hotels_index, hotels_index + 6).map(hotel => (
+              <div key={hotel.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
+                <div className="absolute top-4 right-4 z-10">
+                  <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">HOTEL</span>
                 </div>
-              );
-            })}
+                <Link to={hotel.linkTo} className="block flex-1 flex flex-col">
+                  <div className="h-64 overflow-hidden relative">
+                    <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                  </div>
+                  <div className="p-8 flex flex-col flex-1">
+                    <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">{hotel.name}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">{hotel.description}</p>
+                    <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
+                      <span>Learn More</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
           </div>
         </section>
       )}
@@ -812,42 +759,30 @@ const Home = () => {
               </div>
             )}
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {restaurants.slice(restaurants_index, restaurants_index + 6).map(restaurant => {
-              return (
-                <div key={restaurant.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">
-                      RESTAURANT
-                    </span>
-                  </div>
-
-                  <Link to={restaurant.linkTo} className="block flex-1 flex flex-col">
-                    <div className="h-64 overflow-hidden relative">
-                      <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                    </div>
-
-                    <div className="p-8 flex flex-col flex-1">
-                      <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">
-                        {restaurant.name}
-                      </h3>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
-                        {restaurant.description}
-                      </p>
-
-                      <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
-                        <span>Learn More</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
-                    </div>
-                  </Link>
+            {restaurants.slice(restaurants_index, restaurants_index + 6).map(restaurant => (
+              <div key={restaurant.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-50 flex flex-col h-full">
+                <div className="absolute top-4 right-4 z-10">
+                  <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">RESTAURANT</span>
                 </div>
-              );
-            })}
+                <Link to={restaurant.linkTo} className="block flex-1 flex flex-col">
+                  <div className="h-64 overflow-hidden relative">
+                    <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                  </div>
+                  <div className="p-8 flex flex-col flex-1">
+                    <h3 className="text-[#0F4C81] text-2xl font-bold mb-4 group-hover:text-[#FF7F50] transition-colors leading-snug">{restaurant.name}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">{restaurant.description}</p>
+                    <div className="flex items-center text-sm font-bold text-[#FF7F50] mt-auto">
+                      <span>Learn More</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
           </div>
         </section>
       )}
@@ -891,7 +826,6 @@ const Home = () => {
                 const eventDate = event.period || event.date_range || 'Upcoming';
                 const eventLocation = event.location || event.wilaya_name || 'Algeria';
                 const detailLink = `/details/event-${event.id}`;
-
                 return (
                   <div key={event.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-100 flex flex-col h-full">
                     <Link to={detailLink} className="block flex-1 flex flex-col">
@@ -899,12 +833,8 @@ const Home = () => {
                         <img src={eventImage} alt={event.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
                       </div>
-
                       <div className="p-8 flex flex-col flex-1">
-                        <h3 className="text-[#0F4C81] text-2xl font-bold mb-5 group-hover:text-[#FF7F50] transition-colors leading-snug">
-                          {event.name}
-                        </h3>
-
+                        <h3 className="text-[#0F4C81] text-2xl font-bold mb-5 group-hover:text-[#FF7F50] transition-colors leading-snug">{event.name}</h3>
                         <div className="space-y-3 mt-auto">
                           <div className="flex items-center text-gray-500 text-sm font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -912,7 +842,6 @@ const Home = () => {
                             </svg>
                             <span>{eventDate}</span>
                           </div>
-
                           <div className="flex items-center text-gray-500 text-sm font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

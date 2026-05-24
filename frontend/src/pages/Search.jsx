@@ -23,12 +23,12 @@ const Search = () => {
 
         let p = placesResponse ?? [];
         if (p.results) p = p.results;
-        if (p.data) p = p.data;
+        else if (p.data) p = p.data;
         setPlaces(Array.isArray(p) ? p : []);
 
         let w = wilayasResponse ?? [];
         if (w.results) w = w.results;
-        if (w.data) w = w.data;
+        else if (w.data) w = w.data;
         setWilayaOptions(Array.isArray(w) ? w : []);
       } catch (error) {
         console.error('Failed to load search data:', error);
@@ -43,27 +43,40 @@ const Search = () => {
   const allItems = useMemo(
     () => places.map(place => ({
       ...place,
-      image: place.cover_image,
-      description: place.short_desc,
-      type: place.place_type_display || place.place_type,
+      image: place.cover_image || place.external_image_url,
+      description: place.short_desc || place.description,
+      type: place.place_type_display || place.place_type || 'Place',
       wilaya: place.wilaya_name,
+      linkTo: `/details/${place.id}`,
     })),
     [places]
   );
 
+  const matchesCategory = (itemType, selectedCategory) => {
+    if (selectedCategory === 'All') return true;
+    const t = (itemType || '').toLowerCase();
+    if (selectedCategory === 'Hotels')
+      return t.includes('hotel') || t.includes('accommodation') || t.includes('stay') || t.includes('lodge') || t.includes('inn');
+    if (selectedCategory === 'Restaurants')
+      return t.includes('restaurant') || t.includes('dining') || t.includes('food') || t.includes('cafe') || t.includes('eatery');
+    if (selectedCategory === 'Landmarks')
+      return t.includes('landmark') || t.includes('attraction') || t.includes('historic') || t.includes('museum') || t.includes('monument') || t.includes('park') || t.includes('site') || t.includes('place');
+    return true;
+  };
+
   const filteredResults = useMemo(() => {
     return allItems.filter(item => {
       const matchesQuery = !queryFromUrl ||
-        item.name.toLowerCase().includes(queryFromUrl.toLowerCase()) ||
-        item.wilaya?.toLowerCase().includes(queryFromUrl.toLowerCase());
+        item.name?.toLowerCase().includes(queryFromUrl.toLowerCase()) ||
+        item.wilaya?.toLowerCase().includes(queryFromUrl.toLowerCase()) ||
+        item.description?.toLowerCase().includes(queryFromUrl.toLowerCase());
 
-      const matchesCategory = selectedCategory === 'All' ||
-        (item.type && item.type.toLowerCase() === selectedCategory.toLowerCase().slice(0, -1));
+      const matchesCat = matchesCategory(item.type, selectedCategory);
 
       const matchesWilaya = selectedWilayas.length === 0 ||
         selectedWilayas.includes(item.wilaya);
 
-      return matchesQuery && matchesCategory && matchesWilaya;
+      return matchesQuery && matchesCat && matchesWilaya;
     });
   }, [allItems, queryFromUrl, selectedCategory, selectedWilayas]);
 
@@ -97,14 +110,12 @@ const Search = () => {
                       onChange={() => setSelectedCategory(cat)}
                       className="hidden"
                     />
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                      selectedCategory === cat ? 'border-[#006699]' : 'border-gray-200 group-hover:border-gray-300'
-                    }`}>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${selectedCategory === cat ? 'border-[#006699]' : 'border-gray-200 group-hover:border-gray-300'
+                      }`}>
                       {selectedCategory === cat && <div className="w-2.5 h-2.5 rounded-full bg-[#006699]" />}
                     </div>
-                    <span className={`ml-4 text-sm font-medium transition-colors ${
-                      selectedCategory === cat ? 'text-[#0F4C81]' : 'text-gray-500'
-                    }`}>{cat}</span>
+                    <span className={`ml-4 text-sm font-medium transition-colors ${selectedCategory === cat ? 'text-[#0F4C81]' : 'text-gray-500'
+                      }`}>{cat}</span>
                   </label>
                 ))}
               </div>
@@ -122,18 +133,16 @@ const Search = () => {
                       onChange={() => toggleWilaya(wilaya.name)}
                       className="hidden"
                     />
-                    <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${
-                      selectedWilayas.includes(wilaya.name) ? 'bg-[#006699] border-[#006699]' : 'bg-white border-gray-200 group-hover:border-gray-300'
-                    }`}>
+                    <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${selectedWilayas.includes(wilaya.name) ? 'bg-[#006699] border-[#006699]' : 'bg-white border-gray-200 group-hover:border-gray-300'
+                      }`}>
                       {selectedWilayas.includes(wilaya.name) && (
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       )}
                     </div>
-                    <span className={`ml-4 text-sm font-medium transition-colors ${
-                      selectedWilayas.includes(wilaya.name) ? 'text-[#0F4C81]' : 'text-gray-500'
-                    }`}>{wilaya.name}</span>
+                    <span className={`ml-4 text-sm font-medium transition-colors ${selectedWilayas.includes(wilaya.name) ? 'text-[#0F4C81]' : 'text-gray-500'
+                      }`}>{wilaya.name}</span>
                   </label>
                 ))}
               </div>
@@ -148,7 +157,9 @@ const Search = () => {
               {queryFromUrl ? `Search Results for "${queryFromUrl}"` : 'Search All Destinations'}
             </h1>
             <p className="text-gray-400 font-medium">
-              {isLoading ? 'Loading search results...' : `Showing ${filteredResults.length} results matching your criteria.`}
+              {isLoading
+                ? 'Loading search results...'
+                : `Showing ${filteredResults.length} result${filteredResults.length !== 1 ? 's' : ''} matching your criteria.`}
             </p>
           </div>
 

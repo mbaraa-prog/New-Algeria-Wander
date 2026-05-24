@@ -1,22 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import houssemImg from '../assets/houssem.jpeg';
+import braaImg from '../assets/braa.jpg';
+import manelImg from '../assets/manel.jpg';
+import raniaImg from '../assets/rania.jpg';
+import mouniaImg from '../assets/mounia.jpg';
+import louayImg from '../assets/louay.jpg';
+
 const About = () => {
   const team = [
     {
-      name: 'Amira Benali',
-      role: 'Founder & Explorer',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400'
+      name: 'Houssem Mansouri',
+      role: 'Design+Frontend+Fixing bugs',
+      image: houssemImg
     },
     {
-      name: 'Tariq Mansouri',
-      role: 'Head of Content',
-      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400'
+      name: 'Braa Chaalel',
+      role: 'Frontend+Design',
+      image: braaImg
     },
     {
-      name: 'Lina Haddad',
-      role: 'Lead Designer',
-      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400'
+      name: 'Manel Khouani',
+      role: 'Frontend',
+      image: manelImg
+    },
+    {
+      name: 'Rania Saidi',
+      role: 'Backend Developer',
+      image: raniaImg
+    },
+    {
+      name: 'Mounia Mazit',
+      role: 'Data base and Reports',
+      image: mouniaImg
+    },
+    {
+      name: 'Louay Aounalah',
+      role: 'Backend+team leader',
+      image: louayImg
     }
   ];
 
@@ -24,9 +46,9 @@ const About = () => {
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1509233725247-49e657c54213?q=80&w=2000" 
-          alt="Sahara Dunes" 
+        <img
+          src="https://images.unsplash.com/photo-1509233725247-49e657c54213?q=80&w=2000"
+          alt="Sahara Dunes"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>
@@ -55,9 +77,9 @@ const About = () => {
           </div>
         </div>
         <div className="rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-700">
-          <img 
-            src="https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?q=80&w=1200" 
-            alt="Coastal Algeria" 
+          <img
+            src="https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?q=80&w=1200"
+            alt="Coastal Algeria"
             className="w-full h-[500px] object-cover"
           />
         </div>
@@ -69,17 +91,17 @@ const About = () => {
           <div className="text-center space-y-6">
             <h2 className="text-[#0F4C81] text-5xl font-extrabold tracking-tight">Meet the Team</h2>
             <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto">
-              A passionate group of explorers, designers, and storytellers dedicated to bringing you the best of Algeria.
+              A passionate group of developers, designers, and storytellers dedicated to bringing you the best of Algeria.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {team.map((member, index) => (
               <div key={index} className="bg-white rounded-[40px] overflow-hidden shadow-sm hover:shadow-xl transition-all group">
                 <div className="h-80 overflow-hidden">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
+                  <img
+                    src={member.image}
+                    alt={member.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
@@ -100,8 +122,8 @@ const About = () => {
           <p className="text-gray-400 text-xl font-medium">
             Join us in exploring the rich history, diverse landscapes, and vibrant culture of Algeria. Let's make memories that last a lifetime.
           </p>
-          <Link 
-            to="/wilayas" 
+          <Link
+            to="/wilayas"
             className="inline-block bg-[#006699] text-white px-12 py-5 rounded-2xl font-bold text-lg hover:bg-[#004d73] transition-all shadow-xl shadow-blue-100"
           >
             Explore Destinations
