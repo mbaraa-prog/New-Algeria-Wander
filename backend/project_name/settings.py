@@ -2,6 +2,7 @@ from datetime import timedelta
 from pathlib import Path
 from decouple import config, Csv
 import sys
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +22,8 @@ def _parse_allowed_hosts(raw) -> list[str]:
     return [h for h in s.replace(",", " ").split() if h]
 
 
-SECRET_KEY = config("DJANGO_SECRET_KEY", default="django-insecure-change-me")
+SECRET_KEY = config("DJANGO_SECRET_KEY", default="django-insecure-dev-only-change-in-production")
+
 DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 
 _allowed_hosts_str = config(
@@ -72,6 +74,7 @@ if sys.version_info >= (3, 14):
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -101,30 +104,42 @@ TEMPLATES = [
 WSGI_APPLICATION = "project_name.wsgi.application"
 
 # ── Database ───────────────────────────────────────────────────────────────
-USE_SQLITE = config("USE_SQLITE", default=DEBUG, cast=bool)
+DATABASE_URL = config("DATABASE_URL", default=None)
 
-if USE_SQLITE:
+if DATABASE_URL:
+    # Use DATABASE_URL from environment (production)
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
 else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": config("DB_NAME", default="algeria_wander"),
-            "USER": config("DB_USER", default="root"),
-            "PASSWORD": config("DB_PASSWORD", default=""),
-            "HOST": config("DB_HOST", default="127.0.0.1"),
-            "PORT": config("DB_PORT", default="3306"),
-            "OPTIONS": {
-                "charset": "utf8mb4",
-                "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-            },
+    USE_SQLITE = config("USE_SQLITE", default=DEBUG, cast=bool)
+    
+    if USE_SQLITE:
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
         }
-    }
+    else:
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.mysql",
+                "NAME": config("DB_NAME", default="algeria_wander"),
+                "USER": config("DB_USER", default="root"),
+                "PASSWORD": config("DB_PASSWORD", default=""),
+                "HOST": config("DB_HOST", default="127.0.0.1"),
+                "PORT": config("DB_PORT", default="3306"),
+                "OPTIONS": {
+                    "charset": "utf8mb4",
+                    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+                },
+            }
+        }
 
 AUTH_USER_MODEL = "users.User"
 
@@ -183,17 +198,45 @@ CORS_ALLOWED_ORIGINS = config(
     cast=Csv(),
 )
 CORS_ALLOW_CREDENTIALS = True
-# Allow all origins in DEBUG mode (for opening HTML files directly)
-CORS_ALLOW_ALL_ORIGINS = config("DJANGO_DEBUG", default=True, cast=bool)
+# Allow all origins only in DEBUG mode (for development)
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Africa/Algiers"
 USE_I18N = True
 USE_TZ = True
 
+# ── Static Files ───────────────────────────────────────────────────────────
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# WhiteNoise compression
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ── Production Security Settings ───────────────────────────────────────────
+if not DEBUG:
+    # HTTPS/Security
+    SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_SECURITY_POLICY = {
+        "default-src": ("'self'",),
+        "script-src": ("'self'", "'unsafe-inline'"),
+        "style-src": ("'self'", "'unsafe-inline'"),
+        "img-src": ("'self'", "data:", "https:"),
+        "font-src": ("'self'", "data:"),
+        "connect-src": ("'self'",),
+    }
+    
+    # Trust proxy headers for HTTPS when behind reverse proxy
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    
+    # HSTS (HTTP Strict Transport Security)
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

@@ -16,7 +16,7 @@ const About = () => {
       image: houssemImg
     },
     {
-      name: 'Braa Chaalel',
+      name: 'Mohammed Baraa Chaalel',
       role: 'Frontend+Design',
       image: braaImg
     },
