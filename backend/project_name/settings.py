@@ -107,42 +107,11 @@ TEMPLATES = [
 WSGI_APPLICATION = "project_name.wsgi.application"
 
 # ── Database ───────────────────────────────────────────────────────────────
-DATABASE_URL = config("DATABASE_URL", default=None)
-
-if DATABASE_URL:
-    # Use DATABASE_URL from environment (production)
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-else:
-    USE_SQLITE = config("USE_SQLITE", default=DEBUG, cast=bool)
-    
-    if USE_SQLITE:
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.sqlite3",
-                "NAME": BASE_DIR / "db.sqlite3",
-            }
-        }
-    else:
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.mysql",
-                "NAME": config("DB_NAME", default="algeria_wander"),
-                "USER": config("DB_USER", default="root"),
-                "PASSWORD": config("DB_PASSWORD", default=""),
-                "HOST": config("DB_HOST", default="127.0.0.1"),
-                "PORT": config("DB_PORT", default="3306"),
-                "OPTIONS": {
-                    "charset": "utf8mb4",
-                    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-                },
-            }
-        }
+DATABASES = {
+    "default": dj_database_url.config(
+        default="sqlite:///db.sqlite3"
+    )
+}
 
 AUTH_USER_MODEL = "users.User"
 
