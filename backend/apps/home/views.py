@@ -46,18 +46,18 @@ class HomePageView(APIView):
 
         today = timezone.now().date()
 
-        slides    = HeroSlide.objects.filter(is_active=True).prefetch_related(
-                        "featured_wilayas", "featured_wilayas__category")
+        slides     = HeroSlide.objects.filter(is_active=True).prefetch_related(
+                         "featured_wilayas", "featured_wilayas__category")
         categories = Category.objects.filter(is_active=True)
         featured   = Wilaya.objects.filter(is_active=True, is_featured=True).select_related("category")[:6]
-        upcoming   = Event.objects.filter(is_active=True, end_date__gte=today).select_related("wilaya")[:6]
+        upcoming   = Event.objects.filter(is_active=True).order_by('-end_date').select_related("wilaya")[:6]
 
         return Response({
             "success": True,
             "data": {
-                "hero_slides":          HeroSlideSerializer(slides,     many=True, context={"request": request}).data,
-                "categories":           CategorySerializer(categories,  many=True, context={"request": request}).data,
-                "featured_destinations": WilayaListSerializer(featured, many=True, context={"request": request}).data,
-                "upcoming_events":      EventSerializer(upcoming,       many=True, context={"request": request}).data,
+                "hero_slides":           HeroSlideSerializer(slides,     many=True, context={"request": request}).data,
+                "categories":            CategorySerializer(categories,  many=True, context={"request": request}).data,
+                "featured_destinations": WilayaListSerializer(featured,  many=True, context={"request": request}).data,
+                "upcoming_events":       EventSerializer(upcoming,       many=True, context={"request": request}).data,
             },
         })

@@ -156,10 +156,10 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "20/minute",
-        "user": "100/minute",
-    },
+"DEFAULT_THROTTLE_RATES": {
+    "anon": "200/minute",
+    "user": "1000/minute",
+},
     "DEFAULT_PAGINATION_CLASS": "project_name.pagination.StandardPagination",
     "PAGE_SIZE": 12,
     "EXCEPTION_HANDLER": "project_name.exceptions.custom_exception_handler",
