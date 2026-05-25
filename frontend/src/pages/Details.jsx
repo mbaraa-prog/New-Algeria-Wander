@@ -11,8 +11,8 @@ const Details = () => {
   const [reviews, setReviews] = useState([]);
   const [relatedPlaces, setRelatedPlaces] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  
   const [reviewRating, setReviewRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
@@ -75,6 +75,25 @@ const Details = () => {
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    if (!item) return;
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setIsFavorite(favorites.some(fav => fav.id === item.id));
+  }, [item]);
+
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    let updatedFavorites;
+    if (isFavorite) {
+      updatedFavorites = favorites.filter(fav => fav.id !== item.id);
+    } else {
+      updatedFavorites = [...favorites, item];
+    }
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    setIsFavorite(!isFavorite);
+    window.dispatchEvent(new Event('favoritesUpdated'));
+  };
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -164,8 +183,11 @@ const Details = () => {
                 {placeName}
               </h1>
               <div className="flex space-x-4 mb-2">
-                <button className="bg-white/10 backdrop-blur-md p-4 rounded-full text-white hover:bg-[#FF7F50] transition-all border border-white/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button
+                  onClick={toggleFavorite}
+                  className={`backdrop-blur-md p-4 rounded-full transition-all border border-white/20 ${isFavorite ? 'bg-[#FF7F50] text-white' : 'bg-white/10 text-white hover:bg-[#FF7F50]'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill={isFavorite ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
@@ -243,7 +265,6 @@ const Details = () => {
           <div className="space-y-10">
             <h2 className="text-[#0F4C81] text-3xl font-bold">Visitor Opinions</h2>
 
-            {/* Review Form */}
             <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
               <form onSubmit={handleSubmitReview}>
                 <div className="flex items-start space-x-6">
@@ -255,13 +276,13 @@ const Details = () => {
                       }
                       alt="User"
                       className="w-full h-full object-cover"
-                    />                  </div>
+                    />
+                  </div>
                   <div className="flex-1 space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-[#0F4C81]">
                         {user ? user.username : 'Sign in to leave a review'}
                       </span>
-                      {/* Star Rating */}
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
@@ -274,10 +295,7 @@ const Details = () => {
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className={`h-6 w-6 transition-colors ${star <= (hoveredRating || reviewRating)
-                                ? 'text-[#FF7F50]'
-                                : 'text-gray-200'
-                                }`}
+                              className={`h-6 w-6 transition-colors ${star <= (hoveredRating || reviewRating) ? 'text-[#FF7F50]' : 'text-gray-200'}`}
                               viewBox="0 0 20 20"
                               fill="currentColor"
                             >
@@ -310,7 +328,6 @@ const Details = () => {
               </form>
             </div>
 
-            {/* Reviews List */}
             <div className="space-y-6">
               {reviews.length === 0 && (
                 <p className="text-gray-400 text-center py-8">No reviews yet. Be the first to share your experience!</p>
