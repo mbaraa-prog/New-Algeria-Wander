@@ -9,15 +9,23 @@
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and configure for your environment:
+Copy `.env.example` to `.env` for local development or use `.env.render.example` as a template for production.
 
+### Local Development
 ```bash
-# Production Example
+# .env (development)
+DJANGO_DEBUG=True
+DJANGO_SECRET_KEY=your-secret-key-here
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+```
+
+### Production on Render
+```bash
 DJANGO_DEBUG=False
 DJANGO_SECRET_KEY=your-secure-random-key-here
-ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+DJANGO_ALLOWED_HOSTS=algeria-wander-hods.onrender.com,.onrender.com
 DATABASE_URL=postgresql://user:password@host:5432/database_name
-CORS_ALLOWED_ORIGINS=https://yourdomain.com,https://frontend.yourdomain.com
+CORS_ALLOWED_ORIGINS=https://algeria-wander.vercel.app
 SECURE_SSL_REDIRECT=True
 ```
 
@@ -85,8 +93,8 @@ print(secrets.token_urlsafe(50))
 In Render dashboard, add:
 - `DJANGO_DEBUG` = `False`
 - `DJANGO_SECRET_KEY` = [Generate a secure key]
-- `ALLOWED_HOSTS` = `yourdomain.onrender.com`
-- `CORS_ALLOWED_ORIGINS` = `https://yourdomain.com`
+- `DJANGO_ALLOWED_HOSTS` = `algeria-wander-hods.onrender.com,.onrender.com`
+- `CORS_ALLOWED_ORIGINS` = `https://algeria-wander.vercel.app`
 - `DATABASE_URL` = [Will be auto-generated when you add PostgreSQL]
 - `SECURE_SSL_REDIRECT` = `True`
 
@@ -124,8 +132,8 @@ heroku addons:create heroku-postgresql:hobby-dev
 ```bash
 heroku config:set DJANGO_DEBUG=False
 heroku config:set DJANGO_SECRET_KEY=your-secret-key
-heroku config:set ALLOWED_HOSTS=your-app-name.herokuapp.com
-heroku config:set CORS_ALLOWED_ORIGINS=https://yourdomain.com
+heroku config:set DJANGO_ALLOWED_HOSTS=your-app-name.herokuapp.com
+heroku config:set CORS_ALLOWED_ORIGINS=https://algeria-wander.vercel.app
 heroku config:set SECURE_SSL_REDIRECT=True
 ```
 
