@@ -30,7 +30,7 @@ _allowed_hosts_str = config(
     "DJANGO_ALLOWED_HOSTS",
     default=config(
         "ALLOWED_HOSTS",
-        default="localhost,127.0.0.1,testserver,[::1]",
+        default="localhost,127.0.0.1,testserver,[::1],algeria-wander-hods.onrender.com,.onrender.com",
     ),
 )
 _parsed_hosts = _parse_allowed_hosts(_allowed_hosts_str)
@@ -167,7 +167,7 @@ SIMPLE_JWT = {
 # In production, set CORS_ALLOWED_ORIGINS explicitly in the environment.
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
-    default="http://localhost:3000,http://localhost:5173,http://127.0.0.1:5500,http://localhost:5500",
+    default="http://localhost:3000,http://localhost:5173,http://127.0.0.1:5500,http://localhost:5500,https://algeria-wander.vercel.app",
     cast=Csv(),
 )
 CORS_ALLOW_CREDENTIALS = True
