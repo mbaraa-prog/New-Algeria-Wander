@@ -7,7 +7,8 @@ services:
       pip install --upgrade pip &&
       pip install -r backend/requirements.txt &&
       python backend/manage.py collectstatic --noinput &&
-      python backend/manage.py migrate
+      python backend/manage.py migrate &&
+      python backend/manage.py load_algeria_data
     startCommand: gunicorn project_name.wsgi:application --bind 0.0.0.0:$PORT --workers 4
     envVars:
       - key: DJANGO_DEBUG
