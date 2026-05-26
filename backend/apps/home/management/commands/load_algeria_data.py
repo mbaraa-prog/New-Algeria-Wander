@@ -4,6 +4,7 @@ import os
 from datetime import date
 
 import requests
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
@@ -69,7 +70,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--file-path',
-            default=os.path.join('backend', 'algeria_data.json'),
+            default=os.path.join(settings.BASE_DIR, 'data', 'algeria_wander_data.json'),
             help='Path to the Algeria dataset JSON file.',
         )
 
@@ -77,7 +78,7 @@ class Command(BaseCommand):
         file_path = options['file_path']
 
         if not os.path.exists(file_path):
-            fallback = os.path.join('backend', 'data', 'algeria_wander_data.json')
+            fallback = os.path.join(settings.BASE_DIR, 'data', 'algeria_wander_data.json')
             if os.path.exists(fallback):
                 file_path = fallback
                 self.stdout.write(self.style.WARNING(f'Using fallback JSON file: {fallback}'))
