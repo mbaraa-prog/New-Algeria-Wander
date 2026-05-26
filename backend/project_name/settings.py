@@ -164,13 +164,14 @@ SIMPLE_JWT = {
 }
 
 # ── CORS ──────────────────────────────────────────────────────────────────
+# In production, set CORS_ALLOWED_ORIGINS explicitly in the environment.
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
-    default="http://localhost:3000,http://localhost:5173,http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:5501,http://localhost:5501,http://localhost:8080,http://127.0.0.1:8080",
+    default="http://localhost:3000,http://localhost:5173,http://127.0.0.1:5500,http://localhost:5500",
     cast=Csv(),
 )
 CORS_ALLOW_CREDENTIALS = True
-# Allow all origins only in DEBUG mode (for development)
+# Allow all origins only in DEBUG mode (for development).
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 LANGUAGE_CODE = "en-us"

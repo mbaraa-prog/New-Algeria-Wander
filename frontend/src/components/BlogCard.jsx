@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { getMediaUrl } from '../config/api';
 
 const BlogCard = ({ blog }) => {
   return (
@@ -7,9 +8,7 @@ const BlogCard = ({ blog }) => {
       {blog.cover_image && (
         <div className="md:w-2/5 relative h-64 md:h-full overflow-hidden">
           <img
-            src={blog.cover_image.startsWith('http')
-              ? blog.cover_image
-              : `http://localhost:8000/media/${blog.cover_image}`}
+            src={getMediaUrl(blog.cover_image)}
             alt={blog.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />

@@ -139,7 +139,7 @@ const EditProfile = () => {
                 <h3 className="text-[#0F4C81] text-2xl font-bold">Profile Picture</h3>
                 <div className="flex flex-col md:flex-row items-center gap-10">
                   <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg border-4 border-[#F8FAFF]">
-                    <img src={formData.avatarPreview ? (formData.avatarPreview.startsWith('blob') || formData.avatarPreview.startsWith('http') ? formData.avatarPreview : `http://localhost:8000${formData.avatarPreview}`) : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`} alt="Preview" className="w-full h-full object-cover" />
+                    <img src={formData.avatarPreview ? (formData.avatarPreview.startsWith('blob') || formData.avatarPreview.startsWith('http') ? formData.avatarPreview : getBackendAssetUrl(formData.avatarPreview)) : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                   <div className="space-y-4 text-center md:text-left">
                     <div className="flex flex-col md:flex-row gap-4">

@@ -271,7 +271,7 @@ const Details = () => {
                   <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
                     <img
                       src={user?.avatar
-                        ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`)
+                        ? getBackendAssetUrl(user.avatar)
                         : `https://i.pravatar.cc/150?u=${user?.username}`
                       }
                       alt="User"

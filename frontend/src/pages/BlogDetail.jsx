@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import dataService from '../api/data';
+import { getBackendAssetUrl, getMediaUrl } from '../config/api';
 import * as markedModule from 'marked';
 const marked = markedModule.marked;
 
@@ -75,11 +76,7 @@ const BlogDetail = () => {
     }
   };
 
-  const getCoverUrl = (path) => {
-    if (!path) return null;
-    if (path.startsWith('http')) return path;
-    return `http://localhost:8000/media/${path.replace(/^\/+/, '')}`;
-  };
+  const getCoverUrl = (path) => getMediaUrl(path);
 
   if (loading) {
     return (
@@ -172,7 +169,7 @@ const BlogDetail = () => {
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
                     <img
                       src={user?.avatar
-                        ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`)
+                        ? getBackendAssetUrl(user.avatar)
                         : `https://i.pravatar.cc/150?u=${user?.username}`
                       }
                       alt={user?.username}

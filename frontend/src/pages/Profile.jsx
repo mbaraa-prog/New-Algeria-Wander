@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getBackendAssetUrl, getMediaUrl } from '../config/api';
 import authService from '../api/auth';
 import dataService from '../api/data';
 
@@ -89,7 +90,7 @@ const Profile = () => {
               <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-[#F8FAFF] shadow-lg">
                 <img
                   src={profile?.avatar
-                    ? `http://localhost:8000${profile.avatar}`
+                    ? getBackendAssetUrl(profile.avatar)
                     : `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.full_name || profile?.username || 'U')}&background=006699&color=fff&size=200`}
                 />
               </div>
@@ -231,7 +232,7 @@ const Profile = () => {
                 ) : (
                   myBlogs.map(blog => {
                     const coverImage = blog.cover_image
-                      ? (blog.cover_image.startsWith('http') ? blog.cover_image : `http://localhost:8000/media/${blog.cover_image}`)
+                      ? getMediaUrl(blog.cover_image)
                       : `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.title || 'Blog')}&background=006699&color=fff&size=150`;
                     return (
                       <div key={blog.id} className="flex items-center gap-6 group cursor-pointer" onClick={() => navigate(`/blogs/${blog.id}`)}>
