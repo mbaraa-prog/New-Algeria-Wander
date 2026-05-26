@@ -1,7 +1,7 @@
 import base64
 import json
 import os
-from datetime import date
+from datetime import date, datetime
 
 import requests
 from django.conf import settings
@@ -56,12 +56,21 @@ HERO_SLIDES_CONFIG = [
 ]
 
 CATEGORY_ENTRIES = [
-    {'slug': 'sahara', 'name': 'Sahara', 'description': 'Sahara desert adventures and dunes.'},
-    {'slug': 'beaches', 'name': 'Beaches', 'description': 'Coastal getaways and Mediterranean beaches.'},
+    {'slug': 'sahara',    'name': 'Sahara',    'description': 'Sahara desert adventures and dunes.'},
+    {'slug': 'beaches',   'name': 'Beaches',   'description': 'Coastal getaways and Mediterranean beaches.'},
     {'slug': 'mountains', 'name': 'Mountains', 'description': 'Mountain escapes and forest trails.'},
-    {'slug': 'history', 'name': 'History', 'description': 'Historical sites, museums, and cultural heritage.'},
-    {'slug': 'general', 'name': 'General', 'description': 'General attractions and places.'},
+    {'slug': 'history',   'name': 'History',   'description': 'Historical sites, museums, and cultural heritage.'},
+    {'slug': 'general',   'name': 'General',   'description': 'General attractions and places.'},
 ]
+
+# Maps a wilaya's JSON 'id' field to the hero slide theme that should use its
+# cover image as the slide background.  Edit freely — any wilaya id works.
+THEME_TO_WILAYA_ID = {
+    'coasts':    'bejaia',
+    'desert':    'djanet',
+    'mountains': 'bejaia',
+    'history':   'constantine',
+}
 
 
 class Command(BaseCommand):
@@ -73,41 +82,45 @@ class Command(BaseCommand):
             default=os.path.join(settings.BASE_DIR, 'data', 'algeria_wander_data.json'),
             help='Path to the Algeria dataset JSON file.',
         )
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Re-import even if data already exists (clears existing hero slides, wilayas, places, events).',
+        )
+        parser.add_argument(
+            '--skip-images',
+            action='store_true',
+            help='Skip downloading remote images (useful for fast dev imports).',
+        )
+
+    # ------------------------------------------------------------------
+    # Entry point
+    # ------------------------------------------------------------------
 
     def handle(self, *args, **options):
-        file_path = options['file_path']
+        file_path = self._resolve_file_path(options['file_path'])
+        self.skip_images = options['skip_images']
 
-        if not os.path.exists(file_path):
-            fallback = os.path.join(settings.BASE_DIR, 'data', 'algeria_wander_data.json')
-            if os.path.exists(fallback):
-                file_path = fallback
-                self.stdout.write(self.style.WARNING(f'Using fallback JSON file: {fallback}'))
-            else:
-                raise CommandError(f'File not found: {file_path}')
-
-        if HeroSlide.objects.exists():
-            self.stdout.write(self.style.WARNING('Homepage content already exists. Skipping load_algeria_data.'))
+        if HeroSlide.objects.exists() and not options['force']:
+            self.stdout.write(self.style.WARNING(
+                'Homepage content already exists. Use --force to re-import.'
+            ))
             return
 
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-        except json.JSONDecodeError as exc:
-            raise CommandError(f'Invalid JSON: {exc}')
+        if options['force']:
+            self._clear_existing_data()
 
-        self.stats = {
-            'categories': 0,
-            'wilayas': 0,
-            'landmarks': 0,
-            'restaurants': 0,
-            'hotels': 0,
-            'events': 0,
-            'hero_slides': 0,
-        }
-        self.errors = []
-        self.wilaya_source = {}
+        data = self._load_json(file_path)
 
-        self.stdout.write(self.style.SUCCESS('Starting Algeria dataset import...'))
+        self.stats = {k: 0 for k in ('categories', 'wilayas', 'landmarks',
+                                      'restaurants', 'hotels', 'events', 'hero_slides')}
+        self.errors: list[str] = []
+        # wilaya_id (from JSON) → raw wilaya dict  (for hero slide image lookup)
+        self.wilaya_by_id: dict[str, dict] = {}
+        # wilaya slug → Wilaya ORM instance
+        self.wilaya_orm: dict[str, Wilaya] = {}
+
+        self.stdout.write(self.style.SUCCESS('Starting Algeria dataset import…'))
 
         with transaction.atomic():
             categories = self.import_categories()
@@ -115,65 +128,91 @@ class Command(BaseCommand):
             self.import_wilayas(data.get('wilayas', []), default_category)
             self.import_hero_slides()
 
-        self.report_results()
+        self._report_results()
 
         if self.errors:
-            self.stdout.write(self.style.ERROR(f'Import completed with {len(self.errors)} errors.'))
-            for error in self.errors:
-                self.stderr.write(self.style.ERROR(f'  ✗ {error}'))
+            self.stdout.write(self.style.ERROR(
+                f'\nImport completed with {len(self.errors)} non-fatal error(s):'
+            ))
+            for err in self.errors:
+                self.stderr.write(self.style.ERROR(f'  ✗ {err}'))
         else:
-            self.stdout.write(self.style.SUCCESS('✓ Import completed successfully!'))
+            self.stdout.write(self.style.SUCCESS('\n✓ Import completed successfully with zero errors!'))
 
-    def import_categories(self):
-        categories = {}
-        for order, category_data in enumerate(CATEGORY_ENTRIES, start=1):
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+
+    def _resolve_file_path(self, file_path: str) -> str:
+        if os.path.exists(file_path):
+            return file_path
+        fallback = os.path.join(settings.BASE_DIR, 'data', 'algeria_wander_data.json')
+        if os.path.exists(fallback):
+            self.stdout.write(self.style.WARNING(f'Using fallback JSON: {fallback}'))
+            return fallback
+        raise CommandError(f'File not found: {file_path}')
+
+    def _load_json(self, file_path: str) -> dict:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+        except json.JSONDecodeError as exc:
+            raise CommandError(f'Invalid JSON: {exc}')
+        wilayas = data.get('wilayas', [])
+        if not wilayas:
+            raise CommandError('JSON contains no wilayas — aborting.')
+        self.stdout.write(self.style.SUCCESS(f'Loaded JSON: {len(wilayas)} wilaya(s) found.'))
+        return data
+
+    def _clear_existing_data(self):
+        self.stdout.write(self.style.WARNING('--force: clearing existing data…'))
+        HeroSlide.objects.all().delete()
+        Event.objects.all().delete()
+        Place.objects.all().delete()
+        Wilaya.objects.all().delete()
+        self.stdout.write(self.style.WARNING('  ✓ Cleared hero slides, events, places, wilayas.'))
+
+    # ------------------------------------------------------------------
+    # Categories
+    # ------------------------------------------------------------------
+
+    def import_categories(self) -> dict:
+        categories: dict[str, Category] = {}
+        for order, entry in enumerate(CATEGORY_ENTRIES, start=1):
             category, created = Category.objects.get_or_create(
-                slug=category_data['slug'],
+                slug=entry['slug'],
                 defaults={
-                    'name': category_data['name'],
-                    'description': category_data['description'],
+                    'name': entry['name'],
+                    'description': entry['description'],
                     'icon': '',
                     'order': order,
                     'is_active': True,
                 },
             )
             if not category.image:
-                self.save_placeholder_image(category, f'categories/{category.slug}.png', field_name='image')
+                self._save_placeholder(category, f'categories/{category.slug}.png', 'image')
             categories[category.slug] = category
             if created:
                 self.stats['categories'] += 1
-                self.stdout.write(self.style.SUCCESS(f'  ✓ Created category: {category.name}'))
-            else:
-                self.stdout.write(self.style.SUCCESS(f'  ✓ Found category: {category.name}'))
-
-        if 'general' not in categories:
-            general, created = Category.objects.get_or_create(
-                slug='general',
-                defaults={
-                    'name': 'General',
-                    'description': 'General attractions and places.',
-                    'icon': '',
-                    'order': len(CATEGORY_ENTRIES) + 1,
-                    'is_active': True,
-                },
-            )
-            if not general.image:
-                self.save_placeholder_image(general, 'categories/general.png', field_name='image')
-            categories['general'] = general
-            if created:
-                self.stats['categories'] += 1
-                self.stdout.write(self.style.SUCCESS(f'  ✓ Created category: {general.name}'))
-
+            self.stdout.write(self.style.SUCCESS(
+                f'  {"✓ Created" if created else "· Found"} category: {category.name}'
+            ))
         return categories
 
-    def import_wilayas(self, wilayas, default_category):
-        for wilaya_data in wilayas:
-            try:
-                self.import_wilaya(wilaya_data, default_category)
-            except Exception as exc:
-                self.errors.append(f"Wilaya '{wilaya_data.get('name')}' import failed: {exc}")
+    # ------------------------------------------------------------------
+    # Wilayas
+    # ------------------------------------------------------------------
 
-    def import_wilaya(self, data, default_category):
+    def import_wilayas(self, wilayas: list, default_category):
+        for order, wilaya_data in enumerate(wilayas, start=1):
+            name = wilaya_data.get('name', '<unnamed>')
+            try:
+                self._import_wilaya(wilaya_data, default_category, order)
+            except Exception as exc:
+                self.errors.append(f"Wilaya '{name}': {exc}")
+                self.stderr.write(self.style.ERROR(f"  ✗ Wilaya '{name}' failed: {exc}"))
+
+    def _import_wilaya(self, data: dict, default_category, order: int):
         slug = slugify(data['name'])
         defaults = {
             'name': data['name'],
@@ -181,6 +220,7 @@ class Command(BaseCommand):
             'tagline': data.get('tagline', ''),
             'short_desc': data.get('description', '')[:255],
             'category': default_category,
+            'order': order,
             'is_active': True,
             'is_featured': True,
         }
@@ -191,42 +231,45 @@ class Command(BaseCommand):
             wilaya.save(update_fields=list(defaults.keys()))
 
         if data.get('image') and not wilaya.cover_image:
-            self.save_remote_image_to_field(wilaya, 'cover_image', data['image'], f'{slug}_cover.jpg')
+            self._download_image(wilaya, 'cover_image', data['image'], f'{slug}_cover.jpg')
 
-        self.wilaya_source[slug] = data
+        # Track by both slug and original JSON id for hero slide lookup
+        wilaya_id = data.get('id', slug)
+        self.wilaya_by_id[wilaya_id] = data
+        self.wilaya_orm[slug] = wilaya
+
         self.stats['wilayas'] += 1
-        self.stdout.write(self.style.SUCCESS(f'  ✓ {"Created" if created else "Updated"} wilaya: {wilaya.name}'))
+        self.stdout.write(self.style.SUCCESS(
+            f'  {"✓ Created" if created else "· Updated"} wilaya: {wilaya.name}'
+        ))
 
-        self.import_landmarks(data.get('landmarks', []), wilaya, default_category)
-        self.import_restaurants(data.get('restaurants', []), wilaya, default_category)
-        self.import_hotels(data.get('hotels', []), wilaya, default_category)
-        self.import_events(data.get('events', []), wilaya)
+        self._import_section('landmarks',   data, wilaya, default_category, Place.TYPE_ATTRACTION,  self.stats)
+        self._import_section('restaurants', data, wilaya, default_category, Place.TYPE_RESTAURANT,  self.stats)
+        self._import_section('hotels',      data, wilaya, default_category, Place.TYPE_HOTEL,       self.stats)
+        self._import_events(data.get('events', []), wilaya)
 
-    def import_landmarks(self, landmarks, wilaya, default_category):
-        for landmark in landmarks:
+    def _import_section(self, key: str, data: dict, wilaya, default_category,
+                         place_type: str, stats: dict):
+        items = data.get(key, [])
+        if not items:
+            self.stdout.write(self.style.WARNING(
+                f'    ⚠ No {key} found for wilaya "{wilaya.name}"'
+            ))
+            return
+        stat_key = key if key in stats else key.rstrip('s') + 's'
+        for item in items:
+            name = item.get('name', '<unnamed>')
             try:
-                self.import_place(landmark, wilaya, default_category, Place.TYPE_ATTRACTION)
-                self.stats['landmarks'] += 1
+                self._import_place(item, wilaya, default_category, place_type)
+                # map section key → stats key
+                sk = {'landmarks': 'landmarks', 'restaurants': 'restaurants',
+                      'hotels': 'hotels'}.get(key, key)
+                self.stats[sk] += 1
             except Exception as exc:
-                self.errors.append(f"Landmark '{landmark.get('name')}' import failed: {exc}")
+                self.errors.append(f"{key.rstrip('s').capitalize()} '{name}' in '{wilaya.name}': {exc}")
+                self.stderr.write(self.style.ERROR(f"    ✗ {key} '{name}' failed: {exc}"))
 
-    def import_restaurants(self, restaurants, wilaya, default_category):
-        for restaurant in restaurants:
-            try:
-                self.import_place(restaurant, wilaya, default_category, Place.TYPE_RESTAURANT)
-                self.stats['restaurants'] += 1
-            except Exception as exc:
-                self.errors.append(f"Restaurant '{restaurant.get('name')}' import failed: {exc}")
-
-    def import_hotels(self, hotels, wilaya, default_category):
-        for hotel in hotels:
-            try:
-                self.import_place(hotel, wilaya, default_category, Place.TYPE_HOTEL)
-                self.stats['hotels'] += 1
-            except Exception as exc:
-                self.errors.append(f"Hotel '{hotel.get('name')}' import failed: {exc}")
-
-    def import_place(self, data, wilaya, default_category, place_type):
+    def _import_place(self, data: dict, wilaya, default_category, place_type: str):
         slug = slugify(data['name'])
         defaults = {
             'name': data['name'],
@@ -239,18 +282,17 @@ class Command(BaseCommand):
             'external_image_url': data.get('image', ''),
             'is_active': True,
         }
-
         if place_type == Place.TYPE_ATTRACTION:
-            defaults['opening_hours'] = data.get('opening_hours', '')
+            defaults['opening_hours']  = data.get('opening_hours', '')
             defaults['practical_info'] = data.get('practical_info', '')
         elif place_type == Place.TYPE_RESTAURANT:
-            defaults['cuisine'] = data.get('cuisine', '')
+            defaults['cuisine']     = data.get('cuisine', '')
             defaults['price_range'] = data.get('price_range', '')
-            defaults['must_try'] = data.get('must_try', '')
+            defaults['must_try']    = data.get('must_try', '')
         elif place_type == Place.TYPE_HOTEL:
-            defaults['stars'] = data.get('stars')
+            defaults['stars']       = data.get('stars')
             defaults['price_range'] = data.get('price_range', '')
-            defaults['highlights'] = data.get('highlights', '')
+            defaults['highlights']  = data.get('highlights', '')
 
         place, created = Place.objects.get_or_create(slug=slug, defaults=defaults)
         if not created:
@@ -259,33 +301,47 @@ class Command(BaseCommand):
             place.save(update_fields=list(defaults.keys()))
 
         if data.get('image') and not place.cover_image:
-            self.save_remote_image_to_field(place, 'cover_image', data['image'], f'{slug}_cover.jpg')
+            self._download_image(place, 'cover_image', data['image'], f'{slug}_cover.jpg')
 
-        self.stdout.write(self.style.SUCCESS(f'    ✓ {"Created" if created else "Updated"} {place_type}: {place.name}'))
+        self.stdout.write(self.style.SUCCESS(
+            f'    {"✓" if created else "·"} {place_type}: {place.name}'
+        ))
         return place
 
-    def import_events(self, events, wilaya):
+    # ------------------------------------------------------------------
+    # Events
+    # ------------------------------------------------------------------
+
+    def _import_events(self, events: list, wilaya):
+        if not events:
+            self.stdout.write(self.style.WARNING(
+                f'    ⚠ No events found for wilaya "{wilaya.name}"'
+            ))
+            return
         for event_data in events:
+            name = event_data.get('name', '<unnamed>')
             try:
-                self.import_event(event_data, wilaya)
+                self._import_event(event_data, wilaya)
                 self.stats['events'] += 1
             except Exception as exc:
-                self.errors.append(f"Event '{event_data.get('name')}' import failed: {exc}")
+                self.errors.append(f"Event '{name}' in '{wilaya.name}': {exc}")
+                self.stderr.write(self.style.ERROR(f"    ✗ Event '{name}' failed: {exc}"))
 
-    def import_event(self, data, wilaya):
+    def _import_event(self, data: dict, wilaya):
         slug = slugify(data['name'])
+        start_date, end_date = self._parse_event_dates(data.get('period', ''))
+
         defaults = {
             'name': data['name'],
             'description': data.get('description', ''),
             'period': data.get('period', ''),
             'wilaya': wilaya,
             'location': data.get('location', wilaya.name),
-            'start_date': date.today(),
-            'end_date': date.today(),
+            'start_date': start_date,
+            'end_date': end_date,
             'external_image_url': data.get('image', ''),
             'is_active': True,
         }
-
         event, created = Event.objects.get_or_create(slug=slug, defaults=defaults)
         if not created:
             for field, value in defaults.items():
@@ -293,83 +349,178 @@ class Command(BaseCommand):
             event.save(update_fields=list(defaults.keys()))
 
         if data.get('image') and not event.cover_image:
-            self.save_remote_image_to_field(event, 'cover_image', data['image'], f'{slug}_cover.jpg')
+            self._download_image(event, 'cover_image', data['image'], f'{slug}_cover.jpg')
 
-        self.stdout.write(self.style.SUCCESS(f'    ✓ {"Created" if created else "Updated"} event: {event.name}'))
+        self.stdout.write(self.style.SUCCESS(
+            f'    {"✓" if created else "·"} event: {event.name} [{data.get("period", "?")}]'
+        ))
         return event
 
+    @staticmethod
+    def _parse_event_dates(period: str):
+        """
+        Best-effort parse of human-readable period strings like:
+          "August", "October–November", "July", "Muharram (Islamic New Year)"
+        Returns (start_date, end_date) as date objects.
+        Falls back to today/today if the period is unrecognisable.
+        """
+        MONTH_MAP = {
+            'january': 1, 'february': 2, 'march': 3, 'april': 4,
+            'may': 5, 'june': 6, 'july': 7, 'august': 8,
+            'september': 9, 'october': 10, 'november': 11, 'december': 12,
+        }
+        today = date.today()
+        year = today.year
+
+        # Normalise separators and clean
+        clean = period.lower().replace('–', '-').replace('—', '-')
+        # Strip parenthetical notes e.g. "(Islamic New Year)"
+        if '(' in clean:
+            clean = clean[:clean.index('(')].strip()
+
+        parts = [p.strip() for p in clean.split('-') if p.strip()]
+        months = []
+        for part in parts:
+            for month_name, month_num in MONTH_MAP.items():
+                if month_name in part:
+                    months.append(month_num)
+                    break
+
+        if len(months) == 0:
+            return today, today
+        if len(months) == 1:
+            m = months[0]
+            # If the month has already passed this year, target next year
+            if m < today.month:
+                year += 1
+            import calendar
+            last_day = calendar.monthrange(year, m)[1]
+            return date(year, m, 1), date(year, m, last_day)
+        else:
+            import calendar
+            m_start, m_end = months[0], months[-1]
+            if m_start < today.month and m_end < today.month:
+                year += 1
+            last_day = calendar.monthrange(year, m_end)[1]
+            return date(year, m_start, 1), date(year, m_end, last_day)
+
+    # ------------------------------------------------------------------
+    # Hero slides
+    # ------------------------------------------------------------------
+
     def import_hero_slides(self):
-        active_wilayas = list(Wilaya.objects.filter(is_active=True).order_by('order', 'name')[:6])
-        for index, slide_data in enumerate(HERO_SLIDES_CONFIG):
+        # Build an ordered list of Wilaya ORM objects (same order as JSON)
+        ordered_wilayas = list(Wilaya.objects.filter(is_active=True).order_by('order', 'name'))
+
+        for index, slide_cfg in enumerate(HERO_SLIDES_CONFIG):
             hero_slide, created = HeroSlide.objects.get_or_create(
-                theme=slide_data['theme'],
+                theme=slide_cfg['theme'],
                 defaults={
-                    'title_prefix': slide_data['title_prefix'],
-                    'title_highlight': slide_data['title_highlight'],
-                    'title_suffix': slide_data['title_suffix'],
-                    'description': slide_data['description'],
-                    'highlight_color': slide_data['highlight_color'],
-                    'order': index,
-                    'is_active': True,
+                    'title_prefix':     slide_cfg['title_prefix'],
+                    'title_highlight':  slide_cfg['title_highlight'],
+                    'title_suffix':     slide_cfg['title_suffix'],
+                    'description':      slide_cfg['description'],
+                    'highlight_color':  slide_cfg['highlight_color'],
+                    'order':            index,
+                    'is_active':        True,
                 },
             )
             if not created:
                 for field, value in {
-                    'title_prefix': slide_data['title_prefix'],
-                    'title_highlight': slide_data['title_highlight'],
-                    'title_suffix': slide_data['title_suffix'],
-                    'description': slide_data['description'],
-                    'highlight_color': slide_data['highlight_color'],
-                    'order': index,
-                    'is_active': True,
+                    'title_prefix':    slide_cfg['title_prefix'],
+                    'title_highlight': slide_cfg['title_highlight'],
+                    'title_suffix':    slide_cfg['title_suffix'],
+                    'description':     slide_cfg['description'],
+                    'highlight_color': slide_cfg['highlight_color'],
+                    'order':           index,
+                    'is_active':       True,
                 }.items():
                     setattr(hero_slide, field, value)
                 hero_slide.save()
 
-            featured = active_wilayas[index * 2 : index * 2 + 3] or active_wilayas[:3]
+            # Assign 3 featured wilayas per slide (round-robin, no repeats across slides)
+            start = index * 3
+            featured = ordered_wilayas[start:start + 3]
+            if not featured:
+                featured = ordered_wilayas[:3]   # wrap-around for extra slides
             hero_slide.featured_wilayas.set(featured)
 
+            # Background image: prefer the wilaya mapped for this theme
             if not hero_slide.background_image:
-                background_url = None
-                if featured:
-                    source = self.wilaya_source.get(featured[0].slug)
-                    if source:
-                        background_url = source.get('image')
-                if background_url:
-                    self.save_remote_image_to_field(
-                        hero_slide,
-                        'background_image',
-                        background_url,
-                        f'{hero_slide.theme}_background.jpg',
-                    )
-                else:
-                    self.save_placeholder_image(hero_slide, f'hero/{hero_slide.theme}.png', field_name='background_image')
+                self._assign_hero_background(hero_slide, slide_cfg['theme'])
 
             self.stats['hero_slides'] += 1
-            self.stdout.write(self.style.SUCCESS(f'  ✓ {"Created" if created else "Updated"} hero slide: {hero_slide.theme}'))
+            self.stdout.write(self.style.SUCCESS(
+                f'  {"✓ Created" if created else "· Updated"} hero slide: {hero_slide.theme}'
+            ))
 
-    def save_remote_image_to_field(self, instance, field_name, image_url, filename):
-        if not image_url:
+    def _assign_hero_background(self, hero_slide, theme: str):
+        # 1. Try the explicitly mapped wilaya id
+        wilaya_id = THEME_TO_WILAYA_ID.get(theme)
+        source = self.wilaya_by_id.get(wilaya_id) if wilaya_id else None
+
+        # 2. Fall back to the first featured wilaya's source data
+        if not source:
+            featured = list(hero_slide.featured_wilayas.all()[:1])
+            if featured:
+                source = self.wilaya_by_id.get(
+                    featured[0].slug,
+                    # also try the JSON id stored under the wilaya's slug key
+                    next((v for k, v in self.wilaya_by_id.items()
+                          if slugify(v.get('name', '')) == featured[0].slug), None)
+                )
+
+        background_url = source.get('image') if source else None
+
+        if background_url:
+            self._download_image(
+                hero_slide, 'background_image',
+                background_url,
+                f'{hero_slide.theme}_background.jpg',
+            )
+        else:
+            self._save_placeholder(hero_slide, f'hero/{hero_slide.theme}.png', 'background_image')
+
+    # ------------------------------------------------------------------
+    # Image utilities
+    # ------------------------------------------------------------------
+
+    def _download_image(self, instance, field_name: str, url: str, filename: str) -> bool:
+        if not url:
             return False
-
+        if self.skip_images:
+            self.stdout.write(self.style.WARNING(f'      ⤼ Skipping image (--skip-images): {filename}'))
+            return False
         try:
-            response = requests.get(image_url, timeout=20)
+            response = requests.get(url, timeout=20)
             response.raise_for_status()
+            content_type = response.headers.get('Content-Type', '')
+            if 'image' not in content_type and len(response.content) < 100:
+                raise ValueError(f'Response does not look like an image (Content-Type: {content_type})')
             getattr(instance, field_name).save(filename, ContentFile(response.content), save=True)
+            self.stdout.write(self.style.SUCCESS(f'      ↓ Downloaded image: {filename}'))
             return True
         except Exception as exc:
-            self.errors.append(f'Image download failed for {image_url}: {exc}')
-            self.stderr.write(self.style.WARNING(f'  ⚠ Failed to download image for {image_url}: {exc}'))
+            msg = f'Image download failed [{filename}] {url}: {exc}'
+            self.errors.append(msg)
+            self.stderr.write(self.style.WARNING(f'      ⚠ {msg}'))
+            # Save placeholder so the field is never null
+            self._save_placeholder(instance, filename, field_name)
             return False
 
-    def save_placeholder_image(self, instance, filename, field_name='image'):
-        getattr(instance, field_name).save(filename, ContentFile(PLACEHOLDER_IMAGE), save=True)
+    def _save_placeholder(self, instance, filename: str, field_name: str = 'image'):
+        try:
+            getattr(instance, field_name).save(filename, ContentFile(PLACEHOLDER_IMAGE), save=True)
+        except Exception as exc:
+            self.errors.append(f'Placeholder save failed [{filename}]: {exc}')
 
-    def report_results(self):
-        self.stdout.write(self.style.SUCCESS(f'Imported {self.stats["categories"]} categories'))
-        self.stdout.write(self.style.SUCCESS(f'Imported {self.stats["wilayas"]} wilayas'))
-        self.stdout.write(self.style.SUCCESS(f'Imported {self.stats["landmarks"]} landmarks'))
-        self.stdout.write(self.style.SUCCESS(f'Imported {self.stats["restaurants"]} restaurants'))
-        self.stdout.write(self.style.SUCCESS(f'Imported {self.stats["hotels"]} hotels'))
-        self.stdout.write(self.style.SUCCESS(f'Imported {self.stats["events"]} events'))
-        self.stdout.write(self.style.SUCCESS(f'Imported {self.stats["hero_slides"]} hero slides'))
+    # ------------------------------------------------------------------
+    # Reporting
+    # ------------------------------------------------------------------
+
+    def _report_results(self):
+        self.stdout.write('\n' + self.style.SUCCESS('─' * 50))
+        self.stdout.write(self.style.SUCCESS('Import summary:'))
+        for key, count in self.stats.items():
+            self.stdout.write(self.style.SUCCESS(f'  {key:<14} {count}'))
+        self.stdout.write(self.style.SUCCESS('─' * 50))
