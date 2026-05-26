@@ -120,10 +120,10 @@ const BlogDetail = () => {
           <span>Back to Stories</span>
         </Link>
 
-        {getCoverUrl(blog.cover_image) && (
+        {(blog.external_image_url || blog.cover_image) && (
           <div className="rounded-[32px] overflow-hidden mb-12 shadow-lg">
             <img
-              src={getCoverUrl(blog.cover_image)}
+              src={blog.external_image_url || getCoverUrl(blog.cover_image)}
               alt={blog.title}
               className="w-full h-[420px] object-cover"
             />

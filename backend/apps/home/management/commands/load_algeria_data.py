@@ -1,11 +1,8 @@
-import base64
 import json
 import os
 from datetime import date, datetime
 
-import requests
 from django.conf import settings
-from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.utils.text import slugify
@@ -15,10 +12,6 @@ from apps.events.models import Event
 from apps.home.models import HeroSlide
 from apps.places.models import Place
 from apps.wilayas.models import Wilaya
-
-PLACEHOLDER_IMAGE = base64.b64decode(
-    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/w8AAn8B9L6x3gAAAABJRU5ErkJggg=='
-)
 
 HERO_SLIDES_CONFIG = [
     {
@@ -87,11 +80,6 @@ class Command(BaseCommand):
             action='store_true',
             help='Re-import even if data already exists (clears existing hero slides, wilayas, places, events).',
         )
-        parser.add_argument(
-            '--skip-images',
-            action='store_true',
-            help='Skip downloading remote images (useful for fast dev imports).',
-        )
 
     # ------------------------------------------------------------------
     # Entry point
@@ -99,7 +87,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_path = self._resolve_file_path(options['file_path'])
-        self.skip_images = options['skip_images']
 
         if HeroSlide.objects.exists() and not options['force']:
             self.stdout.write(self.style.WARNING(
@@ -230,8 +217,7 @@ class Command(BaseCommand):
                 setattr(wilaya, field, value)
             wilaya.save(update_fields=list(defaults.keys()))
 
-        if data.get('image') and not wilaya.cover_image:
-            self._download_image(wilaya, 'cover_image', data['image'], f'{slug}_cover.jpg')
+        # Image URL stored in external_image_url field (no local download for production)
 
         # Track by both slug and original JSON id for hero slide lookup
         wilaya_id = data.get('id', slug)
@@ -300,8 +286,7 @@ class Command(BaseCommand):
                 setattr(place, field, value)
             place.save(update_fields=list(defaults.keys()))
 
-        if data.get('image') and not place.cover_image:
-            self._download_image(place, 'cover_image', data['image'], f'{slug}_cover.jpg')
+        # Image URL stored in external_image_url field (no local download for production)
 
         self.stdout.write(self.style.SUCCESS(
             f'    {"✓" if created else "·"} {place_type}: {place.name}'
@@ -348,8 +333,7 @@ class Command(BaseCommand):
                 setattr(event, field, value)
             event.save(update_fields=list(defaults.keys()))
 
-        if data.get('image') and not event.cover_image:
-            self._download_image(event, 'cover_image', data['image'], f'{slug}_cover.jpg')
+        # Image URL stored in external_image_url field (no local download for production)
 
         self.stdout.write(self.style.SUCCESS(
             f'    {"✓" if created else "·"} event: {event.name} [{data.get("period", "?")}]'
@@ -471,48 +455,12 @@ class Command(BaseCommand):
                 )
 
         background_url = source.get('image') if source else None
-
+        
+        # Store background image URL directly (no local download for production)
         if background_url:
-            self._download_image(
-                hero_slide, 'background_image',
-                background_url,
-                f'{hero_slide.theme}_background.jpg',
-            )
-        else:
-            self._save_placeholder(hero_slide, f'hero/{hero_slide.theme}.png', 'background_image')
+            hero_slide.background_image = background_url
+            hero_slide.save(update_fields=['background_image'])
 
-    # ------------------------------------------------------------------
-    # Image utilities
-    # ------------------------------------------------------------------
-
-    def _download_image(self, instance, field_name: str, url: str, filename: str) -> bool:
-        if not url:
-            return False
-        if self.skip_images:
-            self.stdout.write(self.style.WARNING(f'      ⤼ Skipping image (--skip-images): {filename}'))
-            return False
-        try:
-            response = requests.get(url, timeout=20)
-            response.raise_for_status()
-            content_type = response.headers.get('Content-Type', '')
-            if 'image' not in content_type and len(response.content) < 100:
-                raise ValueError(f'Response does not look like an image (Content-Type: {content_type})')
-            getattr(instance, field_name).save(filename, ContentFile(response.content), save=True)
-            self.stdout.write(self.style.SUCCESS(f'      ↓ Downloaded image: {filename}'))
-            return True
-        except Exception as exc:
-            msg = f'Image download failed [{filename}] {url}: {exc}'
-            self.errors.append(msg)
-            self.stderr.write(self.style.WARNING(f'      ⚠ {msg}'))
-            # Save placeholder so the field is never null
-            self._save_placeholder(instance, filename, field_name)
-            return False
-
-    def _save_placeholder(self, instance, filename: str, field_name: str = 'image'):
-        try:
-            getattr(instance, field_name).save(filename, ContentFile(PLACEHOLDER_IMAGE), save=True)
-        except Exception as exc:
-            self.errors.append(f'Placeholder save failed [{filename}]: {exc}')
 
     # ------------------------------------------------------------------
     # Reporting

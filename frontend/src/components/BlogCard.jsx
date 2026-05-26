@@ -3,19 +3,21 @@ import { Link } from 'react-router-dom';
 import { getMediaUrl } from '../config/api';
 
 const BlogCard = ({ blog }) => {
+  const blogImage = blog.external_image_url || (blog.cover_image ? getMediaUrl(blog.cover_image) : null);
+  
   return (
     <div className={`bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-50 flex flex-col md:flex-row group h-full md:h-72`}>
-      {blog.cover_image && (
+      {blogImage && (
         <div className="md:w-2/5 relative h-64 md:h-full overflow-hidden">
           <img
-            src={getMediaUrl(blog.cover_image)}
+            src={blogImage}
             alt={blog.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         </div>
       )}
 
-      <div className={`${blog.cover_image ? 'md:w-3/5' : 'w-full'} p-8 md:p-10 flex flex-col justify-between`}>
+      <div className={`${blogImage ? 'md:w-3/5' : 'w-full'} p-8 md:p-10 flex flex-col justify-between`}>
         <div className="space-y-4">
           <h2 className="text-[#0F4C81] text-2xl font-bold leading-tight group-hover:text-[#FF7F50] transition-colors">
             {blog.title}

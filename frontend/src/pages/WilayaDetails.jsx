@@ -97,7 +97,7 @@ const WilayaDetails = () => {
 
   const mapPlaceCard = (item) => ({
     ...item,
-    image: item.cover_image,
+    image: item.external_image_url || item.cover_image,
     description: item.short_desc || item.description,
     type: item.place_type_display || item.place_type,
     wilaya: wilaya.name,
@@ -106,7 +106,7 @@ const WilayaDetails = () => {
 
   const eventItems = events.map(event => ({
     ...event,
-    image: event.cover_image || event.external_image_url,
+    image: event.external_image_url || event.cover_image,
     description: event.description,
     type: 'Event',
     location: event.location,
@@ -143,7 +143,7 @@ const WilayaDetails = () => {
     <div className="bg-[#F8FAFF] min-h-screen pb-24">
       <section className="relative h-[650px] w-full overflow-hidden">
         <img
-          src={wilaya.banner_image || wilaya.cover_image}
+          src={wilaya.banner_image || wilaya.external_image_url}
           alt={wilaya.name}
           className="w-full h-full object-cover"
         />
@@ -238,7 +238,7 @@ const WilayaDetails = () => {
             {hotels[0] ? (
               <div className="lg:col-span-1 h-[550px]">
                 <Link to={`/details/${hotels[0].id}`} className="relative block h-full rounded-[40px] overflow-hidden group shadow-xl">
-                  <img src={hotels[0].cover_image} alt={hotels[0].name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <img src={hotels[0].external_image_url || hotels[0].cover_image} alt={hotels[0].name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                   <div className="absolute top-6 left-6">
                     <span className="bg-[#006699]/80 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">
@@ -272,7 +272,7 @@ const WilayaDetails = () => {
               {hotels.slice(1, 3).map(hotel => (
                 <Link key={hotel.id} to={`/details/${hotel.id}`} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group h-[260px] border border-gray-50">
                   <div className="h-2/3 overflow-hidden">
-                    <img src={hotel.cover_image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={hotel.external_image_url || hotel.cover_image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="p-6 flex-1">
                     <div className="flex items-center justify-between mb-2">

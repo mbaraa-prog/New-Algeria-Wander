@@ -16,7 +16,7 @@ const WilayaCard = ({ wilaya }) => {
     <div className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full border border-gray-50">
       <div className="relative h-64 overflow-hidden">
         <img
-          src={wilaya.cover_image || wilaya.image}
+          src={wilaya.external_image_url || wilaya.image}
           alt={wilaya.name}
           className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
         />

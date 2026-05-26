@@ -86,7 +86,7 @@ const Home = () => {
       items = places.filter(p => p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Place',
         location: p.wilaya_name,
@@ -97,7 +97,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -107,7 +107,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -119,7 +119,7 @@ const Home = () => {
       const filteredWilayas = wilayas.filter(w => beachWilayas.includes(w.name)).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: w.external_image_url || w.cover_image || w.image,
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -129,7 +129,7 @@ const Home = () => {
       const filteredPlaces = places.filter(p => beachWilayas.includes(p.wilaya_name) && (p.place_type === 'attraction' || p.category?.name === 'Landmarks') && p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -140,7 +140,7 @@ const Home = () => {
       hotelsArray = places.filter(p => beachWilayas.includes(p.wilaya_name) && p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -150,7 +150,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => beachWilayas.includes(p.wilaya_name) && p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -161,7 +161,7 @@ const Home = () => {
       const djanetWilaya = wilayas.filter(w => w.name.toLowerCase().includes('djanet')).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: w.external_image_url || w.cover_image || w.image,
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -171,7 +171,7 @@ const Home = () => {
       const djanetPlaces = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && (p.place_type === 'attraction' || p.category?.name === 'Landmarks') && p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -182,7 +182,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -192,7 +192,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -203,7 +203,7 @@ const Home = () => {
       const bejaiaWilaya = wilayas.filter(w => w.name.toLowerCase().includes('bejaia')).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: w.external_image_url || w.cover_image || w.image,
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -219,7 +219,7 @@ const Home = () => {
       ).map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -230,7 +230,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('bejaia') && p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -240,7 +240,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('bejaia') && p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -251,7 +251,7 @@ const Home = () => {
       const constWilaya = wilayas.filter(w => w.name.toLowerCase().includes('constantine')).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: w.external_image_url || w.cover_image || w.image,
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -266,7 +266,7 @@ const Home = () => {
       ).map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -277,7 +277,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -287,7 +287,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: p.external_image_url || p.cover_image,
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -377,8 +377,8 @@ const Home = () => {
       title: (slide.full_title || `${slide.title_prefix || ''} ${slide.title_highlight || ''} ${slide.title_suffix || ''}`).trim(),
       description: slide.description || '',
       mainImage: slide.background_image || algerLaBlanche,
-      sideImage1: slide.featured_wilayas?.[0]?.cover_image || trainParis,
-      sideImage2: slide.featured_wilayas?.[1]?.cover_image || download3,
+      sideImage1: slide.featured_wilayas?.[0]?.external_image_url || slide.featured_wilayas?.[0]?.cover_image || trainParis,
+      sideImage2: slide.featured_wilayas?.[1]?.external_image_url || slide.featured_wilayas?.[1]?.cover_image || download3,
       accent: slide.highlight_color || '#FF7F50',
       bgImage: slide.background_image || coastHero,
       label1: slide.featured_wilayas?.[0]?.name || 'Algiers',

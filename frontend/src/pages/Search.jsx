@@ -43,7 +43,7 @@ const Search = () => {
   const allItems = useMemo(
     () => places.map(place => ({
       ...place,
-      image: place.cover_image || place.external_image_url,
+      image: place.external_image_url || place.cover_image,
       description: place.short_desc || place.description,
       type: place.place_type_display || place.place_type || 'Place',
       wilaya: place.wilaya_name,
