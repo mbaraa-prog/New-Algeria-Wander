@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:8000/api/';
+const baseURL = 'hhttps://algeria-wander-hods.onrender.com';
 
 const axiosInstance = axios.create({
   baseURL,
