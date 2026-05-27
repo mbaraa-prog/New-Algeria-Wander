@@ -6,12 +6,17 @@ class EventSerializer(serializers.ModelSerializer):
     wilaya_name = serializers.CharField(source="wilaya.name", read_only=True)
     wilaya_id   = serializers.IntegerField(source="wilaya.id", read_only=True)
     date_range  = serializers.SerializerMethodField()
+    # Always return external_image_url only — never expose legacy cover_image paths
+    image       = serializers.SerializerMethodField()
 
     class Meta:
         model  = Event
-        fields = ["id", "name", "slug", "description", "period", "cover_image", "external_image_url",
+        fields = ["id", "name", "slug", "description", "period", "image",
                   "wilaya_id", "wilaya_name", "location",
                   "start_date", "end_date", "date_range"]
+
+    def get_image(self, obj):
+        return obj.external_image_url or None
 
     def get_date_range(self, obj):
         """Returns formatted range like 'July 15-20, 2026'."""
