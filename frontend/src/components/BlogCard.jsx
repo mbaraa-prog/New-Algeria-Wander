@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getMediaUrl } from '../config/api';
+import { getImageUrl } from '../config/api';
 
 const BlogCard = ({ blog }) => {
-  const blogImage = blog.external_image_url || (blog.cover_image ? getMediaUrl(blog.cover_image) : null);
+  const blogImage = getImageUrl(blog);
   
   return (
     <div className={`bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-50 flex flex-col md:flex-row group h-full md:h-72`}>

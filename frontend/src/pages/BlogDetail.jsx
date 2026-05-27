@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import dataService from '../api/data';
-import { getBackendAssetUrl, getMediaUrl } from '../config/api';
+import { getBackendAssetUrl, getMediaUrl, getImageUrl } from '../config/api';
 import * as markedModule from 'marked';
 const marked = markedModule.marked;
 
@@ -120,10 +120,10 @@ const BlogDetail = () => {
           <span>Back to Stories</span>
         </Link>
 
-        {(blog.external_image_url || blog.cover_image) && (
+        {getImageUrl(blog) && (
           <div className="rounded-[32px] overflow-hidden mb-12 shadow-lg">
             <img
-              src={blog.external_image_url || getCoverUrl(blog.cover_image)}
+              src={getImageUrl(blog)}
               alt={blog.title}
               className="w-full h-[420px] object-cover"
             />

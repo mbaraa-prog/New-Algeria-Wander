@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
 import { useAuth } from '../context/AuthContext';
-import { getBackendAssetUrl } from '../config/api';
+import { getBackendAssetUrl, getImageUrl } from '../config/api';
 
 const Details = () => {
   const { id } = useParams();
@@ -154,7 +154,7 @@ const Details = () => {
   const placeType = id.startsWith('event-') ? 'Event' : (item.place_type_display || item.place_type || 'Place');
   const placeName = item.name || item.title;
   const placeDescription = item.description || item.short_desc || 'No description available.';
-  const placeImage = item.external_image_url || item.cover_image || item.image || 'https://via.placeholder.com/1200';
+  const placeImage = getImageUrl(item);
   const placeWilaya = item.wilaya_name || item.wilaya?.name || 'Unknown';
   const placeRating = item.avg_rating || item.rating || (id.startsWith('event-') ? 4.9 : 0);
   const placeReviewCount = reviews.length;
@@ -448,7 +448,7 @@ const Details = () => {
                 relatedPlaces.map(rel => (
                   <PlaceCard key={rel.id} item={{
                     ...rel,
-                    image: rel.external_image_url || rel.cover_image,
+                    image: getImageUrl(rel),
                     location: placeWilaya,
                     wilaya: placeWilaya,
                     description: rel.short_desc || rel.description,

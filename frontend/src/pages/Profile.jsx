@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getBackendAssetUrl, getMediaUrl } from '../config/api';
+import { getBackendAssetUrl, getMediaUrl, getImageUrl } from '../config/api';
 import authService from '../api/auth';
 import dataService from '../api/data';
 
@@ -161,7 +161,7 @@ const Profile = () => {
                       className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50 block"
                     >
                       <img
-                        src={item.external_image_url || item.image || item.cover_image}
+                        src={getImageUrl(item)}
                         alt={item.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
@@ -231,9 +231,7 @@ const Profile = () => {
                   </div>
                 ) : (
                   myBlogs.map(blog => {
-                    const coverImage = blog.external_image_url
-                      || (blog.cover_image ? getMediaUrl(blog.cover_image) : null)
-                      || `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.title || 'Blog')}&background=006699&color=fff&size=150`;
+                    const coverImage = getImageUrl(blog);
                     return (
                       <div key={blog.id} className="flex items-center gap-6 group cursor-pointer" onClick={() => navigate(`/blogs/${blog.id}`)}>
                         <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm flex-shrink-0">

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
+import { getImageUrl } from '../config/api';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -43,7 +44,7 @@ const Search = () => {
   const allItems = useMemo(
     () => places.map(place => ({
       ...place,
-      image: place.external_image_url || place.cover_image,
+      image: getImageUrl(place),
       description: place.short_desc || place.description,
       type: place.place_type_display || place.place_type || 'Place',
       wilaya: place.wilaya_name,

@@ -13,3 +13,16 @@ export const getBackendAssetUrl = (path) => {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${BASE_URL}${normalizedPath}`;
 };
+
+export const getImageUrl = (entity) => {
+  if (!entity) return 'https://via.placeholder.com/1200';
+  
+  const path = entity.external_image_url || entity.cover_image || entity.image || entity.background_image || (entity.images?.[0]?.image);
+  
+  if (!path) return 'https://via.placeholder.com/1200';
+  if (path.startsWith('http')) return path;
+  if (path.startsWith('/media/')) return `${BASE_URL}${path}`;
+  if (path.startsWith('media/')) return `${BASE_URL}/${path}`;
+  
+  return `${MEDIA_URL}/${path.replace(/^\/+/, '')}`;
+};
