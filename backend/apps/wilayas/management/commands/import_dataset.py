@@ -201,6 +201,8 @@ class Command(BaseCommand):
             'category': default_category,
             'is_active': True,
             'is_featured': True,
+            # Always store the Cloudinary URL in external_image_url
+            'external_image_url': data.get('image') or None,
         }
         wilaya, created = Wilaya.objects.get_or_create(slug=slug, defaults=defaults)
         if not created:
@@ -208,10 +210,7 @@ class Command(BaseCommand):
                 setattr(wilaya, field, value)
             wilaya.save(update_fields=list(defaults.keys()))
 
-        if data.get('image') and not wilaya.cover_image:
-            self.save_remote_image_to_field(wilaya, 'cover_image', data['image'], f'{slug}_cover.jpg')
-
-        self.stdout.write(self.style.SUCCESS(f'  ✓ {"Created" if created else "Updated"} wilaya: {wilaya.name}'))
+        self.stdout.write(self.style.SUCCESS(f'  {"Created" if created else "Updated"} wilaya: {wilaya.name}'))
         return wilaya
 
     def import_landmark(self, data, wilaya, default_category):
@@ -333,6 +332,10 @@ class Command(BaseCommand):
             if not featured_wilayas:
                 featured_wilayas = wilayas[:3]
 
+            # Use the first featured wilaya's Cloudinary image as the slide background
+            featured_data = self.wilaya_data_map.get(featured_wilayas[0].slug) if featured_wilayas else None
+            background_url = featured_data.get('image') if featured_data else None
+
             hero_slide, created = HeroSlide.objects.get_or_create(
                 theme=slide_config['theme'],
                 defaults={
@@ -341,26 +344,24 @@ class Command(BaseCommand):
                     'title_suffix': slide_config['title_suffix'],
                     'description': slide_config['description'],
                     'highlight_color': slide_config['highlight_color'],
+                    'external_image_url': background_url or None,
                     'order': index,
                     'is_active': True,
                 }
             )
 
-            for field in ['title_prefix', 'title_highlight', 'title_suffix', 'description', 'highlight_color', 'order', 'is_active']:
+            update_fields = ['title_prefix', 'title_highlight', 'title_suffix',
+                             'description', 'highlight_color', 'order', 'is_active']
+            for field in update_fields:
                 setattr(hero_slide, field, slide_config.get(field, getattr(hero_slide, field)))
+            # Always refresh the background URL from the dataset
+            if background_url:
+                hero_slide.external_image_url = background_url
             hero_slide.save()
-
-            if not hero_slide.background_image:
-                featured_data = self.wilaya_data_map.get(featured_wilayas[0].slug) if featured_wilayas else None
-                background_url = featured_data.get('image') if featured_data else None
-                if background_url:
-                    self.save_remote_image_to_field(hero_slide, 'background_image', background_url, f'{hero_slide.theme}_background.jpg')
-                else:
-                    self.save_placeholder_image(hero_slide, f'hero/{hero_slide.theme}.png', field_name='background_image')
 
             hero_slide.featured_wilayas.set(featured_wilayas)
             self.stats['hero_slides'] += 1
-            self.stdout.write(self.style.SUCCESS(f'  ✓ {"Created" if created else "Updated"} hero slide: {hero_slide.theme}'))
+            self.stdout.write(self.style.SUCCESS(f'  {"Created" if created else "Updated"} hero slide: {hero_slide.theme}'))
 
     def save_remote_image_to_field(self, instance, field_name, image_url, filename):
         image_data = self.download_image(image_url)
