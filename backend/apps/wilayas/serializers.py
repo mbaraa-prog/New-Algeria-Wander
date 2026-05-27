@@ -27,16 +27,22 @@ class WilayaSerializer(serializers.ModelSerializer):
         ]
 
 
-class WilayaListSerializer(WilayaSerializer):
+class WilayaListSerializer(serializers.ModelSerializer):
     """Lightweight — used in lists, search results, hero carousel."""
+    image = serializers.SerializerMethodField()
     category    = CategorySerializer(read_only=True)
     tags_list   = serializers.SerializerMethodField()
     image_count = serializers.SerializerMethodField()
 
-    class Meta(WilayaSerializer.Meta):
-        fields = WilayaSerializer.Meta.fields + [
+    class Meta:
+        model  = Wilaya
+        fields = [
+            "id", "name", "slug", "short_desc", "tagline", "image",
             "category", "tags_list", "is_featured", "image_count"
         ]
+
+    def get_image(self, obj):
+        return obj.external_image_url
 
     def get_tags_list(self, obj):
         return obj.get_tags_list()
@@ -47,12 +53,11 @@ class WilayaListSerializer(WilayaSerializer):
 
 class WilayaDetailSerializer(serializers.ModelSerializer):
     """Full detail — used on the wilaya page."""
+    image = serializers.SerializerMethodField()
     category    = CategorySerializer(read_only=True)
     tags_list   = serializers.SerializerMethodField()
     images      = WilayaImageSerializer(many=True, read_only=True)
     image_count = serializers.SerializerMethodField()
-    # Always return external_image_url only — never expose legacy cover_image paths
-    image       = serializers.SerializerMethodField()
 
     class Meta:
         model  = Wilaya
@@ -63,11 +68,12 @@ class WilayaDetailSerializer(serializers.ModelSerializer):
                   "is_featured", "created_at"]
 
     def get_image(self, obj):
-        return obj.external_image_url or None
+        return obj.external_image_url
 
     def get_tags_list(self, obj):
         return obj.get_tags_list()
 
     def get_image_count(self, obj):
         return obj.images.count()
+
 

@@ -20,7 +20,7 @@ class WilayaListView(APIView):
         category = request.query_params.get("category")
         if category:
             qs = qs.filter(category__slug=category)
-        serializer = WilayaSerializer(qs, many=True, context={"request": request})
+        serializer = WilayaListSerializer(qs, many=True, context={"request": request})
         return Response({"success": True, "count": qs.count(), "data": serializer.data})
 
 
@@ -31,7 +31,7 @@ class WilayaFeaturedView(APIView):
 
     def get(self, request):
         qs = Wilaya.objects.filter(is_active=True, is_featured=True).select_related("category")[:6]
-        serializer = WilayaSerializer(qs, many=True, context={"request": request})
+        serializer = WilayaListSerializer(qs, many=True, context={"request": request})
         return Response({"success": True, "data": serializer.data})
 
 
