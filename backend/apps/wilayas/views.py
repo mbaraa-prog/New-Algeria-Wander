@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 
 from .models import Wilaya
-from .serializers import WilayaListSerializer, WilayaDetailSerializer
+from .serializers import WilayaSerializer, WilayaDetailSerializer, WilayaListSerializer
 
 
 class WilayaListView(APIView):
@@ -20,7 +20,7 @@ class WilayaListView(APIView):
         category = request.query_params.get("category")
         if category:
             qs = qs.filter(category__slug=category)
-        serializer = WilayaListSerializer(qs, many=True, context={"request": request})
+        serializer = WilayaSerializer(qs, many=True, context={"request": request})
         return Response({"success": True, "count": qs.count(), "data": serializer.data})
 
 
@@ -31,7 +31,7 @@ class WilayaFeaturedView(APIView):
 
     def get(self, request):
         qs = Wilaya.objects.filter(is_active=True, is_featured=True).select_related("category")[:6]
-        serializer = WilayaListSerializer(qs, many=True, context={"request": request})
+        serializer = WilayaSerializer(qs, many=True, context={"request": request})
         return Response({"success": True, "data": serializer.data})
 
 

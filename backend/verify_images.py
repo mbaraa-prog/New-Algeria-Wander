@@ -3,7 +3,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 from apps.wilayas.models import Wilaya
-from apps.wilayas.serializers import WilayaListSerializer
+from apps.wilayas.serializers import WilayaSerializer
 from apps.blogs.models import Blog
 from apps.blogs.serializers import BlogSerializer
 from apps.users.serializers import UserProfileSerializer
@@ -15,7 +15,7 @@ print("=" * 60)
 print("WILAYA API OUTPUT")
 print("=" * 60)
 wilayas = Wilaya.objects.all()[:5]
-ws = WilayaListSerializer(wilayas, many=True)
+ws = WilayaSerializer(wilayas, many=True)
 for w in ws.data:
     img = w.get("image")
     status = "OK (Cloudinary)" if img and img.startswith("https://res.cloudinary") else ("NULL" if not img else "BAD: " + str(img)[:60])
