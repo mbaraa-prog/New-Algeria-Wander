@@ -3,15 +3,19 @@ from .models import Review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    username   = serializers.CharField(source="user.username", read_only=True)
-    avatar     = serializers.ImageField(source="user.avatar",  read_only=True)
-    full_name  = serializers.CharField(source="user.full_name", read_only=True)
+    username  = serializers.CharField(source="user.username", read_only=True)
+    full_name = serializers.CharField(source="user.full_name", read_only=True)
+    # Unified image contract — always external_image_url or None
+    image     = serializers.SerializerMethodField()
 
     class Meta:
         model  = Review
-        fields = ["id", "username", "full_name", "avatar",
+        fields = ["id", "username", "full_name", "image",
                   "rating", "title", "body", "visit_date", "created_at"]
         read_only_fields = ["id", "created_at"]
+
+    def get_image(self, obj):
+        return obj.user.external_image_url or None
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
