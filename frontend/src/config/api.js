@@ -21,8 +21,11 @@ export const getImageUrl = (entity) => {
   
   if (!path) return 'https://via.placeholder.com/1200';
   if (path.startsWith('http')) return path;
-  if (path.startsWith('/media/')) return `${BASE_URL}${path}`;
-  if (path.startsWith('media/')) return `${BASE_URL}/${path}`;
   
-  return `${MEDIA_URL}/${path.replace(/^\/+/, '')}`;
+  const backendUrl = 'https://algeria-wander-hods.onrender.com';
+  
+  if (path.startsWith('/media/')) return `${backendUrl}${path}`;
+  if (path.startsWith('media/')) return `${backendUrl}/${path}`;
+  
+  return `${backendUrl}/media/${path.replace(/^\/+/, '')}`;
 };
