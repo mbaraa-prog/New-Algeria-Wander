@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
 import { useAuth } from '../context/AuthContext';
+import { getBackendAssetUrl } from '../config/api';
 
 const Details = () => {
   const { id } = useParams();

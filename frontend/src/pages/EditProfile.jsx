@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import authService from '../api/auth';
+import { getBackendAssetUrl } from '../config/api';
 
 const EditProfile = () => {
   const navigate = useNavigate();
