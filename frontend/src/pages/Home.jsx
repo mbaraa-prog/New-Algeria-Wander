@@ -822,7 +822,7 @@ const Home = () => {
           {shuffledEvents.slice(eventIndex, eventIndex + 3).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {shuffledEvents.slice(eventIndex, eventIndex + 3).map(event => {
-                const eventImage = event.cover_image || event.external_image_url || '';
+                const eventImage = event.external_image_url || event.cover_image || '';
                 const eventDate = event.period || event.date_range || 'Upcoming';
                 const eventLocation = event.location || event.wilaya_name || 'Algeria';
                 const detailLink = `/details/event-${event.id}`;

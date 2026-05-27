@@ -161,7 +161,7 @@ const Profile = () => {
                       className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50 block"
                     >
                       <img
-                        src={item.image || item.external_image_url || item.cover_image}
+                        src={item.external_image_url || item.image || item.cover_image}
                         alt={item.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
