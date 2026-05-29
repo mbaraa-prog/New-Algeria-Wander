@@ -144,7 +144,7 @@ const WilayaDetails = () => {
     <div className="bg-[#F8FAFF] min-h-screen pb-24">
       <section className="relative h-[650px] w-full overflow-hidden">
         <img
-          src={wilaya.banner_image || wilaya.external_image_url}
+          src={wilaya.image}
           alt={wilaya.name}
           className="w-full h-full object-cover"
         />
