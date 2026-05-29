@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 print("=" * 60)
 print("WILAYA API OUTPUT")
 print("=" * 60)
