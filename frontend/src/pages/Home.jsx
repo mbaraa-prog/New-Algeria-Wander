@@ -340,10 +340,10 @@ const Home = () => {
       description: "Explore breathtaking peaks, peaceful villages, and unforgettable hiking experiences in Algeria's stunning mountain landscapes.",
       mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
       sideImage1: 'https://images.unsplash.com/photo-1511497584788-8767fe771d50?q=80&w=600',
-      sideImage2: 'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?q=80&w=600',
+      sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484681/9319eece00c41ac6182fa0d01cb5bd19_hzxzbg.jpg', // Oran
       accent: '#22C55E',
       bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
-      label1: 'Bejaia', label2: 'Chelia', label3: 'Tizi Ouzou'
+      label1: 'Bejaia', label2: 'Chelia', label3: 'Oran'
     },
     {
       id: 'desert',
