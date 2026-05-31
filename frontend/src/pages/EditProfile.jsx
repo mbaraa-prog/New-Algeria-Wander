@@ -3,8 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import authService from '../api/auth';
-import { getBackendAssetUrl } from '../config/api';
-
+import { uploadToCloudinary } from '../utils/cloudinary';
 const EditProfile = () => {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
@@ -59,15 +58,21 @@ const EditProfile = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      const data = new FormData();
-      data.append('first_name', formData.firstName);
-      data.append('last_name', formData.lastName);
-      data.append('bio', formData.bio);
+      let imageUrl = null;
       if (formData.avatar instanceof File) {
-        data.append('avatar', formData.avatar);
+        imageUrl = await uploadToCloudinary(formData.avatar);
       }
 
-      const response = await authService.updateProfile(data);
+      const payload = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        bio: formData.bio,
+      };
+      if (imageUrl) {
+        payload.external_image_url = imageUrl;
+      }
+
+      const response = await authService.updateProfile(payload);
       if (response.success) {
         const updatedProfile = await authService.getProfile();
         if (updatedProfile.success) {
@@ -140,8 +145,7 @@ const EditProfile = () => {
                 <h3 className="text-[#0F4C81] text-2xl font-bold">Profile Picture</h3>
                 <div className="flex flex-col md:flex-row items-center gap-10">
                   <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg border-4 border-[#F8FAFF]">
-                    <img src={formData.avatarPreview ? (formData.avatarPreview.startsWith('blob') || formData.avatarPreview.startsWith('http') ? formData.avatarPreview : getBackendAssetUrl(formData.avatarPreview)) : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`} alt="Preview" className="w-full h-full object-cover" />
-                  </div>
+                    <img src={formData.avatarPreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`} alt="Preview" className="w-full h-full object-cover" />                  </div>
                   <div className="space-y-4 text-center md:text-left">
                     <div className="flex flex-col md:flex-row gap-4">
                       <input

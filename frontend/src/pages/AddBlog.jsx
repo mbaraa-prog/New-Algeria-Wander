@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dataService from '../api/data';
 import { marked } from 'marked';
-
+import { uploadToCloudinary } from '../utils/cloudinary';
 const AddBlog = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -86,12 +86,21 @@ const AddBlog = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const payload = new FormData();
-      payload.append('title', formData.title);
-      payload.append('content', formData.description);
+      let imageUrl = formData.imageUrl || null;
+
+      // If user selected a file, upload to Cloudinary first
       if (imageFile) {
-        payload.append('cover_image', imageFile);
+        imageUrl = await uploadToCloudinary(imageFile);
       }
+
+      const payload = {
+        title: formData.title,
+        content: formData.description,
+      };
+      if (imageUrl) {
+        payload.external_image_url = imageUrl;
+      }
+
       await dataService.createBlog(payload);
       navigate('/blogs');
     } catch (error) {
@@ -119,7 +128,7 @@ const AddBlog = () => {
 
         {/* Form Card */}
         <form onSubmit={handleSubmit} className="bg-white rounded-[40px] shadow-sm border border-gray-100 p-12 space-y-12">
-          
+
           {/* Image Input (Styled as Upload) */}
           <div className="space-y-4">
             <label className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest ml-1">Cover Image</label>
@@ -153,11 +162,11 @@ const AddBlog = () => {
                   </>
                 )}
               </div>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="Or paste an image URL here..."
                 value={formData.imageUrl}
-                onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                 className="w-full mt-4 bg-[#F8FAFF] rounded-2xl py-4 px-6 text-sm outline-none border border-transparent focus:border-[#006699] focus:bg-white transition-all shadow-inner"
               />
             </div>
@@ -166,12 +175,12 @@ const AddBlog = () => {
           {/* Title Input */}
           <div className="space-y-4">
             <label className="text-[#0F4C81] text-sm font-bold uppercase tracking-widest ml-1">Blog Title</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               required
               placeholder="A Sunset in Tassili n'Ajjer"
               value={formData.title}
-              onChange={(e) => setFormData({...formData, title: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               className="w-full bg-[#F8FAFF] rounded-2xl py-5 px-8 text-sm outline-none border border-transparent focus:border-[#006699] focus:bg-white transition-all shadow-inner font-medium text-[#0F4C81]"
             />
           </div>
@@ -201,18 +210,18 @@ const AddBlog = () => {
                 </button>
               </div>
               {showPreview ? (
-                <div 
+                <div
                   className="w-full bg-transparent py-8 px-8 text-sm outline-none font-medium text-gray-600 leading-relaxed min-h-[12rem] prose prose-sm max-w-none"
                   dangerouslySetInnerHTML={{ __html: marked.parse(formData.description || '') }}
                 />
               ) : (
-                <textarea 
+                <textarea
                   ref={textareaRef}
                   required
                   rows="12"
                   placeholder="Tell us about your adventure..."
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full bg-transparent py-8 px-8 text-sm outline-none font-medium text-gray-600 leading-relaxed resize-none"
                 ></textarea>
               )}
@@ -221,7 +230,7 @@ const AddBlog = () => {
 
           {/* Submit Button */}
           <div className="flex justify-end pt-6">
-            <button 
+            <button
               type="submit"
               disabled={loading}
               className="bg-[#91470A] text-white px-12 py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/10 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
