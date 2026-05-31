@@ -162,12 +162,6 @@ const WilayaDetails = () => {
               <button className="bg-[#91470A] text-white px-10 py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/20">
                 Plan Trip
               </button>
-              <button className="bg-white/10 backdrop-blur-md text-white px-10 py-4 rounded-2xl font-bold flex items-center space-x-3 hover:bg-white/20 transition-all border border-white/20">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                </svg>
-                <span>View Map</span>
-              </button>
             </div>
           </div>
         </div>
@@ -180,8 +174,8 @@ const WilayaDetails = () => {
               key={tab.name}
               onClick={() => setActiveTab(tab.name)}
               className={`flex items-center space-x-3 py-6 text-sm font-bold border-b-2 transition-all ${activeTab === tab.name
-                  ? 'text-[#006699] border-[#006699]'
-                  : 'text-gray-400 border-transparent hover:text-gray-600'
+                ? 'text-[#006699] border-[#006699]'
+                : 'text-gray-400 border-transparent hover:text-gray-600'
                 }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -199,7 +193,12 @@ const WilayaDetails = () => {
             <h2 className="text-[#0F4C81] text-4xl font-bold">{activeSectionTitle}</h2>
             <p className="text-gray-400 font-medium">{activeSectionDescription}</p>
           </div>
-          <Link to="/search" className="text-[#006699] font-bold flex items-center space-x-2 hover:underline">
+          <Link
+            to={`/search?wilaya=${encodeURIComponent(wilaya.name)}&category=${activeTab === 'Hotels' ? 'Hotels' :
+                activeTab === 'Restaurants' ? 'Restaurants' : 'Landmarks'
+              }`}
+            className="text-[#006699] font-bold flex items-center space-x-2 hover:underline"
+          >
             <span>Explore all</span>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -227,7 +226,10 @@ const WilayaDetails = () => {
               <h2 className="text-[#0F4C81] text-4xl font-bold">Featured Stays</h2>
               <p className="text-gray-400 font-medium">Top-rated accommodations in {wilaya.name}.</p>
             </div>
-            <Link to="/search" className="text-[#006699] font-bold flex items-center space-x-2 hover:underline">
+            <Link
+              to={`/search?wilaya=${encodeURIComponent(wilaya.name)}&category=Hotels`}
+              className="text-[#006699] font-bold flex items-center space-x-2 hover:underline"
+            >
               <span>View All</span>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -235,7 +237,7 @@ const WilayaDetails = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr_1fr] gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
             {hotels[0] ? (
               <div className="lg:col-span-1 h-[550px]">
                 <Link to={`/details/${hotels[0].id}`} className="relative block h-full rounded-[40px] overflow-hidden group shadow-xl">
@@ -294,24 +296,6 @@ const WilayaDetails = () => {
                 </Link>
               ))}
             </div>
-
-            <div className="lg:col-span-1">
-              <div className="bg-[#E9E4D4] rounded-[40px] h-[550px] p-12 flex flex-col items-center justify-center text-center space-y-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg text-[#006699]">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  </svg>
-                </div>
-                <h3 className="text-[#0F4C81] text-4xl font-bold">Can't decide?</h3>
-                <p className="text-gray-600 text-lg">
-                  Let our travel experts curate the perfect stay tailored to your preferences.
-                </p>
-                <button className="bg-[#006699] text-white px-10 py-4 rounded-2xl font-bold hover:bg-[#004d73] transition-all shadow-xl shadow-blue-900/10">
-                  Get Recommendations
-                </button>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -335,7 +319,7 @@ const WilayaDetails = () => {
                   <div className="flex items-start gap-6">
                     <div className="h-14 w-14 rounded-full overflow-hidden flex-shrink-0">
                       <img
-                        src={review.avatar || 'https://i.pravatar.cc/150?u=review'}
+                        src={review.avatar || `https://i.pravatar.cc/150?u=${review.username || review.id}`}
                         alt={review.full_name || review.username}
                         className="w-full h-full object-cover"
                       />

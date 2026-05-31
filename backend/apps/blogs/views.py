@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
 from .models import Blog, BlogComment
 from .serializers import BlogSerializer, BlogCreateUpdateSerializer, BlogCommentSerializer, BlogCommentCreateSerializer
+from apps.notifications.models import Notification
 
 
 class BlogPagination(PageNumberPagination):
@@ -14,8 +15,6 @@ class BlogPagination(PageNumberPagination):
 
 
 class BlogListView(generics.ListCreateAPIView):
-    """List all blogs or create a new blog."""
-    
     queryset = Blog.objects.all().prefetch_related('comments')
     pagination_class = BlogPagination
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -30,8 +29,6 @@ class BlogListView(generics.ListCreateAPIView):
 
 
 class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """Retrieve, update, or delete a blog."""
-    
     queryset = Blog.objects.all().prefetch_related('comments')
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -45,15 +42,23 @@ class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class BlogCommentCreateView(APIView):
-    """Create a comment on a blog."""
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, blog_id):
         blog = get_object_or_404(Blog, id=blog_id)
         serializer = BlogCommentCreateSerializer(data=request.data)
-        
+
         if serializer.is_valid():
             comment = serializer.save(blog=blog, author=request.user)
+
+            # Send notification to blog author if commenter is different
+            if blog.author != request.user:
+                Notification.objects.create(
+                    user=blog.author,
+                    message=f'{request.user.username} commented on your blog "{blog.title}".',
+                    type='comment'
+                )
+
             return Response(
                 BlogCommentSerializer(comment, context={'request': request}).data,
                 status=201
@@ -62,18 +67,16 @@ class BlogCommentCreateView(APIView):
 
 
 class BlogCommentDeleteView(APIView):
-    """Delete a comment on a blog (only by author or admin)."""
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request, comment_id):
         comment = get_object_or_404(BlogComment, id=comment_id)
-        
-        # Check if user is the comment author or is staff
+
         if comment.author != request.user and not request.user.is_staff:
             return Response(
                 {'detail': 'You do not have permission to delete this comment.'},
                 status=403
             )
-        
+
         comment.delete()
         return Response({'detail': 'Comment deleted successfully.'}, status=204)

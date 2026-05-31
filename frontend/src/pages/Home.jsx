@@ -621,20 +621,6 @@ const Home = () => {
           )}
         </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center space-x-4 mb-12 overflow-x-auto no-scrollbar py-2">
-          {['All', 'Sahara', 'Beaches', 'Mountains', 'History'].map(catName => (
-            <button
-              key={catName}
-              onClick={() => setActiveCategory(catName)}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${activeCategory === catName ? 'text-white shadow-lg' : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'}`}
-              style={activeCategory === catName ? { backgroundColor: activeTheme.accent } : {}}
-            >
-              {catName}
-            </button>
-          ))}
-        </div>
-
         {filteredCards.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {filteredCards.slice(discoverIndex, discoverIndex + 3).map(card => (
@@ -647,7 +633,7 @@ const Home = () => {
                     {card.type === 'Destination' ? 'WILAYA' : activeCategory.toUpperCase()}
                   </span>
                 </div>
-                <Link to={card.linkTo} className="block flex-1 flex flex-col">
+                <Link to={card.linkTo} className="block flex-1 flex-col">
                   <div className="h-64 overflow-hidden relative">
                     <img src={card.image} alt={card.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -714,7 +700,7 @@ const Home = () => {
                 <div className="absolute top-4 right-4 z-10">
                   <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">HOTEL</span>
                 </div>
-                <Link to={hotel.linkTo} className="block flex-1 flex flex-col">
+                <Link to={hotel.linkTo} className="block flex-1 flex-col">
                   <div className="h-64 overflow-hidden relative">
                     <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -773,7 +759,7 @@ const Home = () => {
                 <div className="absolute top-4 right-4 z-10">
                   <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">RESTAURANT</span>
                 </div>
-                <Link to={restaurant.linkTo} className="block flex-1 flex flex-col">
+                <Link to={restaurant.linkTo} className="block flex-1 flex-col">
                   <div className="h-64 overflow-hidden relative">
                     <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -836,7 +822,7 @@ const Home = () => {
                 const detailLink = `/details/event-${event.id}`;
                 return (
                   <div key={event.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-100 flex flex-col h-full">
-                    <Link to={detailLink} className="block flex-1 flex flex-col">
+                    <Link to={detailLink} className="block flex-1 flex-col">
                       <div className="h-64 overflow-hidden relative">
                         <img src={eventImage} alt={event.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>

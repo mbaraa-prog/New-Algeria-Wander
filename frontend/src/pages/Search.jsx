@@ -13,6 +13,16 @@ const Search = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedWilayas, setSelectedWilayas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  // Read filter params from URL (e.g. when coming from WilayaDetails)
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    const wilaya = searchParams.get('wilaya');
+    if (cat) setSelectedCategory(cat);
+    if (wilaya) setSelectedWilayas([wilaya]);
+    setVisibleCount(12); // reset on URL change
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchSearchData = async () => {
@@ -87,6 +97,12 @@ const Search = () => {
         ? prev.filter(w => w !== wilayaName)
         : [...prev, wilayaName]
     );
+    setVisibleCount(12); // reset on filter change
+  };
+
+  const handleCategoryChange = (cat) => {
+    setSelectedCategory(cat);
+    setVisibleCount(12);
   };
 
   return (
@@ -108,7 +124,7 @@ const Search = () => {
                       type="radio"
                       name="category"
                       checked={selectedCategory === cat}
-                      onChange={() => setSelectedCategory(cat)}
+                      onChange={() => handleCategoryChange(cat)}
                       className="hidden"
                     />
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${selectedCategory === cat ? 'border-[#006699]' : 'border-gray-200 group-hover:border-gray-300'
@@ -160,7 +176,7 @@ const Search = () => {
             <p className="text-gray-400 font-medium">
               {isLoading
                 ? 'Loading search results...'
-                : `Showing ${filteredResults.length} result${filteredResults.length !== 1 ? 's' : ''} matching your criteria.`}
+                : `Showing ${Math.min(visibleCount, filteredResults.length)} of ${filteredResults.length} result${filteredResults.length !== 1 ? 's' : ''} matching your criteria.`}
             </p>
           </div>
 
@@ -169,11 +185,23 @@ const Search = () => {
               <div className="w-16 h-16 border-4 border-[#006699] border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : filteredResults.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {filteredResults.map(item => (
-                <PlaceCard key={item.id} item={item} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {filteredResults.slice(0, visibleCount).map(item => (
+                  <PlaceCard key={item.id} item={item} />
+                ))}
+              </div>
+              {filteredResults.length > visibleCount && !isLoading && (
+                <div className="flex justify-center pt-10">
+                  <button
+                    onClick={() => setVisibleCount(prev => prev + 12)}
+                    className="px-10 py-3.5 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all"
+                  >
+                    Load More Results ({filteredResults.length - visibleCount} remaining)
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="bg-white rounded-3xl p-20 text-center shadow-sm border border-gray-100">
               <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -183,14 +211,6 @@ const Search = () => {
               </div>
               <h3 className="text-[#0F4C81] text-xl font-bold mb-2">No results found</h3>
               <p className="text-gray-400">Try adjusting your filters or search terms.</p>
-            </div>
-          )}
-
-          {filteredResults.length > 0 && !isLoading && (
-            <div className="flex justify-center pt-10">
-              <button className="px-10 py-3.5 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
-                Load More Results
-              </button>
             </div>
           )}
         </main>

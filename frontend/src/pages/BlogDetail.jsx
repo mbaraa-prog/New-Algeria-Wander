@@ -136,11 +136,7 @@ const BlogDetail = () => {
 
         <div className="flex items-center space-x-4 mb-12 pb-8 border-b border-gray-100">
           <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-100 shadow-sm">
-            {blog.author?.avatar ? (
-              <img src={blog.author.avatar} alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
-            ) : (
-              <img src="https://i.pravatar.cc/150?u=default" alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
-            )}
+            <img src={`https://i.pravatar.cc/150?u=${blog.author?.username || 'author'}`} alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
           </div>
           <div>
             <p className="text-[#0F4C81] text-sm font-bold">{blog.author?.username || 'Anonymous'}</p>
@@ -214,11 +210,7 @@ const BlogDetail = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-4 flex-1">
                       <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
-                        {comment.author?.avatar ? (
-                          <img src={comment.author.avatar} alt={comment.author.username} className="w-full h-full object-cover" />
-                        ) : (
-                          <img src="https://i.pravatar.cc/150?u=default" alt={comment.author?.username} className="w-full h-full object-cover" />
-                        )}
+                        <img src={comment.author?.avatar || `https://i.pravatar.cc/150?u=${comment.author?.username || comment.id}`} alt={comment.author?.username} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1">
                         <p className="text-[#0F4C81] text-sm font-bold">{comment.author?.username}</p>
