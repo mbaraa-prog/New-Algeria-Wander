@@ -371,22 +371,28 @@ const Home = () => {
     }
   ];
 
-  const themes = heroSlides.length
-    ? heroSlides.map((slide, index) => ({
-      id: slide.id || `slide-${index}`,
-      category: slide.theme || 'Explore Algeria',
-      title: (slide.full_title || `${slide.title_prefix || ''} ${slide.title_highlight || ''} ${slide.title_suffix || ''}`).trim(),
-      description: slide.description || '',
-      mainImage: slide.featured_wilayas?.[0] ? getImageUrl(slide.featured_wilayas[0]) : (getImageUrl(slide) || algerLaBlanche),
-      sideImage1: slide.featured_wilayas?.[1] ? getImageUrl(slide.featured_wilayas[1]) : trainParis,
-      sideImage2: slide.featured_wilayas?.[2] ? getImageUrl(slide.featured_wilayas[2]) : download3,
-      accent: slide.highlight_color || '#FF7F50',
-      bgImage: getImageUrl(slide) || coastHero,
-      label1: slide.featured_wilayas?.[0]?.name || 'Algiers',
-      label2: slide.featured_wilayas?.[1]?.name || 'Annaba',
-      label3: slide.featured_wilayas?.[2]?.name || 'Bejaia',
-    }))
-    : defaultThemes;
+  const themes = defaultThemes.map((defaultSlide) => {
+    const apiSlide = heroSlides.find(s => 
+      s.theme === defaultSlide.id || 
+      (defaultSlide.id === 'beaches' && s.theme === 'coasts')
+    );
+    if (!apiSlide) return defaultSlide;
+
+    return {
+      id: apiSlide.id || defaultSlide.id,
+      category: apiSlide.theme || defaultSlide.category,
+      title: (apiSlide.full_title || `${apiSlide.title_prefix || ''} ${apiSlide.title_highlight || ''} ${apiSlide.title_suffix || ''}`).trim() || defaultSlide.title,
+      description: apiSlide.description || defaultSlide.description,
+      mainImage: apiSlide.featured_wilayas?.[0] ? getImageUrl(apiSlide.featured_wilayas[0]) : defaultSlide.mainImage,
+      sideImage1: apiSlide.featured_wilayas?.[1] ? getImageUrl(apiSlide.featured_wilayas[1]) : defaultSlide.sideImage1,
+      sideImage2: apiSlide.featured_wilayas?.[2] ? getImageUrl(apiSlide.featured_wilayas[2]) : defaultSlide.sideImage2,
+      accent: apiSlide.highlight_color || defaultSlide.accent,
+      bgImage: getImageUrl(apiSlide) && getImageUrl(apiSlide) !== 'https://via.placeholder.com/1200' ? getImageUrl(apiSlide) : defaultSlide.bgImage,
+      label1: apiSlide.featured_wilayas?.[0]?.name || defaultSlide.label1,
+      label2: apiSlide.featured_wilayas?.[1]?.name || defaultSlide.label2,
+      label3: apiSlide.featured_wilayas?.[2]?.name || defaultSlide.label3,
+    };
+  });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
