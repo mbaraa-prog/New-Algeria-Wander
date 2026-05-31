@@ -383,14 +383,15 @@ const Home = () => {
       category: apiSlide.theme || defaultSlide.category,
       title: (apiSlide.full_title || `${apiSlide.title_prefix || ''} ${apiSlide.title_highlight || ''} ${apiSlide.title_suffix || ''}`).trim() || defaultSlide.title,
       description: apiSlide.description || defaultSlide.description,
-      mainImage: apiSlide.featured_wilayas?.[0] ? getImageUrl(apiSlide.featured_wilayas[0]) : defaultSlide.mainImage,
-      sideImage1: apiSlide.featured_wilayas?.[1] ? getImageUrl(apiSlide.featured_wilayas[1]) : defaultSlide.sideImage1,
-      sideImage2: apiSlide.featured_wilayas?.[2] ? getImageUrl(apiSlide.featured_wilayas[2]) : defaultSlide.sideImage2,
+      // always use our curated local images & labels — remote DB may have stale wilaya assignments
+      mainImage: defaultSlide.mainImage,
+      sideImage1: defaultSlide.sideImage1,
+      sideImage2: defaultSlide.sideImage2,
       accent: apiSlide.highlight_color || defaultSlide.accent,
       bgImage: getImageUrl(apiSlide) && getImageUrl(apiSlide) !== 'https://via.placeholder.com/1200' ? getImageUrl(apiSlide) : defaultSlide.bgImage,
-      label1: apiSlide.featured_wilayas?.[0]?.name || defaultSlide.label1,
-      label2: apiSlide.featured_wilayas?.[1]?.name || defaultSlide.label2,
-      label3: apiSlide.featured_wilayas?.[2]?.name || defaultSlide.label3,
+      label1: defaultSlide.label1,
+      label2: defaultSlide.label2,
+      label3: defaultSlide.label3,
     };
   });
 
