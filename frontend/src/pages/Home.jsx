@@ -339,7 +339,7 @@ const Home = () => {
       title: 'Discover the Mountains of Algeria',
       description: "Explore breathtaking peaks, peaceful villages, and unforgettable hiking experiences in Algeria's stunning mountain landscapes.",
       mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
-      sideImage1: 'https://images.unsplash.com/photo-1511497584788-8767fe771d50?q=80&w=600',
+      sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780240854/nature-mountains_r4ttqw.jpg', //chelia
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484681/9319eece00c41ac6182fa0d01cb5bd19_hzxzbg.jpg', // Oran
       accent: '#22C55E',
       bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
@@ -372,8 +372,8 @@ const Home = () => {
   ];
 
   const themes = defaultThemes.map((defaultSlide) => {
-    const apiSlide = heroSlides.find(s => 
-      s.theme === defaultSlide.id || 
+    const apiSlide = heroSlides.find(s =>
+      s.theme === defaultSlide.id ||
       (defaultSlide.id === 'beaches' && s.theme === 'coasts')
     );
     if (!apiSlide) return defaultSlide;
