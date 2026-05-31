@@ -326,35 +326,35 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the coasts of Algeria',
       description: "Explore stunning Mediterranean beaches, vibrant coastal cities, and hidden gems along Algeria's breathtaking shoreline.",
-      mainImage: algerLaBlanche,
-      sideImage1: trainParis,
-      sideImage2: download3,
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484617/3501e1681cbb79a207dd824c1f12d6c6_djpnsd.jpg', // Algiers
+      sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484889/7013c9c242c194a7ea9a8970e971adae_q0eeb5.jpg', // Annaba
+      sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
       accent: '#FF7F50',
-      bgImage: coastHero,
-      label1: 'Algiers', label2: 'Journey', label3: 'Coasts'
+      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779481659/5e2ec141a62800034f051de7aab190e3_m4gsyl.jpg', // Casbah
+      label1: 'Algiers', label2: 'Annaba', label3: 'Bejaia'
     },
     {
       id: 'mountains',
       category: 'Explore Algeria',
       title: 'Discover the Mountains of Algeria',
       description: "Explore breathtaking peaks, peaceful villages, and unforgettable hiking experiences in Algeria's stunning mountain landscapes.",
-      mainImage: 'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=800',
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
       sideImage1: 'https://images.unsplash.com/photo-1511497584788-8767fe771d50?q=80&w=600',
       sideImage2: 'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?q=80&w=600',
       accent: '#22C55E',
-      bgImage: mountainHero,
-      label1: 'Tikjda', label2: 'Chelia', label3: 'Tizi Ouzou'
+      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
+      label1: 'Bejaia', label2: 'Chelia', label3: 'Tizi Ouzou'
     },
     {
       id: 'desert',
       category: 'Explore Algeria',
       title: 'Discover the Desert of Algeria',
       description: "Experience the magic of the Sahara — vast dunes, silent horizons, and breathtaking sunsets in the world's most iconic desert.",
-      mainImage: 'https://images.unsplash.com/photo-1509233725247-49e657c54213?q=80&w=800',
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485068/ad4a0b5730797c72680d54d720383fc5_wbrgr8.jpg', // Djanet
       sideImage1: 'https://images.unsplash.com/photo-1440635592348-167b1b30296f?q=80&w=600',
       sideImage2: 'https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?q=80&w=600',
       accent: '#EA580C',
-      bgImage: saharaHero,
+      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485068/ad4a0b5730797c72680d54d720383fc5_wbrgr8.jpg', // Djanet
       label1: 'Djanet', label2: 'Tamenrast', label3: 'Bechar'
     },
     {
@@ -362,12 +362,12 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the History of Algeria',
       description: "Discover centuries of history through timeless architecture, ancient cities, and stories carved into every stone.",
-      mainImage: 'https://images.unsplash.com/photo-1605634591461-9b63481a5477?q=80&w=800',
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485015/ecaa1f141dcfed8d00c85267cd0b27d5_cyseda.jpg', // Constantine
       sideImage1: 'https://images.unsplash.com/photo-1580674239581-3fbc191a90c2?q=80&w=600',
       sideImage2: 'https://images.unsplash.com/photo-1596395817202-6028590c67e7?q=80&w=600',
       accent: '#92400E',
-      bgImage: historyHero,
-      label1: 'Gherdaya', label2: 'Timgad', label3: 'Constantine'
+      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485015/ecaa1f141dcfed8d00c85267cd0b27d5_cyseda.jpg', // Constantine
+      label1: 'Constantine', label2: 'Timgad', label3: 'Constantine'
     }
   ];
 
@@ -377,14 +377,14 @@ const Home = () => {
       category: slide.theme || 'Explore Algeria',
       title: (slide.full_title || `${slide.title_prefix || ''} ${slide.title_highlight || ''} ${slide.title_suffix || ''}`).trim(),
       description: slide.description || '',
-      mainImage: getImageUrl(slide) || algerLaBlanche,
-      sideImage1: slide.featured_wilayas?.[0] ? getImageUrl(slide.featured_wilayas[0]) : trainParis,
-      sideImage2: slide.featured_wilayas?.[1] ? getImageUrl(slide.featured_wilayas[1]) : download3,
+      mainImage: slide.featured_wilayas?.[0] ? getImageUrl(slide.featured_wilayas[0]) : (getImageUrl(slide) || algerLaBlanche),
+      sideImage1: slide.featured_wilayas?.[1] ? getImageUrl(slide.featured_wilayas[1]) : trainParis,
+      sideImage2: slide.featured_wilayas?.[2] ? getImageUrl(slide.featured_wilayas[2]) : download3,
       accent: slide.highlight_color || '#FF7F50',
       bgImage: getImageUrl(slide) || coastHero,
       label1: slide.featured_wilayas?.[0]?.name || 'Algiers',
-      label2: slide.featured_wilayas?.[1]?.name || 'Journey',
-      label3: slide.featured_wilayas?.[2]?.name || 'Coasts',
+      label2: slide.featured_wilayas?.[1]?.name || 'Annaba',
+      label3: slide.featured_wilayas?.[2]?.name || 'Bejaia',
     }))
     : defaultThemes;
 
