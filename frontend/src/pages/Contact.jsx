@@ -1,6 +1,24 @@
 import React from 'react';
 import algiersImg from '../assets/algiers.jpg';
 
+const WebIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
+  </svg>
+);
+
+const InstagramIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+  </svg>
+);
+
+const YouTubeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+  </svg>
+);
+
 const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,7 +33,7 @@ const Contact = () => {
         </svg>
       ),
       label: 'EMAIL',
-      value: 'algeriawander@gmail.com'
+      value: 'algeriawander@gmail.com',
     },
     {
       icon: (
@@ -24,7 +42,7 @@ const Contact = () => {
         </svg>
       ),
       label: 'PHONE',
-      value: '+213 551 35 0989'
+      value: '+213 551 35 0989',
     },
     {
       icon: (
@@ -34,38 +52,14 @@ const Contact = () => {
         </svg>
       ),
       label: 'OFFICE',
-      value: 'ESTIN, Amizour, Béjaïa, Algérie'
-    }
+      value: 'ESTIN, Amizour, Béjaïa, Algérie',
+    },
   ];
 
   const socialLinks = [
-    {
-      label: 'Website',
-      href: '#',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
-        </svg>
-      )
-    },
-    {
-      label: 'Instagram',
-      href: 'https://instagram.com/algeriawander',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-        </svg>
-      )
-    },
-    {
-      label: 'YouTube',
-      href: 'https://youtube.com/@algeriawander',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-        </svg>
-      )
-    }
+    { label: 'Website', href: '#', Icon: WebIcon },
+    { label: 'Instagram', href: 'https://instagram.com/algeriawander', Icon: InstagramIcon },
+    { label: 'YouTube', href: 'https://youtube.com/@algeriawander', Icon: YouTubeIcon },
   ];
 
   return (
@@ -80,7 +74,9 @@ const Contact = () => {
           </p>
         </div>
 
+        {/* Form + Sidebar Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-12">
+
           {/* Contact Form */}
           <section className="bg-white rounded-[40px] p-12 shadow-sm border border-gray-50 space-y-12">
             <h2 className="text-[#0F4C81] text-3xl font-bold">Send a Message</h2>
@@ -115,11 +111,11 @@ const Contact = () => {
               <div className="md:col-span-2 space-y-3">
                 <label className="text-[#0F4C81] text-xs font-bold uppercase tracking-widest ml-2">Message</label>
                 <textarea
-                  rows="6"
+                  rows={6}
                   placeholder="Tell us about your travel plans..."
                   className="w-full bg-[#F8FAFF] rounded-3xl py-6 px-8 text-sm outline-none border border-transparent focus:border-[#006699] transition-all shadow-inner resize-none leading-relaxed text-gray-500"
                   required
-                ></textarea>
+                />
               </div>
               <div className="md:col-span-2 flex justify-end pt-6">
                 <button
@@ -164,37 +160,39 @@ const Contact = () => {
                 </p>
               </div>
               <div className="flex gap-4">
-                {socialLinks.map((social, i) => (
+                {socialLinks.map(({ label, href, Icon }) => (
 
-                  key = { i }
-                    href = { social.href }
+                  key = { label }
+                    href = { href }
                     target = "_blank"
                     rel = "noopener noreferrer"
-                    title = { social.label }
+                    title = { label }
                     className = "bg-white p-4 rounded-2xl text-[#006699] hover:bg-[#006699] hover:text-white transition-all shadow-sm"
                   >
-                  { social.icon }
+                  <Icon />
                   </a>
                 ))}
             </div>
         </div>
       </aside>
-    </div>
 
-        {/* Bottom Banner */ }
+    </div>{/* ← closes grid */ }
+
+  {/* Bottom Banner */ }
   <section className="relative rounded-[40px] overflow-hidden h-96 group shadow-2xl">
     <img
-      src={algiersImg} alt="Algiers City"
+      src={algiersImg}
+      alt="Algiers City"
       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]"
     />
-    <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+    <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
     <div className="absolute bottom-12 left-12 space-y-2">
       <p className="text-white/70 text-[10px] font-bold uppercase tracking-[0.3em]">Headquarters</p>
       <h3 className="text-white text-5xl font-extrabold tracking-tight">Algiers, The White City</h3>
     </div>
   </section>
 
-      </div >
+      </div > {/* ← closes space-y-16 wrapper */ }
     </div >
   );
 };
