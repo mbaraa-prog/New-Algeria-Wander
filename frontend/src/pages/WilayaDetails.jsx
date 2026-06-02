@@ -13,6 +13,8 @@ const tabs = [
 
 const WilayaDetails = () => {
   const { id } = useParams();
+  const tabsRef = React.useRef(null);
+  const handlePlanTrip = () => tabsRef.current?.scrollIntoView({ behavior: 'smooth' });
   const [wilaya, setWilaya] = useState(null);
   const [places, setPlaces] = useState({ attractions: [], hotels: [], restaurants: [] });
   const [events, setEvents] = useState([]);
@@ -159,7 +161,7 @@ const WilayaDetails = () => {
               {wilaya.short_desc || wilaya.description}
             </p>
             <div className="flex items-center space-x-6">
-              <button className="bg-[#91470A] text-white px-10 py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/20">
+              <button onClick={handlePlanTrip} className="bg-[#91470A] text-white px-10 py-4 rounded-2xl font-bold hover:bg-[#7a3c08] transition-all shadow-xl shadow-orange-900/20">
                 Plan Trip
               </button>
             </div>
@@ -167,24 +169,23 @@ const WilayaDetails = () => {
         </div>
       </section>
 
-      <section className="bg-white border-b border-gray-100 sticky top-[72px] z-40 px-6">
-        <div className="max-w-7xl mx-auto flex items-center space-x-12">
-          {tabs.map(tab => (
-            <button
-              key={tab.name}
-              onClick={() => setActiveTab(tab.name)}
-              className={`flex items-center space-x-3 py-6 text-sm font-bold border-b-2 transition-all ${activeTab === tab.name
-                ? 'text-[#006699] border-[#006699]'
-                : 'text-gray-400 border-transparent hover:text-gray-600'
-                }`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} />
-              </svg>
-              <span>{tab.name === 'Hotels' ? 'Hotels & Stays' : tab.name}</span>
-            </button>
-          ))}
-        </div>
+      <section ref={tabsRef} className="bg-white border-b border-gray-100 sticky top-[72px] z-40 px-6">        <div className="max-w-7xl mx-auto flex items-center space-x-12">
+        {tabs.map(tab => (
+          <button
+            key={tab.name}
+            onClick={() => setActiveTab(tab.name)}
+            className={`flex items-center space-x-3 py-6 text-sm font-bold border-b-2 transition-all ${activeTab === tab.name
+              ? 'text-[#006699] border-[#006699]'
+              : 'text-gray-400 border-transparent hover:text-gray-600'
+              }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} />
+            </svg>
+            <span>{tab.name === 'Hotels' ? 'Hotels & Stays' : tab.name}</span>
+          </button>
+        ))}
+      </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-6 py-20 space-y-16">
@@ -195,7 +196,7 @@ const WilayaDetails = () => {
           </div>
           <Link
             to={`/search?wilaya=${encodeURIComponent(wilaya.name)}&category=${activeTab === 'Hotels' ? 'Hotels' :
-                activeTab === 'Restaurants' ? 'Restaurants' : 'Landmarks'
+              activeTab === 'Restaurants' ? 'Restaurants' : 'Landmarks'
               }`}
             className="text-[#006699] font-bold flex items-center space-x-2 hover:underline"
           >
