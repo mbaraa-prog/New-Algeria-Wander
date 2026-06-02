@@ -15,7 +15,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at"]
 
     def get_image(self, obj):
-        return obj.user.external_image_url or None
+        if obj.user.external_image_url:
+            return obj.user.external_image_url
+        if obj.user.avatar:
+            return obj.user.avatar.url
+        return None
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):

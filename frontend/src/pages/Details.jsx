@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
 import { useAuth } from '../context/AuthContext';
-import { getBackendAssetUrl, getImageUrl } from '../config/api';
+import { getAvatarUrl, getImageUrl } from '../config/api';
 
 const Details = () => {
   const { id } = useParams();
@@ -294,10 +294,7 @@ const Details = () => {
                 <div className="flex items-start space-x-6">
                   <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
                     <img
-                      src={user?.avatar
-                        ? getBackendAssetUrl(user.avatar)
-                        : `https://i.pravatar.cc/150?u=${user?.username}`
-                      }
+                      src={getAvatarUrl(user) || `https://i.pravatar.cc/150?u=${user?.username}`}
                       alt="User"
                       className="w-full h-full object-cover"
                     />
@@ -361,15 +358,15 @@ const Details = () => {
                   <div className="flex items-start space-x-6">
                     <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
                       <img
-                        src={review.avatar || `https://i.pravatar.cc/150?u=${review.username || review.id}`}
-                        alt={review.username || 'Guest'}
+                        src={getAvatarUrl(review.author || review) || `https://i.pravatar.cc/150?u=${review.author?.username || review.username || review.author?.id || review.id}`}
+                        alt={review.author?.username || review.username || 'Guest'}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1 space-y-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <h4 className="font-bold text-[#0F4C81]">{review.full_name || review.username || 'Guest'}</h4>
+                          <h4 className="font-bold text-[#0F4C81]">{review.author?.full_name || review.full_name || review.author?.username || review.username || 'Guest'}</h4>
                           <p className="text-gray-400 text-xs">
                             {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'Unknown date'}
                           </p>

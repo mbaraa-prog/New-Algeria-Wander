@@ -29,7 +29,7 @@ const EditProfile = () => {
             firstName: u.first_name || '',
             lastName: u.last_name || '',
             bio: u.bio || '',
-            avatarPreview: u.avatar || ''
+            avatarPreview: u.image || u.external_image_url || ''
           });
         }
       } catch (error) {

@@ -148,7 +148,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "email", "is_active", "created_at", "updated_at"]
 
     def get_image(self, obj):
-        return obj.external_image_url or None
+        if obj.external_image_url:
+            return obj.external_image_url
+        if obj.avatar:
+            return obj.avatar.url
+        return None
 
 
 class TokenResponseSerializer(serializers.Serializer):

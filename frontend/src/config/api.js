@@ -21,6 +21,19 @@ export const getBackendAssetUrl = (path) => {
   return `${BASE_URL}/${cleanPath}`;
 };
 
+export const getAvatarUrl = (entity) => {
+  if (!entity) return null;
+
+  let path = null;
+  if (typeof entity === 'string') {
+    path = entity;
+  } else if (typeof entity === 'object') {
+    path = entity.avatar || entity.image || entity.external_image_url || entity.photo || entity.picture;
+  }
+
+  return getBackendAssetUrl(path);
+};
+
 export const getImageUrl = (entity) => {
   if (!entity) return 'https://via.placeholder.com/1200?text=No+Image';
 
@@ -51,4 +64,4 @@ export const getImageUrl = (entity) => {
   }
 
   return `${BASE_URL}/media/${cleanPath}`;
-};
+};

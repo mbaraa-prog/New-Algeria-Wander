@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getImageUrl } from '../config/api';
+import { getAvatarUrl, getImageUrl } from '../config/api';
 
 const BlogCard = ({ blog }) => {
   const blogImage = getImageUrl(blog);
@@ -30,11 +30,11 @@ const BlogCard = ({ blog }) => {
         <div className="flex items-center justify-between pt-6 mt-auto">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-100 shadow-sm">
-              {blog.author?.avatar ? (
-                <img src={blog.author.avatar} alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
-              ) : (
-                <img src="https://i.pravatar.cc/150?u=default" alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
-              )}
+              <img
+                src={getAvatarUrl(blog.author) || `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.author?.username || 'U')}&background=006699&color=fff&size=200`}
+                alt={blog.author?.username || 'Author'}
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="text-[#0F4C81] text-[13px] font-bold">
               {blog.author?.username || blog.author || 'Anonymous'}

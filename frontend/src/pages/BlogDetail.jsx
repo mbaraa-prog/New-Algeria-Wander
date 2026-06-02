@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import dataService from '../api/data';
-import { getBackendAssetUrl, getMediaUrl, getImageUrl } from '../config/api';
+import { getAvatarUrl, getMediaUrl, getImageUrl } from '../config/api';
 import * as markedModule from 'marked';
 const marked = markedModule.marked;
 
@@ -136,7 +136,7 @@ const BlogDetail = () => {
 
         <div className="flex items-center space-x-4 mb-12 pb-8 border-b border-gray-100">
           <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-100 shadow-sm">
-            <img src={`https://i.pravatar.cc/150?u=${blog.author?.username || 'author'}`} alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
+            <img src={getAvatarUrl(blog.author) || `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.author?.username || 'U')}&background=006699&color=fff&size=200`} alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
           </div>
           <div>
             <p className="text-[#0F4C81] text-sm font-bold">{blog.author?.username || 'Anonymous'}</p>
@@ -164,10 +164,7 @@ const BlogDetail = () => {
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
                     <img
-                      src={user?.avatar
-                        ? getBackendAssetUrl(user.avatar)
-                        : `https://i.pravatar.cc/150?u=${user?.username}`
-                      }
+                      src={getAvatarUrl(user) || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`}
                       alt={user?.username}
                       className="w-full h-full object-cover"
                     />
@@ -210,7 +207,7 @@ const BlogDetail = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-4 flex-1">
                       <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
-                        <img src={comment.author?.avatar || `https://i.pravatar.cc/150?u=${comment.author?.username || comment.id}`} alt={comment.author?.username} className="w-full h-full object-cover" />
+                        <img src={getAvatarUrl(comment.author || comment) || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.author?.username || 'U')}&background=006699&color=fff&size=200`} alt={comment.author?.username || comment.username} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1">
                         <p className="text-[#0F4C81] text-sm font-bold">{comment.author?.username}</p>

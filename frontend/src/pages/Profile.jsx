@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getBackendAssetUrl, getMediaUrl, getImageUrl } from '../config/api';
+import { getAvatarUrl, getMediaUrl, getImageUrl } from '../config/api';
 import authService from '../api/auth';
 import dataService from '../api/data';
 
@@ -89,9 +89,9 @@ const Profile = () => {
             <div className="relative group">
               <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-[#F8FAFF] shadow-lg">
                 <img
-                  src={profile?.avatar
-                    ? getBackendAssetUrl(profile.avatar)
-                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.full_name || profile?.username || 'U')}&background=006699&color=fff&size=200`}
+                  src={getAvatarUrl(profile) || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.full_name || profile?.username || 'U')}&background=006699&color=fff&size=200`}
+                  alt={profile?.username || 'Profile'}
+                  className="w-full h-full object-cover"
                 />
               </div>
               <Link to="/profile/edit" className="absolute bottom-2 right-2 bg-[#006699] text-white p-3 rounded-full shadow-lg hover:scale-110 transition-all border-4 border-white">

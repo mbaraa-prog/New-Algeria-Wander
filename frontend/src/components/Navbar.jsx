@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getBackendAssetUrl } from '../config/api';
+import { getAvatarUrl } from '../config/api';
 import logo from '../assets/photo_2026-02-14_23-36-08-removebg-preview.png';
 
 const Navbar = () => {
@@ -99,7 +99,7 @@ const Navbar = () => {
               <Link to="/profile" className="flex items-center">
                 <div className={`h-11 w-11 rounded-full border-2 overflow-hidden transition-colors ${isHome && !isScrolled ? 'border-white/30' : 'border-[#006699]/30'}`}>
                   <img
-                    src={user?.avatar ? getBackendAssetUrl(user.avatar) : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`}
+                    src={getAvatarUrl(user) || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || 'U')}&background=006699&color=fff&size=200`}
                     alt="Profile"
                     className="h-full w-full object-cover"
                   />

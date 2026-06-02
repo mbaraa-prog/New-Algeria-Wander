@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
-import { getImageUrl } from '../config/api';
+import { getAvatarUrl, getImageUrl } from '../config/api';
 
 const tabs = [
   { name: 'Hotels', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5' },
@@ -319,15 +319,15 @@ const WilayaDetails = () => {
                   <div className="flex items-start gap-6">
                     <div className="h-14 w-14 rounded-full overflow-hidden flex-shrink-0">
                       <img
-                        src={review.avatar || `https://i.pravatar.cc/150?u=${review.username || review.id}`}
-                        alt={review.full_name || review.username}
+                        src={getAvatarUrl(review.author || review) || `https://i.pravatar.cc/150?u=${review.author?.username || review.username || review.author?.id || review.id}`}
+                        alt={review.author?.full_name || review.full_name || review.author?.username || review.username}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between gap-6 mb-3">
                         <div>
-                          <h4 className="font-bold text-[#0F4C81]">{review.full_name || review.username}</h4>
+                          <h4 className="font-bold text-[#0F4C81]">{review.author?.full_name || review.full_name || review.author?.username || review.username}</h4>
                           <p className="text-gray-400 text-xs">{new Date(review.created_at).toLocaleDateString()}</p>
                         </div>
                         <div className="flex text-[#FF7F50] text-sm font-bold">

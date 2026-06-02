@@ -3,8 +3,12 @@ from .models import Blog, BlogComment
 
 
 def _get_image(obj):
-    """Unified image resolver — always returns external_image_url or None."""
-    return obj.external_image_url or None
+    """Unified image resolver — always returns external_image_url or cover_image URL or None."""
+    if obj.external_image_url:
+        return obj.external_image_url
+    if hasattr(obj, 'cover_image') and obj.cover_image:
+        return obj.cover_image.url
+    return None
 
 
 class AuthorDetailSerializer(serializers.Serializer):
@@ -14,7 +18,11 @@ class AuthorDetailSerializer(serializers.Serializer):
     image    = serializers.SerializerMethodField()
 
     def get_image(self, obj):
-        return obj.external_image_url or None
+        if obj.external_image_url:
+            return obj.external_image_url
+        if hasattr(obj, 'avatar') and obj.avatar:
+            return obj.avatar.url
+        return None
 
 
 class BlogCommentSerializer(serializers.ModelSerializer):
@@ -38,7 +46,11 @@ class BlogSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'author', 'created_at', 'comments']
 
     def get_image(self, obj):
-        return obj.external_image_url or None
+        if obj.external_image_url:
+            return obj.external_image_url
+        if obj.cover_image:
+            return obj.cover_image.url
+        return None
 
 
 class BlogCreateUpdateSerializer(serializers.ModelSerializer):
