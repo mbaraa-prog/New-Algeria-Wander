@@ -17,7 +17,7 @@ const About = () => {
     },
     {
       name: 'Mohammed Baraa Chaalel',
-      role: 'Frontend+Design+cute boy',
+      role: 'Frontend+Design+fixing bugs',
       image: braaImg
     },
     {
@@ -37,7 +37,7 @@ const About = () => {
     },
     {
       name: 'Louay Aounalah',
-      role: 'Backend+team leader',
+      role: 'دعم معنوي',
       image: louayImg
     }
   ];
