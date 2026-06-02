@@ -366,7 +366,7 @@ const Home = () => {
       sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780398702/Timgad_nicknamed_the__Pompeii_of_North_Africa_is_a_ohspka.jpg', // Timgad
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780399011/Das_r%C3%B6mische_Amphitheater_von_Tipaza_malerisch_an_em5eaw.jpg', // Tipaza
       accent: '#92400E',
-      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485015/ecaa1f141dcfed8d00c85267cd0b27d5_cyseda.jpg', // Constantine
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780425574/pexels-adel-kara-32885066-33477231_yymm9d.jpg', // Constantine
       label1: 'Constantine', label2: 'Timgad', label3: 'Tipaza'
     }
   ];
