@@ -326,7 +326,7 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the coasts of Algeria',
       description: "Explore stunning Mediterranean beaches, vibrant coastal cities, and hidden gems along Algeria's breathtaking shoreline.",
-      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780229912/6028564389461429274_121_nqmtwj.jpg', // Coasts
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397008/Alger_cglaox.jpg', // Algiers
       sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484889/7013c9c242c194a7ea9a8970e971adae_q0eeb5.jpg', // Annaba
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
       accent: '#FF7F50',
@@ -351,11 +351,11 @@ const Home = () => {
       title: 'Discover the Desert of Algeria',
       description: "Experience the magic of the Sahara — vast dunes, silent horizons, and breathtaking sunsets in the world's most iconic desert.",
       mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397176/Djanet_e7m8zt.jpg', // Djanet
-      sideImage1: 'https://images.unsplash.com/photo-1440635592348-167b1b30296f?q=80&w=600',
-      sideImage2: 'https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?q=80&w=600',
+      sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780398698/476959416809172277_ifmlvt.jpg', // Tamanrasset
+      sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780398708/18718154695390518_mbyklm.jpg', // Bechar
       accent: '#EA580C',
       bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397176/Djanet_e7m8zt.jpg', // Djanet
-      label1: 'Djanet', label2: 'Tamenrast', label3: 'Bechar'
+      label1: 'Djanet', label2: 'Tamanrasset', label3: 'Bechar'
     },
     {
       id: 'history',
@@ -363,11 +363,11 @@ const Home = () => {
       title: 'Discover the History of Algeria',
       description: "Discover centuries of history through timeless architecture, ancient cities, and stories carved into every stone.",
       mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485015/ecaa1f141dcfed8d00c85267cd0b27d5_cyseda.jpg', // Constantine
-      sideImage1: 'https://images.unsplash.com/photo-1580674239581-3fbc191a90c2?q=80&w=600',
-      sideImage2: 'https://images.unsplash.com/photo-1596395817202-6028590c67e7?q=80&w=600',
+      sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780398702/Timgad_nicknamed_the__Pompeii_of_North_Africa_is_a_ohspka.jpg', // Timgad
+      sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780399011/Das_r%C3%B6mische_Amphitheater_von_Tipaza_malerisch_an_em5eaw.jpg', // Tipaza
       accent: '#92400E',
       bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485015/ecaa1f141dcfed8d00c85267cd0b27d5_cyseda.jpg', // Constantine
-      label1: 'Constantine', label2: 'Timgad', label3: 'Constantine'
+      label1: 'Constantine', label2: 'Timgad', label3: 'Tipaza'
     }
   ];
 
