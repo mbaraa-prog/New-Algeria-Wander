@@ -388,7 +388,7 @@ const Home = () => {
       sideImage1: defaultSlide.sideImage1,
       sideImage2: defaultSlide.sideImage2,
       accent: apiSlide.highlight_color || defaultSlide.accent,
-      bgImage: getImageUrl(apiSlide) && getImageUrl(apiSlide) !== 'https://via.placeholder.com/1200' ? getImageUrl(apiSlide) : defaultSlide.bgImage,
+      bgImage: defaultSlide.bgImage,
       label1: defaultSlide.label1,
       label2: defaultSlide.label2,
       label3: defaultSlide.label3,
