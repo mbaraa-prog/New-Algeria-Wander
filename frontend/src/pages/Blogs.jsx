@@ -28,7 +28,6 @@ const Blogs = () => {
     }
   };
 
-  const trendingTopics = ['Travel Tips', 'Hidden Gems', 'Budget Travel', 'Adventure', 'Culture', 'Food'];
 
   return (
     <div className="bg-[#F8FAFF] min-h-screen pt-32 pb-24 px-6">
@@ -36,8 +35,8 @@ const Blogs = () => {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-16 space-y-6 md:space-y-0">
           <h1 className="text-[#0F4C81] text-5xl font-extrabold tracking-tight">Traveler Stories</h1>
-          <Link 
-            to="/blogs/new" 
+          <Link
+            to="/blogs/new"
             className="bg-[#006699] text-white px-8 py-3.5 rounded-2xl font-bold flex items-center space-x-3 hover:bg-[#004d73] transition-all shadow-xl shadow-blue-100 self-start"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,35 +52,67 @@ const Blogs = () => {
             {loading && <div className="text-center py-12 text-gray-500">Loading blogs...</div>}
             {error && <div className="text-center py-12 text-red-500">{error}</div>}
             {!loading && blogs.length === 0 && <div className="text-center py-12 text-gray-500">No blogs yet</div>}
-            
+
             {!loading && (showAll ? blogs : blogs.slice(0, 6)).map(blog => (
               <BlogCard key={blog.id} blog={blog} />
             ))}
-            
+
             {/* Pagination / Load More */}
             {!loading && blogs.length > 6 && !showAll && (
               <div className="flex justify-center pt-10">
-                 <button onClick={() => setShowAll(true)} className="px-10 py-4 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
-                   View All Stories
-                 </button>
+                <button onClick={() => setShowAll(true)} className="px-10 py-4 rounded-full border-2 border-[#006699] text-[#006699] font-bold hover:bg-[#006699] hover:text-white transition-all">
+                  View All Stories
+                </button>
               </div>
             )}
           </main>
 
           {/* Sidebar */}
           <aside className="space-y-12">
-            {/* Trending Topics */}
+            {/* Community Stats */}
             <div className="bg-white rounded-[40px] p-10 shadow-sm border border-gray-50">
-              <h3 className="text-[#0F4C81] text-2xl font-bold mb-8">Trending Topics</h3>
-              <div className="flex flex-wrap gap-3">
-                {trendingTopics.map(topic => (
-                  <button 
-                    key={topic} 
-                    className="bg-[#EEF4FF] text-[#0F4C81] px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-[#006699] hover:text-white transition-all"
-                  >
-                    {topic}
-                  </button>
-                ))}
+              <h3 className="text-[#0F4C81] text-2xl font-bold mb-8">
+                Community Stats
+              </h3>
+
+              <div className="space-y-5">
+                <div className="flex items-center justify-between bg-[#EEF4FF] rounded-2xl px-5 py-4">
+                  <span className="font-semibold text-[#0F4C81]">
+                    📝 Total Blogs
+                  </span>
+                  <span className="font-bold text-[#006699] text-lg">
+                    {blogs.length}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between bg-[#EEF4FF] rounded-2xl px-5 py-4">
+                  <span className="font-semibold text-[#0F4C81]">
+                    ✍️ Stories Displayed
+                  </span>
+                  <span className="font-bold text-[#006699] text-lg">
+                    {showAll ? blogs.length : Math.min(6, blogs.length)}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between bg-[#EEF4FF] rounded-2xl px-5 py-4">
+                  <span className="font-semibold text-[#0F4C81]">
+                    👥 Contributors
+                  </span>
+                  <span className="font-bold text-[#006699] text-lg">
+                    {new Set(
+                      blogs.map(blog => blog.author?.username || blog.author_name)
+                    ).size}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between bg-[#EEF4FF] rounded-2xl px-5 py-4">
+                  <span className="font-semibold text-[#0F4C81]">
+                    🌍 Travel Community
+                  </span>
+                  <span className="font-bold text-green-600 text-lg">
+                    Active
+                  </span>
+                </div>
               </div>
             </div>
 
