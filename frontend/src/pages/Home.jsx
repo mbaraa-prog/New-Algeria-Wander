@@ -350,7 +350,7 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the Desert of Algeria',
       description: "Experience the magic of the Sahara — vast dunes, silent horizons, and breathtaking sunsets in the world's most iconic desert.",
-      mainImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427574/Tadrart_Rouge_rgiawo.jpg', // Djanet
+      mainImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780428254/pexels-binyaminmellish-305535_gysila.jpg', // Djanet
       sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427572/S_316929_f4x8dk.jpg', // Tamanrasset
       sideImage2: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427788/traditional-arabic-coffee-pot-tea-600nw-1956774079_lf5lv2.jpg', // Bechar
       accent: '#EA580C',
