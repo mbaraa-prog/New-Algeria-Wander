@@ -4,6 +4,15 @@ import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
 import { getImageUrl } from '../config/api';
 
+// Helper function to normalize strings for case-insensitive and accent-insensitive search
+const normalizeString = (str) => {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, ''); // Remove diacritical marks
+};
+
 const Search = () => {
   const [searchParams] = useSearchParams();
   const queryFromUrl = searchParams.get('q') || '';
@@ -76,11 +85,12 @@ const Search = () => {
   };
 
   const filteredResults = useMemo(() => {
+    const normalizedQuery = normalizeString(queryFromUrl);
     return allItems.filter(item => {
-      const matchesQuery = !queryFromUrl ||
-        item.name?.toLowerCase().includes(queryFromUrl.toLowerCase()) ||
-        item.wilaya?.toLowerCase().includes(queryFromUrl.toLowerCase()) ||
-        item.description?.toLowerCase().includes(queryFromUrl.toLowerCase());
+      const matchesQuery = !normalizedQuery ||
+        normalizeString(item.name).includes(normalizedQuery) ||
+        normalizeString(item.wilaya).includes(normalizedQuery) ||
+        normalizeString(item.description).includes(normalizedQuery);
 
       const matchesCat = matchesCategory(item.type, selectedCategory);
 
