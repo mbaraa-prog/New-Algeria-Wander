@@ -326,11 +326,11 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the coasts of Algeria',
       description: "Explore stunning Mediterranean beaches, vibrant coastal cities, and hidden gems along Algeria's breathtaking shoreline.",
-      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484617/3501e1681cbb79a207dd824c1f12d6c6_djpnsd.jpg', // Algiers
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780229912/6028564389461429274_121_nqmtwj.jpg', // Coasts
       sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484889/7013c9c242c194a7ea9a8970e971adae_q0eeb5.jpg', // Annaba
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
       accent: '#FF7F50',
-      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779481659/5e2ec141a62800034f051de7aab190e3_m4gsyl.jpg', // Casbah
+      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780229912/6028564389461429274_121_nqmtwj.jpg', // Coasts
       label1: 'Algiers', label2: 'Annaba', label3: 'Bejaia'
     },
     {
@@ -338,11 +338,11 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the Mountains of Algeria',
       description: "Explore breathtaking peaks, peaceful villages, and unforgettable hiking experiences in Algeria's stunning mountain landscapes.",
-      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397165/Bejaia_znhdbj.jpg', // Bejaia
       sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780240854/nature-mountains_r4ttqw.jpg', //chelia
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484681/9319eece00c41ac6182fa0d01cb5bd19_hzxzbg.jpg', // Oran
       accent: '#22C55E',
-      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
+      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397165/Bejaia_znhdbj.jpg', // Bejaia
       label1: 'Bejaia', label2: 'Chelia', label3: 'Oran'
     },
     {
@@ -350,11 +350,11 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the Desert of Algeria',
       description: "Experience the magic of the Sahara — vast dunes, silent horizons, and breathtaking sunsets in the world's most iconic desert.",
-      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485068/ad4a0b5730797c72680d54d720383fc5_wbrgr8.jpg', // Djanet
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397176/Djanet_e7m8zt.jpg', // Djanet
       sideImage1: 'https://images.unsplash.com/photo-1440635592348-167b1b30296f?q=80&w=600',
       sideImage2: 'https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?q=80&w=600',
       accent: '#EA580C',
-      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485068/ad4a0b5730797c72680d54d720383fc5_wbrgr8.jpg', // Djanet
+      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397176/Djanet_e7m8zt.jpg', // Djanet
       label1: 'Djanet', label2: 'Tamenrast', label3: 'Bechar'
     },
     {

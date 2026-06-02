@@ -1,4 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+// VITE_API_URL can be set with or without /api suffix — we normalise here
+const _rawApiUrl = import.meta.env.VITE_API_URL || 'https://algeria-wander-hods.onrender.com';
+// Strip trailing /api or /api/ so BASE_URL is always the bare domain
+const BASE_URL = _rawApiUrl.replace(/\/api\/?$/, '').replace(/\/$/, '');
 
 export const API_BASE_URL = BASE_URL;
 export const API_URL = `${BASE_URL}/api`;
@@ -48,4 +51,4 @@ export const getImageUrl = (entity) => {
   }
 
   return `${BASE_URL}/media/${cleanPath}`;
-};
+};
