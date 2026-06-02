@@ -354,7 +354,7 @@ const Home = () => {
       sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780398698/476959416809172277_ifmlvt.jpg', // Tamanrasset
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780398708/18718154695390518_mbyklm.jpg', // Bechar
       accent: '#EA580C',
-      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397176/Djanet_e7m8zt.jpg', // Djanet
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780424474/pexels-colin-113475134-9701658_tfyvmn.jpg', // Djanet
       label1: 'Djanet', label2: 'Tamanrasset', label3: 'Bechar'
     },
     {
