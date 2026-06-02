@@ -17,7 +17,7 @@ const About = () => {
     },
     {
       name: 'Mohammed Baraa Chaalel',
-      role: 'Frontend+Design+Fixing bugs',
+      role: 'Frontend+Design+cute boy',
       image: braaImg
     },
     {
