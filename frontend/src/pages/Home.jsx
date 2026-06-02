@@ -342,7 +342,7 @@ const Home = () => {
       sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780240854/nature-mountains_r4ttqw.jpg', //chelia
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484681/9319eece00c41ac6182fa0d01cb5bd19_hzxzbg.jpg', // Oran
       accent: '#22C55E',
-      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397165/Bejaia_znhdbj.jpg', // Bejaia
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780424075/pexels-aleyna-kilic-54873290-7831727_1_mpllup.jpg', // Bejaia
       label1: 'Bejaia', label2: 'Chelia', label3: 'Oran'
     },
     {
