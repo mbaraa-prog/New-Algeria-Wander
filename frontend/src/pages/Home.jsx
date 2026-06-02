@@ -534,15 +534,10 @@ const Home = () => {
       {/* Floating Search Widget */}
       <div className="relative z-30 max-w-5xl mx-auto -mt-24 px-6 pb-20">
         <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-gray-100">
-          <div className="flex items-center space-x-10 mb-8 border-b border-gray-50 pb-4 overflow-x-auto no-scrollbar">
-            {categoriesTabs.map((tab, i) => (
-              <button
-                key={tab}
-                className={`text-[13px] font-bold pb-4 whitespace-nowrap transition-all uppercase tracking-wider ${i === 0 ? 'text-[#006699] border-b-2 border-[#006699]' : 'text-gray-300 hover:text-gray-500'}`}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="flex items-center space-x-10 mb-8 border-b border-gray-50 pb-4">
+            <button className="text-[13px] font-bold pb-4 whitespace-nowrap uppercase tracking-wider text-[#006699] border-b-2 border-[#006699]">
+              All
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-8 items-end">
