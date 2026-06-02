@@ -12,12 +12,12 @@ const About = () => {
   const team = [
     {
       name: 'Houssem Mansouri',
-      role: 'Design+Frontend+Fixing bugs',
+      role: 'Frontend+Design+Fixing bugs',
       image: houssemImg
     },
     {
       name: 'Mohammed Baraa Chaalel',
-      role: 'Frontend+Design',
+      role: 'Frontend+Design+Fixing bugs',
       image: braaImg
     },
     {
