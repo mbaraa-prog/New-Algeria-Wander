@@ -330,7 +330,7 @@ const Home = () => {
       sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484889/7013c9c242c194a7ea9a8970e971adae_q0eeb5.jpg', // Annaba
       sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484750/073b82bd6ebe1fe8dac420a01ae6ea01_j2gchb.jpg', // Bejaia
       accent: '#FF7F50',
-      bgImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780229912/6028564389461429274_121_nqmtwj.jpg', // Coasts
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780422311/beach-ocean-sunset-landscape-blue-sky-5k-3840x2160-8974_edb9sm.jpg', // Coasts
       label1: 'Algiers', label2: 'Annaba', label3: 'Bejaia'
     },
     {
