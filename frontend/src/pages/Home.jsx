@@ -338,12 +338,12 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the Mountains of Algeria',
       description: "Explore breathtaking peaks, peaceful villages, and unforgettable hiking experiences in Algeria's stunning mountain landscapes.",
-      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780397165/Bejaia_znhdbj.jpg', // Bejaia
+      mainImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780426907/Denali-peak-center-Alaska-Range-North-America_wfnnyl.jpg', // Bejaia
       sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780240854/nature-mountains_r4ttqw.jpg', //chelia
-      sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779484681/9319eece00c41ac6182fa0d01cb5bd19_hzxzbg.jpg', // Oran
+      sideImage2: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780426906/MAG19008_190528_738.jpg_fpufgp.jpg', // khenchela
       accent: '#22C55E',
       bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780424075/pexels-aleyna-kilic-54873290-7831727_1_mpllup.jpg', // Bejaia
-      label1: 'Bejaia', label2: 'Chelia', label3: 'Oran'
+      label1: 'Bejaia', label2: 'Chelia', label3: 'Khenchela'
     },
     {
       id: 'desert',
