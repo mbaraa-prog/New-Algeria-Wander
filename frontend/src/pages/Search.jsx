@@ -80,8 +80,8 @@ const Search = () => {
     if (selectedCategory === 'Restaurants')
       return t.includes('restaurant') || t.includes('dining') || t.includes('food') || t.includes('cafe') || t.includes('eatery');
     if (selectedCategory === 'Landmarks')
-      return t.includes('landmark') || t.includes('attraction') || t.includes('historic') || t.includes('museum') || t.includes('monument') || t.includes('park') || t.includes('site') || t.includes('place');
-    return true;
+      return t.includes('landmark') || t.includes('attraction') || t.includes('historic') || t.includes('museum') || t.includes('monument') || t.includes('park') || t.includes('site');
+    return false;
   };
 
   const filteredResults = useMemo(() => {
