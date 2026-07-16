@@ -24,7 +24,8 @@ class HeroSlide(models.Model):
     # e.g. "of Algeria"
     title_suffix     = models.CharField(max_length=100, default="of Algeria")
     description      = models.TextField()
-    background_image = models.ImageField(upload_to="hero/")
+    background_image = models.ImageField(upload_to="hero/", blank=True, null=True)
+    external_image_url = models.URLField(blank=True, null=True, help_text="Cloudinary or external image URL")
     # Color applied to the highlighted word (hex or css class name)
     highlight_color  = models.CharField(max_length=30, default="#E86C2C",
                                         help_text="CSS color for highlighted word")

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getAvatarUrl, getMediaUrl, getImageUrl } from '../config/api';
 import authService from '../api/auth';
 import dataService from '../api/data';
 
@@ -88,9 +89,9 @@ const Profile = () => {
             <div className="relative group">
               <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-[#F8FAFF] shadow-lg">
                 <img
-                  src={profile?.avatar
-                    ? `http://localhost:8000${profile.avatar}`
-                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.full_name || profile?.username || 'U')}&background=006699&color=fff&size=200`}
+                  src={getAvatarUrl(profile) || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.full_name || profile?.username || 'U')}&background=006699&color=fff&size=200`}
+                  alt={profile?.username || 'Profile'}
+                  className="w-full h-full object-cover"
                 />
               </div>
               <Link to="/profile/edit" className="absolute bottom-2 right-2 bg-[#006699] text-white p-3 rounded-full shadow-lg hover:scale-110 transition-all border-4 border-white">
@@ -160,7 +161,7 @@ const Profile = () => {
                       className="relative group rounded-3xl overflow-hidden shadow-sm h-64 border border-gray-50 block"
                     >
                       <img
-                        src={item.image || item.cover_image}
+                        src={getImageUrl(item)}
                         alt={item.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
@@ -230,9 +231,7 @@ const Profile = () => {
                   </div>
                 ) : (
                   myBlogs.map(blog => {
-                    const coverImage = blog.cover_image
-                      ? (blog.cover_image.startsWith('http') ? blog.cover_image : `http://localhost:8000/media/${blog.cover_image}`)
-                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.title || 'Blog')}&background=006699&color=fff&size=150`;
+                    const coverImage = getImageUrl(blog);
                     return (
                       <div key={blog.id} className="flex items-center gap-6 group cursor-pointer" onClick={() => navigate(`/blogs/${blog.id}`)}>
                         <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm flex-shrink-0">

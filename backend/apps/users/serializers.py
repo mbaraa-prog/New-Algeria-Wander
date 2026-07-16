@@ -126,6 +126,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for returning user profile data."""
 
     full_name = serializers.ReadOnlyField()
+    # Unified image contract — always external_image_url or None
+    image     = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -137,12 +139,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "last_name",
             "full_name",
             "bio",
-            "avatar",
+            "image",
+            "external_image_url",
             "is_active",
             "created_at",
             "updated_at",
         ]
         read_only_fields = ["id", "email", "is_active", "created_at", "updated_at"]
+
+    def get_image(self, obj):
+        if obj.external_image_url:
+            return obj.external_image_url
+        if obj.avatar:
+            return obj.avatar.url
+        return None
 
 
 class TokenResponseSerializer(serializers.Serializer):

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
 import { useAuth } from '../context/AuthContext';
+import { getAvatarUrl, getImageUrl } from '../config/api';
 
 const Details = () => {
   const { id } = useParams();
@@ -11,6 +12,8 @@ const Details = () => {
   const [reviews, setReviews] = useState([]);
   const [relatedPlaces, setRelatedPlaces] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   
   const [reviewRating, setReviewRating] = useState(0);
@@ -76,6 +79,43 @@ const Details = () => {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    if (!item) return;
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setIsFavorite(favorites.some(fav => fav.id === item.id));
+  }, [item]);
+
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    let updatedFavorites;
+    if (isFavorite) {
+      updatedFavorites = favorites.filter(fav => fav.id !== item.id);
+    } else {
+      updatedFavorites = [...favorites, item];
+    }
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    setIsFavorite(!isFavorite);
+    window.dispatchEvent(new Event('favoritesUpdated'));
+  };
+
+  const handleShare = async () => {
+    const placeName = item?.name || item?.title || 'Place';
+    const placeWilaya = item?.wilaya_name || item?.wilaya?.name || 'Algeria';
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: placeName,
+          text: `Check out ${placeName} in ${placeWilaya}, Algeria!`,
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      }
+    } catch { }
+  };
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -134,7 +174,7 @@ const Details = () => {
   const placeType = id.startsWith('event-') ? 'Event' : (item.place_type_display || item.place_type || 'Place');
   const placeName = item.name || item.title;
   const placeDescription = item.description || item.short_desc || 'No description available.';
-  const placeImage = item.cover_image || item.image || item.external_image_url || 'https://via.placeholder.com/1200';
+  const placeImage = getImageUrl(item);
   const placeWilaya = item.wilaya_name || item.wilaya?.name || 'Unknown';
   const placeRating = item.avg_rating || item.rating || (id.startsWith('event-') ? 4.9 : 0);
   const placeReviewCount = reviews.length;
@@ -164,12 +204,19 @@ const Details = () => {
                 {placeName}
               </h1>
               <div className="flex space-x-4 mb-2">
-                <button className="bg-white/10 backdrop-blur-md p-4 rounded-full text-white hover:bg-[#FF7F50] transition-all border border-white/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button
+                  onClick={toggleFavorite}
+                  className={`backdrop-blur-md p-4 rounded-full transition-all border border-white/20 ${isFavorite ? 'bg-[#FF7F50] text-white' : 'bg-white/10 text-white hover:bg-[#FF7F50]'}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill={isFavorite ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
-                <button className="bg-white/10 backdrop-blur-md p-4 rounded-full text-white hover:bg-[#FF7F50] transition-all border border-white/20">
+                <button
+                  onClick={handleShare}
+                  title={shareCopied ? 'Link copied!' : 'Share'}
+                  className={`backdrop-blur-md p-4 rounded-full text-white transition-all border border-white/20 ${shareCopied ? 'bg-green-500' : 'bg-white/10 hover:bg-[#FF7F50]'}`}
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
@@ -243,25 +290,21 @@ const Details = () => {
           <div className="space-y-10">
             <h2 className="text-[#0F4C81] text-3xl font-bold">Visitor Opinions</h2>
 
-            {/* Review Form */}
             <div className="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
               <form onSubmit={handleSubmitReview}>
                 <div className="flex items-start space-x-6">
                   <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
                     <img
-                      src={user?.avatar
-                        ? (user.avatar.startsWith('http') ? user.avatar : `http://localhost:8000${user.avatar}`)
-                        : `https://i.pravatar.cc/150?u=${user?.username}`
-                      }
+                      src={getAvatarUrl(user) || `https://i.pravatar.cc/150?u=${user?.username}`}
                       alt="User"
                       className="w-full h-full object-cover"
-                    />                  </div>
+                    />
+                  </div>
                   <div className="flex-1 space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-[#0F4C81]">
                         {user ? user.username : 'Sign in to leave a review'}
                       </span>
-                      {/* Star Rating */}
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
@@ -274,10 +317,7 @@ const Details = () => {
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className={`h-6 w-6 transition-colors ${star <= (hoveredRating || reviewRating)
-                                ? 'text-[#FF7F50]'
-                                : 'text-gray-200'
-                                }`}
+                              className={`h-6 w-6 transition-colors ${star <= (hoveredRating || reviewRating) ? 'text-[#FF7F50]' : 'text-gray-200'}`}
                               viewBox="0 0 20 20"
                               fill="currentColor"
                             >
@@ -310,7 +350,6 @@ const Details = () => {
               </form>
             </div>
 
-            {/* Reviews List */}
             <div className="space-y-6">
               {reviews.length === 0 && (
                 <p className="text-gray-400 text-center py-8">No reviews yet. Be the first to share your experience!</p>
@@ -320,15 +359,15 @@ const Details = () => {
                   <div className="flex items-start space-x-6">
                     <div className="h-12 w-12 rounded-full overflow-hidden shrink-0">
                       <img
-                        src={review.avatar || `https://i.pravatar.cc/150?u=${review.username || review.id}`}
-                        alt={review.username || 'Guest'}
+                        src={getAvatarUrl(review.author || review) || `https://i.pravatar.cc/150?u=${review.author?.username || review.username || review.author?.id || review.id}`}
+                        alt={review.author?.username || review.username || 'Guest'}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1 space-y-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <h4 className="font-bold text-[#0F4C81]">{review.full_name || review.username || 'Guest'}</h4>
+                          <h4 className="font-bold text-[#0F4C81]">{review.author?.full_name || review.full_name || review.author?.username || review.username || 'Guest'}</h4>
                           <p className="text-gray-400 text-xs">
                             {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'Unknown date'}
                           </p>
@@ -430,7 +469,7 @@ const Details = () => {
                 relatedPlaces.map(rel => (
                   <PlaceCard key={rel.id} item={{
                     ...rel,
-                    image: rel.cover_image || rel.external_image_url,
+                    image: getImageUrl(rel),
                     location: placeWilaya,
                     wilaya: placeWilaya,
                     description: rel.short_desc || rel.description,

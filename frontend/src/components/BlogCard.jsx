@@ -1,22 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { getAvatarUrl, getImageUrl } from '../config/api';
 
 const BlogCard = ({ blog }) => {
+  const blogImage = getImageUrl(blog);
+  
   return (
     <div className={`bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-50 flex flex-col md:flex-row group h-full md:h-72`}>
-      {blog.cover_image && (
+      {blogImage && (
         <div className="md:w-2/5 relative h-64 md:h-full overflow-hidden">
           <img
-            src={blog.cover_image.startsWith('http')
-              ? blog.cover_image
-              : `http://localhost:8000/media/${blog.cover_image}`}
+            src={blogImage}
             alt={blog.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         </div>
       )}
 
-      <div className={`${blog.cover_image ? 'md:w-3/5' : 'w-full'} p-8 md:p-10 flex flex-col justify-between`}>
+      <div className={`${blogImage ? 'md:w-3/5' : 'w-full'} p-8 md:p-10 flex flex-col justify-between`}>
         <div className="space-y-4">
           <h2 className="text-[#0F4C81] text-2xl font-bold leading-tight group-hover:text-[#FF7F50] transition-colors">
             {blog.title}
@@ -29,11 +30,11 @@ const BlogCard = ({ blog }) => {
         <div className="flex items-center justify-between pt-6 mt-auto">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-100 shadow-sm">
-              {blog.author?.avatar ? (
-                <img src={blog.author.avatar} alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
-              ) : (
-                <img src="https://i.pravatar.cc/150?u=default" alt={blog.author?.username || 'Author'} className="w-full h-full object-cover" />
-              )}
+              <img
+                src={getAvatarUrl(blog.author) || `https://ui-avatars.com/api/?name=${encodeURIComponent(blog.author?.username || 'U')}&background=006699&color=fff&size=200`}
+                alt={blog.author?.username || 'Author'}
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="text-[#0F4C81] text-[13px] font-bold">
               {blog.author?.username || blog.author || 'Anonymous'}

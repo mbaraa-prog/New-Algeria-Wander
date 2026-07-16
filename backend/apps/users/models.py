@@ -24,6 +24,7 @@ class User(AbstractUser):
     username   = models.CharField(max_length=50, unique=True)
     bio        = models.TextField(blank=True, null=True)
     avatar     = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    external_image_url = models.URLField(blank=True, null=True, help_text="Cloudinary avatar URL")
     phone      = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

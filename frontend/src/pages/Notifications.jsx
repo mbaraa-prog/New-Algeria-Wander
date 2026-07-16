@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import dataService from '../api/data';
 
 const Notifications = () => {
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    if (user) fetchNotifications();
+    else setLoading(false);
+  }, [user]);
 
   const fetchNotifications = async () => {
     try {
@@ -69,7 +72,7 @@ const Notifications = () => {
   const handleMarkRead = async (id) => {
     try {
       await dataService.markNotificationRead(id);
-      setNotifications(notifications.map(n => 
+      setNotifications(notifications.map(n =>
         n.id === id ? { ...n, is_read: true } : n
       ));
     } catch (err) {
@@ -80,7 +83,6 @@ const Notifications = () => {
   return (
     <div className="bg-[#F8FAFF] min-h-screen pt-32 pb-24 px-6">
       <div className="max-w-4xl mx-auto space-y-12">
-        {/* Header Section */}
         <div className="space-y-3">
           <h1 className="text-[#0F4C81] text-5xl font-extrabold tracking-tight">Notifications</h1>
           <p className="text-gray-400 font-medium text-lg italic">
@@ -88,29 +90,42 @@ const Notifications = () => {
           </p>
         </div>
 
-        {/* Notifications List */}
         <div className="space-y-6">
-          {loading && <div className="text-center py-12 text-gray-500">Loading notifications...</div>}
-          {error && <div className="text-center py-12 text-red-500">{error}</div>}
-          {!loading && notifications.length === 0 && <div className="text-center py-12 text-gray-500">No notifications yet</div>}
-          
-          {!loading && notifications.map((notif) => (
-            <div 
+          {loading && (
+            <div className="text-center py-12 text-gray-500">Loading notifications...</div>
+          )}
+
+          {!loading && !user && (
+            <div className="text-center py-12 text-gray-500">
+              Please log in to see your notifications.
+            </div>
+          )}
+
+          {!loading && user && error && (
+            <div className="text-center py-12 text-red-500">{error}</div>
+          )}
+
+          {!loading && user && !error && notifications.length === 0 && (
+            <div className="text-center py-12 text-gray-500">No notifications yet</div>
+          )}
+
+          {!loading && user && notifications.map((notif) => (
+            <div
               key={notif.id}
               onClick={() => !notif.is_read && handleMarkRead(notif.id)}
-              className={`bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex items-center gap-8 transition-all hover:shadow-md group cursor-pointer ${
-                !notif.is_read ? 'border-l-[6px] border-l-[#0081C9]' : ''
-              }`}
+              className={`bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex items-center gap-8 transition-all hover:shadow-md group cursor-pointer ${!notif.is_read ? 'border-l-[6px] border-l-[#0081C9]' : ''
+                }`}
             >
               <div className={`${getColorClass(notif.type)} w-16 h-16 rounded-full flex items-center justify-center text-white shadow-lg shrink-0 transform group-hover:scale-110 transition-transform`}>
                 {getNotificationIcon(notif.type)}
               </div>
-              
               <div className="flex-1 space-y-1">
                 <p className="text-[#0F4C81] text-lg font-medium leading-relaxed">
                   {notif.message}
                 </p>
-                <span className="text-gray-400 text-sm font-bold block italic">{new Date(notif.created_at).toLocaleDateString()}</span>
+                <span className="text-gray-400 text-sm font-bold block italic">
+                  {new Date(notif.created_at).toLocaleDateString()}
+                </span>
               </div>
             </div>
           ))}

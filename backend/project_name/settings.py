@@ -30,7 +30,7 @@ _allowed_hosts_str = config(
     "DJANGO_ALLOWED_HOSTS",
     default=config(
         "ALLOWED_HOSTS",
-        default="localhost,127.0.0.1,testserver,[::1]",
+        default="localhost,127.0.0.1,testserver,[::1],algeria-wander-hods.onrender.com,.onrender.com",
     ),
 )
 _parsed_hosts = _parse_allowed_hosts(_allowed_hosts_str)
@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "cloudinary_storage",
     "django.contrib.staticfiles",
+    "cloudinary",
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
@@ -164,13 +166,14 @@ SIMPLE_JWT = {
 }
 
 # ── CORS ──────────────────────────────────────────────────────────────────
+# In production, set CORS_ALLOWED_ORIGINS explicitly in the environment.
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
-    default="http://localhost:3000,http://localhost:5173,http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:5501,http://localhost:5501,http://localhost:8080,http://127.0.0.1:8080",
+    default="http://localhost:3000,http://localhost:5173,http://127.0.0.1:5500,http://localhost:5500,https://algeria-wander.vercel.app",
     cast=Csv(),
 )
 CORS_ALLOW_CREDENTIALS = True
-# Allow all origins only in DEBUG mode (for development)
+# Allow all origins only in DEBUG mode (for development).
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 LANGUAGE_CODE = "en-us"
@@ -186,6 +189,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # WhiteNoise compression
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# ── Cloudinary Media Storage ────────────────────────────────────────────────
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default=""),
+    "API_KEY": config("CLOUDINARY_API_KEY", default=""),
+    "API_SECRET": config("CLOUDINARY_API_SECRET", default=""),
+}
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

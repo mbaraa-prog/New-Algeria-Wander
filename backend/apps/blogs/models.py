@@ -6,6 +6,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     cover_image = models.ImageField(upload_to='blog_covers/', blank=True, null=True)
+    external_image_url = models.URLField(blank=True, null=True, help_text="Cloudinary or external image URL")
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blogs')
     created_at = models.DateTimeField(auto_now_add=True)
 

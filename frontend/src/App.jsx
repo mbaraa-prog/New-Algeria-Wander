@@ -11,6 +11,7 @@ import WilayaDetails from './pages/WilayaDetails';
 import Details from './pages/Details';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import ForgotPassword from './pages/Auth/ForgotPassword';
 import Blogs from './pages/Blogs';
 import AddBlog from './pages/AddBlog';
 import BlogDetail from './pages/BlogDetail';
@@ -34,6 +35,7 @@ function App() {
         {/* Routes with No Navbar/Footer */}
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<NotFound />} />
 
         {/* Main Application Routes (With Navbar/Footer) */}

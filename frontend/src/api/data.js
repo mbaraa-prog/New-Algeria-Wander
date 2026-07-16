@@ -90,7 +90,7 @@ const dataService = {
 
   createBlog: async (blogData) => {
     const response = await axiosInstance.post('blogs/', blogData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Content-Type': 'application/json' },
     });
     clearCache('blogs_{}');
     return response.data;

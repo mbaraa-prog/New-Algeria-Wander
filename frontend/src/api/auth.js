@@ -26,11 +26,9 @@ const authService = {
   },
 
   updateProfile: async (userData) => {
-    const headers = userData instanceof FormData 
-      ? { 'Content-Type': 'multipart/form-data' } 
-      : { 'Content-Type': 'application/json' };
-      
-    const response = await axiosInstance.put('auth/profile/', userData, { headers });
+    const response = await axiosInstance.put('auth/profile/', userData, {
+      headers: { 'Content-Type': 'application/json' }
+    });
     return response.data;
   },
 

@@ -12,7 +12,8 @@ class Wilaya(models.Model):
     description     = models.TextField()
     short_desc      = models.CharField(max_length=255, blank=True)
     tagline         = models.CharField(max_length=255, blank=True, help_text="e.g. The White City on the Mediterranean")
-    cover_image     = models.ImageField(upload_to="wilayas/covers/")
+    cover_image     = models.ImageField(upload_to="wilayas/covers/", blank=True, null=True)
+    external_image_url = models.URLField(blank=True, null=True, help_text="Cloudinary or external image URL")
     banner_image    = models.ImageField(upload_to="wilayas/banners/", blank=True, null=True)
     category        = models.ForeignKey(Category, on_delete=models.SET_NULL,
                                         null=True, blank=True, related_name="wilayas")

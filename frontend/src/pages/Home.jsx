@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PlaceCard from '../components/PlaceCard';
 import dataService from '../api/data';
+import { getImageUrl } from '../config/api';
 
 import coastHero from '../assets/generated/coast_hero.png';
 import mountainHero from '../assets/generated/mountain_hero.png';
@@ -86,7 +87,7 @@ const Home = () => {
       items = places.filter(p => p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Place',
         location: p.wilaya_name,
@@ -97,7 +98,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -107,7 +108,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -119,7 +120,7 @@ const Home = () => {
       const filteredWilayas = wilayas.filter(w => beachWilayas.includes(w.name)).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: getImageUrl(w),
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -129,7 +130,7 @@ const Home = () => {
       const filteredPlaces = places.filter(p => beachWilayas.includes(p.wilaya_name) && (p.place_type === 'attraction' || p.category?.name === 'Landmarks') && p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -140,7 +141,7 @@ const Home = () => {
       hotelsArray = places.filter(p => beachWilayas.includes(p.wilaya_name) && p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -150,7 +151,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => beachWilayas.includes(p.wilaya_name) && p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -161,7 +162,7 @@ const Home = () => {
       const djanetWilaya = wilayas.filter(w => w.name.toLowerCase().includes('djanet')).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: getImageUrl(w),
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -171,7 +172,7 @@ const Home = () => {
       const djanetPlaces = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && (p.place_type === 'attraction' || p.category?.name === 'Landmarks') && p.place_type !== 'hotel' && p.place_type !== 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -182,7 +183,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -192,7 +193,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('djanet') && p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -203,7 +204,7 @@ const Home = () => {
       const bejaiaWilaya = wilayas.filter(w => w.name.toLowerCase().includes('bejaia')).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: getImageUrl(w),
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -219,7 +220,7 @@ const Home = () => {
       ).map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -230,7 +231,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('bejaia') && p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -240,7 +241,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.wilaya_name.toLowerCase().includes('bejaia') && p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -251,7 +252,7 @@ const Home = () => {
       const constWilaya = wilayas.filter(w => w.name.toLowerCase().includes('constantine')).map(w => ({
         id: `wilaya-${w.id}`,
         name: w.name,
-        image: w.cover_image || w.image,
+        image: getImageUrl(w),
         description: w.short_desc || w.description,
         type: 'Destination',
         location: 'Algeria',
@@ -266,7 +267,7 @@ const Home = () => {
       ).map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: p.place_type_display || p.place_type || 'Landmark',
         location: p.wilaya_name,
@@ -277,7 +278,7 @@ const Home = () => {
       hotelsArray = places.filter(p => p.place_type === 'hotel').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Hotel',
         location: p.wilaya_name,
@@ -287,7 +288,7 @@ const Home = () => {
       restaurantsArray = places.filter(p => p.place_type === 'restaurant').map(p => ({
         id: p.id,
         name: p.name,
-        image: p.cover_image || p.external_image_url,
+        image: getImageUrl(p),
         description: p.short_desc || p.description,
         type: 'Restaurant',
         location: p.wilaya_name,
@@ -325,67 +326,74 @@ const Home = () => {
       category: 'Explore Algeria',
       title: 'Discover the coasts of Algeria',
       description: "Explore stunning Mediterranean beaches, vibrant coastal cities, and hidden gems along Algeria's breathtaking shoreline.",
-      mainImage: algerLaBlanche,
-      sideImage1: trainParis,
-      sideImage2: download3,
+      mainImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427316/tnc_10286958_Full.jpg_enh0ee.jpg', // Algiers
+      sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427316/hero_xksu7y.jpg', // Annaba
+      sideImage2: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427316/90_jxvlg8.jpg', // Bejaia
       accent: '#FF7F50',
-      bgImage: coastHero,
-      label1: 'Algiers', label2: 'Journey', label3: 'Coasts'
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780422311/beach-ocean-sunset-landscape-blue-sky-5k-3840x2160-8974_edb9sm.jpg', // Coasts
+      label1: 'Algiers', label2: 'Annaba', label3: 'Bejaia'
     },
     {
       id: 'mountains',
       category: 'Explore Algeria',
       title: 'Discover the Mountains of Algeria',
       description: "Explore breathtaking peaks, peaceful villages, and unforgettable hiking experiences in Algeria's stunning mountain landscapes.",
-      mainImage: 'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=800',
-      sideImage1: 'https://images.unsplash.com/photo-1511497584788-8767fe771d50?q=80&w=600',
-      sideImage2: 'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?q=80&w=600',
+      mainImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780426907/Denali-peak-center-Alaska-Range-North-America_wfnnyl.jpg', // Bejaia
+      sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780240854/nature-mountains_r4ttqw.jpg', //chelia
+      sideImage2: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780426906/MAG19008_190528_738.jpg_fpufgp.jpg', // khenchela
       accent: '#22C55E',
-      bgImage: mountainHero,
-      label1: 'Tikjda', label2: 'Chelia', label3: 'Tizi Ouzou'
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780424075/pexels-aleyna-kilic-54873290-7831727_1_mpllup.jpg', // Bejaia
+      label1: 'Bejaia', label2: 'Chelia', label3: 'Khenchela'
     },
     {
       id: 'desert',
       category: 'Explore Algeria',
       title: 'Discover the Desert of Algeria',
       description: "Experience the magic of the Sahara — vast dunes, silent horizons, and breathtaking sunsets in the world's most iconic desert.",
-      mainImage: 'https://images.unsplash.com/photo-1509233725247-49e657c54213?q=80&w=800',
-      sideImage1: 'https://images.unsplash.com/photo-1440635592348-167b1b30296f?q=80&w=600',
-      sideImage2: 'https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?q=80&w=600',
+      mainImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780428254/pexels-binyaminmellish-305535_gysila.jpg', // Djanet
+      sideImage1: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427572/S_316929_f4x8dk.jpg', // Tamanrasset
+      sideImage2: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780427788/traditional-arabic-coffee-pot-tea-600nw-1956774079_lf5lv2.jpg', // Bechar
       accent: '#EA580C',
-      bgImage: saharaHero,
-      label1: 'Djanet', label2: 'Tamenrast', label3: 'Bechar'
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780424474/pexels-colin-113475134-9701658_tfyvmn.jpg', // Djanet
+      label1: 'Djanet', label2: 'Tamanrasset', label3: 'Bechar'
     },
     {
       id: 'history',
       category: 'Explore Algeria',
       title: 'Discover the History of Algeria',
       description: "Discover centuries of history through timeless architecture, ancient cities, and stories carved into every stone.",
-      mainImage: 'https://images.unsplash.com/photo-1605634591461-9b63481a5477?q=80&w=800',
-      sideImage1: 'https://images.unsplash.com/photo-1580674239581-3fbc191a90c2?q=80&w=600',
-      sideImage2: 'https://images.unsplash.com/photo-1596395817202-6028590c67e7?q=80&w=600',
+      mainImage: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1779485015/ecaa1f141dcfed8d00c85267cd0b27d5_cyseda.jpg', // Constantine
+      sideImage1: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780398702/Timgad_nicknamed_the__Pompeii_of_North_Africa_is_a_ohspka.jpg', // Timgad
+      sideImage2: 'https://res.cloudinary.com/df9dmkiuj/image/upload/v1780399011/Das_r%C3%B6mische_Amphitheater_von_Tipaza_malerisch_an_em5eaw.jpg', // Tipaza
       accent: '#92400E',
-      bgImage: historyHero,
-      label1: 'Gherdaya', label2: 'Timgad', label3: 'Constantine'
+      bgImage: 'https://res.cloudinary.com/de8bbyc37/image/upload/v1780425574/pexels-adel-kara-32885066-33477231_yymm9d.jpg', // Constantine
+      label1: 'Constantine', label2: 'Timgad', label3: 'Tipaza'
     }
   ];
 
-  const themes = heroSlides.length
-    ? heroSlides.map((slide, index) => ({
-      id: slide.id || `slide-${index}`,
-      category: slide.theme || 'Explore Algeria',
-      title: (slide.full_title || `${slide.title_prefix || ''} ${slide.title_highlight || ''} ${slide.title_suffix || ''}`).trim(),
-      description: slide.description || '',
-      mainImage: slide.background_image || algerLaBlanche,
-      sideImage1: slide.featured_wilayas?.[0]?.cover_image || trainParis,
-      sideImage2: slide.featured_wilayas?.[1]?.cover_image || download3,
-      accent: slide.highlight_color || '#FF7F50',
-      bgImage: slide.background_image || coastHero,
-      label1: slide.featured_wilayas?.[0]?.name || 'Algiers',
-      label2: slide.featured_wilayas?.[1]?.name || 'Journey',
-      label3: slide.featured_wilayas?.[2]?.name || 'Coasts',
-    }))
-    : defaultThemes;
+  const themes = defaultThemes.map((defaultSlide) => {
+    const apiSlide = heroSlides.find(s =>
+      s.theme === defaultSlide.id ||
+      (defaultSlide.id === 'beaches' && s.theme === 'coasts')
+    );
+    if (!apiSlide) return defaultSlide;
+
+    return {
+      id: apiSlide.id || defaultSlide.id,
+      category: apiSlide.theme || defaultSlide.category,
+      title: (apiSlide.full_title || `${apiSlide.title_prefix || ''} ${apiSlide.title_highlight || ''} ${apiSlide.title_suffix || ''}`).trim() || defaultSlide.title,
+      description: apiSlide.description || defaultSlide.description,
+      // always use our curated local images & labels — remote DB may have stale wilaya assignments
+      mainImage: defaultSlide.mainImage,
+      sideImage1: defaultSlide.sideImage1,
+      sideImage2: defaultSlide.sideImage2,
+      accent: apiSlide.highlight_color || defaultSlide.accent,
+      bgImage: defaultSlide.bgImage,
+      label1: defaultSlide.label1,
+      label2: defaultSlide.label2,
+      label3: defaultSlide.label3,
+    };
+  });
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -526,15 +534,10 @@ const Home = () => {
       {/* Floating Search Widget */}
       <div className="relative z-30 max-w-5xl mx-auto -mt-24 px-6 pb-20">
         <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-gray-100">
-          <div className="flex items-center space-x-10 mb-8 border-b border-gray-50 pb-4 overflow-x-auto no-scrollbar">
-            {categoriesTabs.map((tab, i) => (
-              <button
-                key={tab}
-                className={`text-[13px] font-bold pb-4 whitespace-nowrap transition-all uppercase tracking-wider ${i === 0 ? 'text-[#006699] border-b-2 border-[#006699]' : 'text-gray-300 hover:text-gray-500'}`}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="flex items-center space-x-10 mb-8 border-b border-gray-50 pb-4">
+            <button className="text-[13px] font-bold pb-4 whitespace-nowrap uppercase tracking-wider text-[#006699] border-b-2 border-[#006699]">
+              All
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-8 items-end">
@@ -613,20 +616,6 @@ const Home = () => {
           )}
         </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center space-x-4 mb-12 overflow-x-auto no-scrollbar py-2">
-          {['All', 'Sahara', 'Beaches', 'Mountains', 'History'].map(catName => (
-            <button
-              key={catName}
-              onClick={() => setActiveCategory(catName)}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${activeCategory === catName ? 'text-white shadow-lg' : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'}`}
-              style={activeCategory === catName ? { backgroundColor: activeTheme.accent } : {}}
-            >
-              {catName}
-            </button>
-          ))}
-        </div>
-
         {filteredCards.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {filteredCards.slice(discoverIndex, discoverIndex + 3).map(card => (
@@ -639,7 +628,7 @@ const Home = () => {
                     {card.type === 'Destination' ? 'WILAYA' : activeCategory.toUpperCase()}
                   </span>
                 </div>
-                <Link to={card.linkTo} className="block flex-1 flex flex-col">
+                <Link to={card.linkTo} className="block flex-1 flex-col">
                   <div className="h-64 overflow-hidden relative">
                     <img src={card.image} alt={card.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -706,7 +695,7 @@ const Home = () => {
                 <div className="absolute top-4 right-4 z-10">
                   <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">HOTEL</span>
                 </div>
-                <Link to={hotel.linkTo} className="block flex-1 flex flex-col">
+                <Link to={hotel.linkTo} className="block flex-1 flex-col">
                   <div className="h-64 overflow-hidden relative">
                     <img src={hotel.image} alt={hotel.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -765,7 +754,7 @@ const Home = () => {
                 <div className="absolute top-4 right-4 z-10">
                   <span className="text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#FF7F50] shadow-sm">RESTAURANT</span>
                 </div>
-                <Link to={restaurant.linkTo} className="block flex-1 flex flex-col">
+                <Link to={restaurant.linkTo} className="block flex-1 flex-col">
                   <div className="h-64 overflow-hidden relative">
                     <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -822,13 +811,13 @@ const Home = () => {
           {shuffledEvents.slice(eventIndex, eventIndex + 3).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {shuffledEvents.slice(eventIndex, eventIndex + 3).map(event => {
-                const eventImage = event.cover_image || event.external_image_url || '';
+                const eventImage = getImageUrl(event);
                 const eventDate = event.period || event.date_range || 'Upcoming';
                 const eventLocation = event.location || event.wilaya_name || 'Algeria';
                 const detailLink = `/details/event-${event.id}`;
                 return (
                   <div key={event.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group relative border border-gray-100 flex flex-col h-full">
-                    <Link to={detailLink} className="block flex-1 flex flex-col">
+                    <Link to={detailLink} className="block flex-1 flex-col">
                       <div className="h-64 overflow-hidden relative">
                         <img src={eventImage} alt={event.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>

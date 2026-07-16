@@ -9,16 +9,40 @@ class WilayaImageSerializer(serializers.ModelSerializer):
         fields = ["id", "image", "caption", "order"]
 
 
+class WilayaSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        return obj.external_image_url
+
+    class Meta:
+        model = Wilaya
+        fields = [
+            'id',
+            'name',
+            'slug',
+            'short_desc',
+            'tagline',
+            'image',   # ONLY THIS, not model field
+        ]
+
+
 class WilayaListSerializer(serializers.ModelSerializer):
     """Lightweight — used in lists, search results, hero carousel."""
-    category   = CategorySerializer(read_only=True)
-    tags_list  = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    category    = CategorySerializer(read_only=True)
+    tags_list   = serializers.SerializerMethodField()
     image_count = serializers.SerializerMethodField()
 
     class Meta:
         model  = Wilaya
-        fields = ["id", "name", "slug", "short_desc", "cover_image",
-                  "category", "tags_list", "is_featured", "image_count"]
+        fields = [
+            "id", "name", "slug", "short_desc", "tagline", "image",
+            "category", "tags_list", "is_featured", "image_count"
+        ]
+
+    def get_image(self, obj):
+        return obj.external_image_url
 
     def get_tags_list(self, obj):
         return obj.get_tags_list()
@@ -29,18 +53,22 @@ class WilayaListSerializer(serializers.ModelSerializer):
 
 class WilayaDetailSerializer(serializers.ModelSerializer):
     """Full detail — used on the wilaya page."""
-    category   = CategorySerializer(read_only=True)
-    tags_list  = serializers.SerializerMethodField()
-    images     = WilayaImageSerializer(many=True, read_only=True)
+    image = serializers.SerializerMethodField()
+    category    = CategorySerializer(read_only=True)
+    tags_list   = serializers.SerializerMethodField()
+    images      = WilayaImageSerializer(many=True, read_only=True)
     image_count = serializers.SerializerMethodField()
 
     class Meta:
         model  = Wilaya
-        fields = ["id", "name", "slug", "description", "short_desc",
-                  "cover_image", "banner_image", "category",
+        fields = ["id", "name", "slug", "description", "short_desc", "tagline",
+                  "image", "category",
                   "founded", "best_time", "weather_info",
                   "tags", "tags_list", "images", "image_count",
                   "is_featured", "created_at"]
+
+    def get_image(self, obj):
+        return obj.external_image_url
 
     def get_tags_list(self, obj):
         return obj.get_tags_list()

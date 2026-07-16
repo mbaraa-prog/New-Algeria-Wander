@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../config/api';
 
 const PlaceCard = ({ item, type = 'default', onRemove, linkTo }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const cardLink = linkTo || `/details/${item.id}`;
-  const image = item.image || item.cover_image || item.background_image || item?.images?.[0]?.image || '';
+  const image = getImageUrl(item);
+  console.log("PlaceCard Image URL:", image);
   const description = item.description || item.short_desc || item.body || item?.short_desc || '';
   const typeLabel = item.type || item.place_type_display || item.place_type || item.date_range || 'Explore';
   const location = item.location || item.wilaya || item.wilaya_name || '';

@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 
 from .models import Wilaya
-from .serializers import WilayaListSerializer, WilayaDetailSerializer
+from .serializers import WilayaSerializer, WilayaDetailSerializer, WilayaListSerializer
 
 
 class WilayaListView(APIView):
